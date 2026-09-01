@@ -381,8 +381,14 @@
     border-bottom:2px solid white;
     transform:rotate(40deg);
   }
-  .task-title{ font-size:14.5px; }
+  .task-title{ font-size:14.5px; flex:1; outline:none; cursor:text; }
   .task-title.done{ color:var(--text-muted); text-decoration:line-through; }
+  .task-delete{
+    background:none; border:none; color:var(--text-muted); cursor:pointer;
+    display:flex; align-items:center; justify-content:center; padding:4px;
+    flex-shrink:0;
+  }
+  .task-delete:hover{ color:#E28B8B; }
 
   .add-task-bar{
     display:flex; align-items:center; gap:10px;
@@ -965,11 +971,30 @@
       state.tareas.filter(t => t.dia === dia).forEach(t => {
         const row = document.createElement('div');
         row.className = 'task-row';
-        row.innerHTML = `
-          <div class="checkbox ${t.completada ? 'checked' : ''}" data-id="${t.id}"></div>
-          <div class="task-title ${t.completada ? 'done' : ''}">${t.titulo}</div>
-        `;
-        row.querySelector('.checkbox').addEventListener('click', () => toggleTask(t.id));
+
+        const checkbox = document.createElement('div');
+        checkbox.className = 'checkbox' + (t.completada ? ' checked' : '');
+        checkbox.addEventListener('click', () => toggleTask(t.id));
+
+        const title = document.createElement('div');
+        title.className = 'task-title' + (t.completada ? ' done' : '');
+        title.textContent = t.titulo;
+        title.contentEditable = 'true';
+        title.spellcheck = false;
+        title.addEventListener('blur', () => saveTaskTitle(t.id, title));
+        title.addEventListener('keydown', (e) => {
+          if(e.key === 'Enter'){ e.preventDefault(); title.blur(); }
+        });
+
+        const del = document.createElement('button');
+        del.className = 'task-delete';
+        del.setAttribute('aria-label', 'Eliminar tarea');
+        del.innerHTML = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>';
+        del.addEventListener('click', () => deleteTask(t.id));
+
+        row.appendChild(checkbox);
+        row.appendChild(title);
+        row.appendChild(del);
         group.appendChild(row);
       });
       container.appendChild(group);
@@ -989,6 +1014,38 @@
       t.completada = !t.completada;
       renderTasks();
       alert('No se pudo actualizar la tarea: ' + error.message);
+    }
+  }
+
+  async function saveTaskTitle(id, el){
+    const t = state.tareas.find(t => t.id === id);
+    if(!t) return;
+    const nuevoTitulo = el.textContent.trim();
+    if(!nuevoTitulo){
+      el.textContent = t.titulo;
+      return;
+    }
+    if(nuevoTitulo === t.titulo) return;
+    const anterior = t.titulo;
+    t.titulo = nuevoTitulo;
+    const { error } = await supabase.from('tareas').update({ titulo: nuevoTitulo }).eq('id', id);
+    if(error){
+      t.titulo = anterior;
+      el.textContent = anterior;
+      alert('No se pudo actualizar la tarea: ' + error.message);
+    }
+  }
+
+  async function deleteTask(id){
+    const idx = state.tareas.findIndex(t => t.id === id);
+    if(idx === -1) return;
+    const [removed] = state.tareas.splice(idx, 1);
+    renderTasks();
+    const { error } = await supabase.from('tareas').delete().eq('id', id);
+    if(error){
+      state.tareas.splice(idx, 0, removed);
+      renderTasks();
+      alert('No se pudo eliminar la tarea: ' + error.message);
     }
   }
 
