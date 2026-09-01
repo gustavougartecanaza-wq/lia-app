@@ -53,23 +53,23 @@
   .view.active{ display:flex; }
 
   /* ---------- Onboarding ---------- */
-  #view-onboarding{
+  #view-onboarding, #view-auth{
     justify-content:center;
     align-items:center;
     padding: 40px 32px;
     text-align:center;
     gap:8px;
   }
-  #view-onboarding .orb-mini{
+  #view-onboarding .orb-mini, #view-auth .orb-mini{
     width:88px; height:88px; margin-bottom: 28px;
   }
-  #view-onboarding h1{
+  #view-onboarding h1, #view-auth h1{
     font-size:30px;
     font-weight:500;
     margin:0 0 6px;
     letter-spacing: 0.2px;
   }
-  #view-onboarding p.lead{
+  #view-onboarding p.lead, #view-auth p.lead{
     color:var(--text-muted);
     font-size:15px;
     line-height:1.5;
@@ -87,7 +87,7 @@
     color:var(--text-muted);
     margin-bottom:8px;
   }
-  .field input[type=text]{
+  .field input[type=text], .field input[type=password]{
     width:100%;
     background:transparent;
     border:none;
@@ -98,7 +98,7 @@
     padding:10px 2px;
     outline:none;
   }
-  .field input[type=text]:focus{ border-bottom-color: var(--orb-3); }
+  .field input[type=text]:focus, .field input[type=password]:focus{ border-bottom-color: var(--orb-3); }
 
   .choice-row{
     display:flex;
@@ -916,6 +916,13 @@
   }
 
   // ---------- Tareas ----------
+  function fechaLocalHoy(){
+    const d = new Date();
+    const mes = String(d.getMonth() + 1).padStart(2, '0');
+    const dia = String(d.getDate()).padStart(2, '0');
+    return `${d.getFullYear()}-${mes}-${dia}`;
+  }
+
   function fechaALabel(fecha){
     if(!fecha) return 'Sin fecha';
     const hoy = new Date(); hoy.setHours(0,0,0,0);
@@ -965,8 +972,9 @@
       });
       container.appendChild(group);
     });
+    const numPendientes = state.tareas.filter(t => !t.completada).length;
     document.querySelector('#view-tasks .date').textContent =
-      state.tareas.filter(t => !t.completada).length + ' pendientes';
+      `${numPendientes} pendiente${numPendientes === 1 ? '' : 's'}`;
     renderGreeting();
   }
 
@@ -988,7 +996,7 @@
     if(!text) return;
     input.value = '';
 
-    const hoy = new Date().toISOString().slice(0, 10);
+    const hoy = fechaLocalHoy();
     const { data, error } = await supabase
       .from('tareas')
       .insert({ usuario_id: state.userId, titulo: text, completada: false, fecha: hoy })
