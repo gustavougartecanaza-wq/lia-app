@@ -21,6 +21,17 @@ const tools = [
           description:
             "Fecha en formato YYYY-MM-DD. Si el usuario no da fecha, usa la fecha de hoy indicada en el contexto.",
         },
+        prioridad: {
+          type: "string",
+          enum: ["alta", "media", "baja"],
+          description: "Prioridad de la tarea. Si no se especifica, usa 'media'.",
+        },
+        recurrencia: {
+          type: "string",
+          enum: ["diaria", "semanal", "mensual"],
+          description:
+            "Solo si la tarea se repite periódicamente (ej. 'todos los días', 'cada semana'). Omite si es una tarea única.",
+        },
       },
       required: ["titulo", "fecha"],
     },
@@ -28,7 +39,7 @@ const tools = [
   {
     name: "listar_tareas",
     description:
-      "Lista las tareas del usuario. Úsala para responder qué tiene pendiente, y antes de completar o eliminar una tarea para conocer su id exacto.",
+      "Lista las tareas del usuario, con su prioridad y recurrencia. Úsala para responder qué tiene pendiente, y antes de modificar o eliminar una tarea para conocer su id exacto.",
     input_schema: {
       type: "object",
       properties: {
@@ -38,15 +49,21 @@ const tools = [
     },
   },
   {
-    name: "marcar_tarea",
-    description: "Marca una tarea como completada o pendiente, dado su id (obtenido con listar_tareas).",
+    name: "actualizar_tarea",
+    description:
+      "Modifica una tarea existente: título, fecha (reprogramar), prioridad, recurrencia o si está completada. " +
+      "Dado su id (obtenido con listar_tareas). Incluye solo los campos que cambian.",
     input_schema: {
       type: "object",
       properties: {
         id: { type: "string", description: "ID (uuid) de la tarea." },
+        titulo: { type: "string" },
+        fecha: { type: "string", description: "Nueva fecha YYYY-MM-DD." },
         completada: { type: "boolean" },
+        prioridad: { type: "string", enum: ["alta", "media", "baja"] },
+        recurrencia: { type: "string", enum: ["diaria", "semanal", "mensual"] },
       },
-      required: ["id", "completada"],
+      required: ["id"],
     },
   },
   {
@@ -76,8 +93,10 @@ async function ejecutarHerramienta(
         titulo: String(input.titulo ?? "").slice(0, 500),
         fecha: input.fecha ?? null,
         completada: false,
+        prioridad: typeof input.prioridad === "string" ? input.prioridad : "media",
+        recurrencia: typeof input.recurrencia === "string" ? input.recurrencia : null,
       })
-      .select("id, titulo, fecha, completada")
+      .select("id, titulo, fecha, completada, prioridad, recurrencia")
       .single();
     if (error) return { error: error.message };
     return { tarea: data };
@@ -86,7 +105,7 @@ async function ejecutarHerramienta(
   if (name === "listar_tareas") {
     let query = supabase
       .from("tareas")
-      .select("id, titulo, fecha, completada")
+      .select("id, titulo, fecha, completada, prioridad, recurrencia")
       .eq("usuario_id", userId)
       .order("fecha", { ascending: true, nullsFirst: false });
     if (typeof input.fecha === "string") query = query.eq("fecha", input.fecha);
@@ -96,13 +115,21 @@ async function ejecutarHerramienta(
     return { tareas: data };
   }
 
-  if (name === "marcar_tarea") {
+  if (name === "actualizar_tarea") {
+    const cambios: Record<string, unknown> = {};
+    if (typeof input.titulo === "string") cambios.titulo = input.titulo.slice(0, 500);
+    if (typeof input.fecha === "string") cambios.fecha = input.fecha;
+    if (typeof input.completada === "boolean") cambios.completada = input.completada;
+    if (typeof input.prioridad === "string") cambios.prioridad = input.prioridad;
+    if (typeof input.recurrencia === "string") cambios.recurrencia = input.recurrencia;
+    if (Object.keys(cambios).length === 0) return { error: "No se especificó ningún cambio." };
+
     const { data, error } = await supabase
       .from("tareas")
-      .update({ completada: Boolean(input.completada) })
+      .update(cambios)
       .eq("id", String(input.id))
       .eq("usuario_id", userId)
-      .select("id, titulo, fecha, completada")
+      .select("id, titulo, fecha, completada, prioridad, recurrencia")
       .single();
     if (error) return { error: error.message };
     return { tarea: data };
@@ -165,7 +192,8 @@ Deno.serve(async (req: Request) => {
       `Usa siempre un trato formal y respetuoso (de usted). ` +
       (nombre ? `El nombre de la persona con la que hablas es ${nombre}. ` : "") +
       (fechaHoy ? `Hoy es ${fechaHoy}${horaActual ? `, son las ${horaActual}` : ""}. ` : "") +
-      `Tienes herramientas para crear, listar, completar y eliminar tareas reales del usuario: úsalas siempre ` +
+      `Tienes herramientas para crear, listar, modificar (incluyendo reprogramar fecha, cambiar prioridad o marcar ` +
+      `como recurrente) y eliminar tareas reales del usuario: úsalas siempre ` +
       `que te pida gestionar pendientes, en vez de solo responder en texto. Nunca inventes ni des por hecho el ` +
       `contenido de la agenda o las tareas: si no lo has consultado con una herramienta en esta conversación, no lo sabes.`;
 

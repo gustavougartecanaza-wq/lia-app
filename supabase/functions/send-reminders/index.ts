@@ -84,7 +84,7 @@ Deno.serve(async (req: Request) => {
         ? `Tienes pendiente: ${titulos[0]}`
         : `Tienes ${titulos.length} tareas pendientes hoy: ${titulos.slice(0, 3).join(", ")}${titulos.length > 3 ? "…" : ""}`;
 
-      const payload = JSON.stringify({ title: "Lia — recordatorio", body: cuerpo, url: "./" });
+      const payload = JSON.stringify({ title: "Lia — recordatorio", body: cuerpo, url: "./?view=tasks" });
 
       try {
         await webpush.sendNotification(

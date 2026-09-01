@@ -27,10 +27,15 @@ self.addEventListener('push', (event) => {
 self.addEventListener('notificationclick', (event) => {
   event.notification.close();
   const targetUrl = (event.notification.data && event.notification.data.url) || './';
+  const targetView = new URL(targetUrl, self.location.origin).searchParams.get('view');
   event.waitUntil(
     self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clientList) => {
       for (const client of clientList) {
-        if ('focus' in client) return client.focus();
+        if ('focus' in client) {
+          client.focus();
+          if (targetView) client.postMessage({ type: 'lia-navigate', view: targetView });
+          return;
+        }
       }
       if (self.clients.openWindow) return self.clients.openWindow(targetUrl);
     })

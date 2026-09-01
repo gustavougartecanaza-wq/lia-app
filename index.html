@@ -412,6 +412,21 @@
   }
   .task-title{ font-size:14.5px; flex:1; outline:none; cursor:text; }
   .task-title.done{ color:var(--text-muted); text-decoration:line-through; }
+  .priority-dot{
+    width:8px; height:8px; border-radius:50%; flex-shrink:0; cursor:pointer;
+  }
+  .task-recurrence-icon{
+    color:var(--text-muted); display:flex; align-items:center; flex-shrink:0;
+  }
+  .task-icon-btn{
+    background:none; border:none; color:var(--text-muted); cursor:pointer;
+    display:flex; align-items:center; justify-content:center; padding:4px;
+    flex-shrink:0;
+  }
+  .task-icon-btn:hover{ color:var(--text); }
+  .task-date-input{
+    position:absolute; width:1px; height:1px; opacity:0; pointer-events:none;
+  }
   .task-delete{
     background:none; border:none; color:var(--text-muted); cursor:pointer;
     display:flex; align-items:center; justify-content:center; padding:4px;
@@ -830,8 +845,18 @@
     const { data: { session } } = await supabase.auth.getSession();
     if(session && session.user){
       await onAuthenticated(session.user);
+      const vistaSolicitada = new URLSearchParams(location.search).get('view');
+      if(vistaSolicitada) showView(vistaSolicitada);
     }
   })();
+
+  if('serviceWorker' in navigator){
+    navigator.serviceWorker.addEventListener('message', (event) => {
+      if(event.data && event.data.type === 'lia-navigate' && event.data.view && state.userId){
+        showView(event.data.view);
+      }
+    });
+  }
 
   function renderGreeting(){
     const hour = new Date().getHours();
@@ -848,6 +873,7 @@
     document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
     document.getElementById('view-' + name).classList.add('active');
     document.querySelectorAll('.navbtn').forEach(b => b.classList.toggle('active', b.dataset.view === name));
+    if(name === 'tasks' && state.userId) loadTasks();
   }
 
   // ---------- Orbe ----------
@@ -1050,7 +1076,7 @@
   async function loadTasks(){
     const { data, error } = await supabase
       .from('tareas')
-      .select('id, titulo, completada, fecha')
+      .select('id, titulo, completada, fecha, prioridad, recurrencia')
       .eq('usuario_id', state.userId)
       .order('fecha', { ascending: true, nullsFirst: false })
       .order('creada_en', { ascending: true });
@@ -1103,6 +1129,12 @@
         const row = document.createElement('div');
         row.className = 'task-row';
 
+        const priorityDot = document.createElement('div');
+        priorityDot.className = 'priority-dot';
+        priorityDot.style.background = colorPrioridad(t.prioridad);
+        priorityDot.title = 'Prioridad: ' + (t.prioridad || 'media') + ' (clic para cambiar)';
+        priorityDot.addEventListener('click', () => cycleTaskPriority(t.id));
+
         const checkbox = document.createElement('div');
         checkbox.className = 'checkbox' + (t.completada ? ' checked' : '');
         checkbox.addEventListener('click', () => toggleTask(t.id));
@@ -1117,14 +1149,38 @@
           if(e.key === 'Enter'){ e.preventDefault(); title.blur(); }
         });
 
+        row.appendChild(priorityDot);
+        row.appendChild(checkbox);
+        row.appendChild(title);
+
+        if(t.recurrencia){
+          const recIcon = document.createElement('span');
+          recIcon.className = 'task-recurrence-icon';
+          recIcon.title = 'Se repite: ' + t.recurrencia;
+          recIcon.innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 2l4 4-4 4"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><path d="M7 22l-4-4 4-4"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>';
+          row.appendChild(recIcon);
+        }
+
+        const dateInput = document.createElement('input');
+        dateInput.type = 'date';
+        dateInput.className = 'task-date-input';
+        dateInput.value = t.fecha || '';
+        dateInput.addEventListener('change', () => updateTaskDate(t.id, dateInput.value));
+
+        const calBtn = document.createElement('button');
+        calBtn.className = 'task-icon-btn';
+        calBtn.setAttribute('aria-label', 'Cambiar fecha');
+        calBtn.innerHTML = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>';
+        calBtn.addEventListener('click', () => { if(dateInput.showPicker) dateInput.showPicker(); else dateInput.click(); });
+
         const del = document.createElement('button');
         del.className = 'task-delete';
         del.setAttribute('aria-label', 'Eliminar tarea');
         del.innerHTML = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>';
         del.addEventListener('click', () => deleteTask(t.id));
 
-        row.appendChild(checkbox);
-        row.appendChild(title);
+        row.appendChild(calBtn);
+        row.appendChild(dateInput);
         row.appendChild(del);
         group.appendChild(row);
       });
@@ -1136,8 +1192,47 @@
     renderGreeting();
   }
 
+  function colorPrioridad(p){
+    return p === 'alta' ? '#E28B8B' : p === 'baja' ? 'var(--text-muted)' : 'var(--orb-3)';
+  }
+
+  async function cycleTaskPriority(id){
+    const t = state.tareas.find(t => t.id === id);
+    if(!t) return;
+    const orden = ['baja', 'media', 'alta'];
+    const idx = orden.indexOf(t.prioridad || 'media');
+    const nueva = orden[(idx + 1) % orden.length];
+    const anterior = t.prioridad;
+    t.prioridad = nueva;
+    renderTasks();
+    const { error } = await supabase.from('tareas').update({ prioridad: nueva }).eq('id', id);
+    if(error){
+      t.prioridad = anterior;
+      renderTasks();
+      alert('No se pudo actualizar la prioridad: ' + error.message);
+    }
+  }
+
+  async function updateTaskDate(id, nuevaFecha){
+    if(!nuevaFecha) return;
+    const t = state.tareas.find(t => t.id === id);
+    if(!t) return;
+    const anteriorFecha = t.fecha;
+    t.fecha = nuevaFecha;
+    t.dia = fechaALabel(nuevaFecha);
+    renderTasks();
+    const { error } = await supabase.from('tareas').update({ fecha: nuevaFecha }).eq('id', id);
+    if(error){
+      t.fecha = anteriorFecha;
+      t.dia = fechaALabel(anteriorFecha);
+      renderTasks();
+      alert('No se pudo cambiar la fecha: ' + error.message);
+    }
+  }
+
   async function toggleTask(id){
     const t = state.tareas.find(t => t.id === id);
+    const eraRecurrente = !!t.recurrencia;
     t.completada = !t.completada;
     renderTasks();
     const { error } = await supabase.from('tareas').update({ completada: t.completada }).eq('id', id);
@@ -1145,6 +1240,10 @@
       t.completada = !t.completada;
       renderTasks();
       alert('No se pudo actualizar la tarea: ' + error.message);
+      return;
+    }
+    if(t.completada && eraRecurrente){
+      await loadTasks();
     }
   }
 
@@ -1190,7 +1289,7 @@
     const { data, error } = await supabase
       .from('tareas')
       .insert({ usuario_id: state.userId, titulo: text, completada: false, fecha: hoy })
-      .select('id, titulo, completada, fecha')
+      .select('id, titulo, completada, fecha, prioridad, recurrencia')
       .single();
 
     if(error){
