@@ -542,7 +542,7 @@
       <span class="date">Hoy</span>
     </div>
     <div class="messages" id="chat-messages">
-      <div class="bubble assistant">Buenas tardes. He revisado tu agenda: tienes una reunión a las 16:00 y dos tareas sin completar. ¿Empezamos por ahí?</div>
+      <div class="bubble assistant">Buenas. ¿En qué puedo ayudarte? Puedo crear, revisar o completar tareas por ti.</div>
     </div>
     <div class="chat-inputbar">
       <input type="text" id="chat-input" placeholder="Escribe tu mensaje…" onkeydown="if(event.key==='Enter') sendChatMessage()"/>
@@ -886,7 +886,9 @@
         },
         body: JSON.stringify({
           messages: chatHistory.slice(-20),
-          nombre: state.nombre
+          nombre: state.nombre,
+          fechaHoy: fechaLocalHoy(),
+          horaActual: new Date().toLocaleTimeString('es', { hour: '2-digit', minute: '2-digit' })
         })
       });
       const data = await res.json();
