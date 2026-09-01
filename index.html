@@ -50,7 +50,14 @@
     min-height:100vh;
     padding-bottom: 84px;
   }
-  .view.active{ display:flex; }
+  .view.active{ display:flex; animation: view-enter .28s ease; }
+  @keyframes view-enter{
+    from{ opacity:0; transform:translateY(8px); }
+    to{ opacity:1; transform:translateY(0); }
+  }
+  @media (prefers-reduced-motion: reduce){
+    .view.active{ animation:none; }
+  }
 
   /* ---------- Onboarding ---------- */
   #view-onboarding, #view-auth{
@@ -249,23 +256,6 @@
     height:16px;
   }
 
-  .state-toggle{
-    display:flex;
-    gap:6px;
-    justify-content:center;
-    margin-bottom: 10px;
-  }
-  .state-toggle button{
-    background:transparent;
-    border:1px solid var(--hairline);
-    color:var(--text-muted);
-    font-family:'Manrope',sans-serif;
-    font-size:11.5px;
-    padding:6px 10px;
-    cursor:pointer;
-  }
-  .state-toggle button.active{ border-color:var(--orb-3); color:var(--text); }
-
   .home-inputbar{
     width: calc(100% - 48px);
     margin: 0 24px 18px;
@@ -350,6 +340,20 @@
   /* ---------- Tasks ---------- */
   #view-tasks .task-scroll{ flex:1; overflow-y:auto; padding: 0 24px; }
   .day-group{ margin-bottom: 26px; }
+  .tasks-empty{
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    gap:10px;
+    color:var(--text-muted);
+    padding: 40px 32px;
+  }
+  .tasks-empty svg{ opacity:0.45; }
+  .tasks-empty p{ margin:0; color:var(--text); font-size:15px; }
+  .tasks-empty span{ font-size:13px; max-width:240px; line-height:1.5; }
   .day-label{
     font-size:12.5px;
     color:var(--text-muted);
@@ -523,16 +527,10 @@
         <div class="ring"></div>
         <div class="ring"></div>
         <div class="ring"></div>
-        <div class="orb" onclick="cycleOrbState()"></div>
+        <div class="orb" onclick="toggleHomeMic()"></div>
       </div>
     </div>
     <div class="orb-status" id="orb-status">En espera</div>
-
-    <div class="state-toggle">
-      <button class="active" data-state="idle" onclick="setOrbState('idle')">En espera</button>
-      <button data-state="listening" onclick="setOrbState('listening')">Escuchando</button>
-      <button data-state="thinking" onclick="setOrbState('thinking')">Pensando</button>
-    </div>
 
     <div class="home-inputbar">
       <input type="text" placeholder="Escribe o dicta un mensaje…" id="home-input" onkeydown="if(event.key==='Enter') goToChatWithMessage()"/>
@@ -829,21 +827,13 @@
   }
 
   // ---------- Orbe ----------
-  const orbStates = ['idle','listening','thinking'];
   const orbLabels = { idle: 'En espera', listening: 'Escuchando', thinking: 'Pensando' };
-  let currentOrbState = 'idle';
 
   function setOrbState(s){
-    currentOrbState = s;
     const wrap = document.getElementById('orb-wrap');
     wrap.classList.remove('listening','thinking');
     if(s !== 'idle') wrap.classList.add(s);
     document.getElementById('orb-status').textContent = orbLabels[s];
-    document.querySelectorAll('.state-toggle button').forEach(b => b.classList.toggle('active', b.dataset.state === s));
-  }
-  function cycleOrbState(){
-    const idx = (orbStates.indexOf(currentOrbState) + 1) % orbStates.length;
-    setOrbState(orbStates[idx]);
   }
 
   // ---------- Chat ----------
@@ -1052,6 +1042,31 @@
   function renderTasks(){
     const container = document.getElementById('task-scroll');
     container.innerHTML = '';
+
+    if(state.tareas.length === 0){
+      const empty = document.createElement('div');
+      empty.className = 'tasks-empty';
+      const icon = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      icon.setAttribute('viewBox', '0 0 24 24');
+      icon.setAttribute('width', '40');
+      icon.setAttribute('height', '40');
+      icon.setAttribute('fill', 'none');
+      icon.setAttribute('stroke', 'currentColor');
+      icon.setAttribute('stroke-width', '1.5');
+      icon.innerHTML = '<path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>';
+      const title = document.createElement('p');
+      title.textContent = 'No tienes tareas pendientes.';
+      const sub = document.createElement('span');
+      sub.textContent = 'Agrega una abajo, o pídele a Lia que te organice el día.';
+      empty.appendChild(icon);
+      empty.appendChild(title);
+      empty.appendChild(sub);
+      container.appendChild(empty);
+      document.querySelector('#view-tasks .date').textContent = '0 pendientes';
+      renderGreeting();
+      return;
+    }
+
     const dias = [...new Set(state.tareas.map(t => t.dia))];
     dias.forEach(dia => {
       const group = document.createElement('div');
