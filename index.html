@@ -418,6 +418,9 @@
   .task-recurrence-icon{
     color:var(--text-muted); display:flex; align-items:center; flex-shrink:0;
   }
+  .task-hora-badge{
+    color:var(--text-muted); font-size:11.5px; flex-shrink:0; white-space:nowrap;
+  }
   .task-icon-btn{
     background:none; border:none; color:var(--text-muted); cursor:pointer;
     display:flex; align-items:center; justify-content:center; padding:4px;
@@ -1076,7 +1079,7 @@
   async function loadTasks(){
     const { data, error } = await supabase
       .from('tareas')
-      .select('id, titulo, completada, fecha, prioridad, recurrencia')
+      .select('id, titulo, completada, fecha, hora, prioridad, recurrencia')
       .eq('usuario_id', state.userId)
       .order('fecha', { ascending: true, nullsFirst: false })
       .order('creada_en', { ascending: true });
@@ -1152,6 +1155,14 @@
         row.appendChild(priorityDot);
         row.appendChild(checkbox);
         row.appendChild(title);
+
+        if(t.hora){
+          const horaBadge = document.createElement('span');
+          horaBadge.className = 'task-hora-badge';
+          horaBadge.textContent = t.hora.slice(0, 5);
+          horaBadge.title = 'Recordatorio a las ' + t.hora.slice(0, 5);
+          row.appendChild(horaBadge);
+        }
 
         if(t.recurrencia){
           const recIcon = document.createElement('span');
@@ -1289,7 +1300,7 @@
     const { data, error } = await supabase
       .from('tareas')
       .insert({ usuario_id: state.userId, titulo: text, completada: false, fecha: hoy })
-      .select('id, titulo, completada, fecha, prioridad, recurrencia')
+      .select('id, titulo, completada, fecha, hora, prioridad, recurrencia')
       .single();
 
     if(error){

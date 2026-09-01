@@ -31,7 +31,8 @@ Deno.serve(async (req: Request) => {
       .from("tareas")
       .select("usuario_id, titulo, fecha")
       .eq("completada", false)
-      .not("fecha", "is", null);
+      .not("fecha", "is", null)
+      .is("hora", null);
     if (tareasError) throw tareasError;
 
     if (!tareas || tareas.length === 0) {
