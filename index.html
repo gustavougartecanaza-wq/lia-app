@@ -419,7 +419,7 @@
     color:var(--text-muted); display:flex; align-items:center; flex-shrink:0;
   }
   .task-hora-badge{
-    color:var(--text-muted); font-size:11.5px; flex-shrink:0; white-space:nowrap;
+    color:var(--text-muted); font-size:11.5px; flex-shrink:0; white-space:nowrap; cursor:pointer;
   }
   .task-icon-btn{
     background:none; border:none; color:var(--text-muted); cursor:pointer;
@@ -427,7 +427,7 @@
     flex-shrink:0;
   }
   .task-icon-btn:hover{ color:var(--text); }
-  .task-date-input{
+  .task-date-input, .task-time-input{
     position:absolute; width:1px; height:1px; opacity:0; pointer-events:none;
   }
   .task-delete{
@@ -1156,11 +1156,19 @@
         row.appendChild(checkbox);
         row.appendChild(title);
 
+        const timeInput = document.createElement('input');
+        timeInput.type = 'time';
+        timeInput.className = 'task-time-input';
+        timeInput.value = t.hora ? t.hora.slice(0, 5) : '';
+        timeInput.addEventListener('change', () => updateTaskTime(t.id, timeInput.value));
+        const abrirSelectorHora = () => { if(timeInput.showPicker) timeInput.showPicker(); else timeInput.click(); };
+
         if(t.hora){
           const horaBadge = document.createElement('span');
           horaBadge.className = 'task-hora-badge';
           horaBadge.textContent = t.hora.slice(0, 5);
-          horaBadge.title = 'Recordatorio a las ' + t.hora.slice(0, 5);
+          horaBadge.title = 'Recordatorio a las ' + t.hora.slice(0, 5) + ' — clic para cambiar';
+          horaBadge.addEventListener('click', abrirSelectorHora);
           row.appendChild(horaBadge);
         }
 
@@ -1184,12 +1192,20 @@
         calBtn.innerHTML = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>';
         calBtn.addEventListener('click', () => { if(dateInput.showPicker) dateInput.showPicker(); else dateInput.click(); });
 
+        const clockBtn = document.createElement('button');
+        clockBtn.className = 'task-icon-btn';
+        clockBtn.setAttribute('aria-label', t.hora ? 'Cambiar hora del recordatorio' : 'Poner hora de recordatorio');
+        clockBtn.innerHTML = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>';
+        clockBtn.addEventListener('click', abrirSelectorHora);
+
         const del = document.createElement('button');
         del.className = 'task-delete';
         del.setAttribute('aria-label', 'Eliminar tarea');
         del.innerHTML = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>';
         del.addEventListener('click', () => deleteTask(t.id));
 
+        row.appendChild(clockBtn);
+        row.appendChild(timeInput);
         row.appendChild(calBtn);
         row.appendChild(dateInput);
         row.appendChild(del);
@@ -1232,12 +1248,27 @@
     t.fecha = nuevaFecha;
     t.dia = fechaALabel(nuevaFecha);
     renderTasks();
-    const { error } = await supabase.from('tareas').update({ fecha: nuevaFecha }).eq('id', id);
+    const { error } = await supabase.from('tareas').update({ fecha: nuevaFecha, recordatorio_enviado: false }).eq('id', id);
     if(error){
       t.fecha = anteriorFecha;
       t.dia = fechaALabel(anteriorFecha);
       renderTasks();
       alert('No se pudo cambiar la fecha: ' + error.message);
+    }
+  }
+
+  async function updateTaskTime(id, nuevaHora){
+    const t = state.tareas.find(t => t.id === id);
+    if(!t) return;
+    const anteriorHora = t.hora;
+    const valor = nuevaHora || null;
+    t.hora = valor;
+    renderTasks();
+    const { error } = await supabase.from('tareas').update({ hora: valor, recordatorio_enviado: false }).eq('id', id);
+    if(error){
+      t.hora = anteriorHora;
+      renderTasks();
+      alert('No se pudo cambiar la hora: ' + error.message);
     }
   }
 
