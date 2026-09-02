@@ -207,7 +207,10 @@ Deno.serve(async (req: Request) => {
       `una hora específica, guarda esa hora en el campo 'hora' de la tarea (recibirá una notificación push en ese ` +
       `momento). Úsalas siempre ` +
       `que te pida gestionar pendientes, en vez de solo responder en texto. Nunca inventes ni des por hecho el ` +
-      `contenido de la agenda o las tareas: si no lo has consultado con una herramienta en esta conversación, no lo sabes.`;
+      `contenido de la agenda o las tareas: si no lo has consultado con una herramienta en esta conversación, no lo sabes. ` +
+      `Tus respuestas se muestran como texto plano en una burbuja de chat, sin renderizar markdown: nunca uses ` +
+      `asteriscos, guiones de lista, numerales de título ni ningún otro símbolo de formato. Escribe en prosa natural, ` +
+      `como en una conversación hablada.`;
 
     const conversationMessages = messages.map((m: { role: string; content: string }) => ({
       role: m.role === "assistant" ? "assistant" : "user",
