@@ -179,6 +179,23 @@
     text-decoration:underline;
   }
 
+  /* ---------- Admin ---------- */
+  .admin-user-row{
+    padding: 12px 0;
+    border-bottom: 1px solid var(--hairline);
+    display:flex; align-items:center; justify-content:space-between; gap:10px;
+  }
+  .admin-user-row:last-child{ border-bottom: none; }
+  .admin-user-name{ font-size:14.5px; }
+  .admin-user-email{ font-size:12.5px; color:var(--text-muted); margin-top:2px; }
+  .admin-user-actions{ display:flex; align-items:center; gap:8px; flex-shrink:0; }
+  .role-badge{
+    font-size:10.5px; padding:3px 8px; border:1px solid var(--hairline); color:var(--text-muted);
+    text-transform:uppercase; letter-spacing:0.4px; cursor:pointer; white-space:nowrap;
+  }
+  .role-badge.admin{ border-color:var(--orb-3); color:var(--text); }
+  .role-badge.self{ cursor:default; opacity:0.6; }
+
   /* ---------- Header shared ---------- */
   .topbar{
     padding: 22px 24px 14px;
@@ -515,18 +532,6 @@
 
   <!-- AUTENTICACIÓN -->
   <div class="view active" id="view-auth">
-    <div class="orb-mini">
-      <svg viewBox="0 0 100 100" width="100%" height="100%">
-        <circle cx="50" cy="50" r="42" fill="url(#gAuth)"/>
-        <defs>
-          <radialGradient id="gAuth" cx="35%" cy="30%">
-            <stop offset="0%" stop-color="#534AB7"/>
-            <stop offset="55%" stop-color="#3C3489"/>
-            <stop offset="100%" stop-color="#26215C"/>
-          </radialGradient>
-        </defs>
-      </svg>
-    </div>
     <h1 class="serif" id="auth-title">Bienvenido a Lia</h1>
     <p class="lead" id="auth-lead">Inicia sesión para continuar.</p>
 
@@ -673,7 +678,7 @@
       </div>
       <div class="setting-block" id="admin-panel-link" style="display:none;">
         <div class="setting-label">Administración</div>
-        <button class="btn-secondary" onclick="showView('admin')">Crear nuevo usuario</button>
+        <button class="btn-secondary" onclick="showView('admin')">Panel de administración</button>
       </div>
 
       <div class="logout-link" onclick="logout()">Cerrar sesión</div>
@@ -686,23 +691,31 @@
       <button class="icon-btn" onclick="showView('settings')" aria-label="Volver">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
       </button>
-      <h2 class="serif">Crear usuario</h2>
+      <h2 class="serif">Administración</h2>
     </div>
     <div class="settings-scroll">
-      <div class="field">
-        <label for="admin-new-nombre">Nombre</label>
-        <input type="text" id="admin-new-nombre" placeholder="Nombre del usuario" />
+      <div class="setting-block">
+        <div class="setting-label">Crear usuario</div>
+        <div class="field">
+          <label for="admin-new-nombre">Nombre</label>
+          <input type="text" id="admin-new-nombre" placeholder="Nombre del usuario" />
+        </div>
+        <div class="field">
+          <label for="admin-new-email">Correo</label>
+          <input type="text" id="admin-new-email" placeholder="correo@ejemplo.com" autocomplete="off" />
+        </div>
+        <div class="field">
+          <label for="admin-new-password">Contraseña temporal</label>
+          <input type="password" id="admin-new-password" placeholder="••••••••" autocomplete="off" />
+        </div>
+        <div class="auth-error" id="admin-create-error"></div>
+        <button class="btn-primary" id="admin-create-btn" onclick="crearUsuarioAdmin()">Crear usuario</button>
       </div>
-      <div class="field">
-        <label for="admin-new-email">Correo</label>
-        <input type="text" id="admin-new-email" placeholder="correo@ejemplo.com" autocomplete="off" />
+
+      <div class="setting-block">
+        <div class="setting-label">Usuarios</div>
+        <div id="admin-users-list"></div>
       </div>
-      <div class="field">
-        <label for="admin-new-password">Contraseña temporal</label>
-        <input type="password" id="admin-new-password" placeholder="••••••••" autocomplete="off" />
-      </div>
-      <div class="auth-error" id="admin-create-error"></div>
-      <button class="btn-primary" id="admin-create-btn" onclick="crearUsuarioAdmin()">Crear usuario</button>
     </div>
   </div>
 
@@ -861,12 +874,105 @@
       document.getElementById('admin-new-email').value = '';
       document.getElementById('admin-new-password').value = '';
       alert('Usuario creado: ' + email);
-      showView('settings');
+      await cargarUsuariosAdmin();
     } catch (err) {
       errorEl.textContent = 'Error de conexión con el servidor.';
     } finally {
       btn.disabled = false;
       btn.textContent = 'Crear usuario';
+    }
+  }
+
+  const ADMIN_MANAGE_USERS_URL = 'https://coeoasnibxuvpodoixbd.supabase.co/functions/v1/admin-gestionar-usuarios';
+
+  async function llamarGestionUsuarios(body){
+    const { data: { session } } = await supabase.auth.getSession();
+    const res = await fetch(ADMIN_MANAGE_USERS_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + (session ? session.access_token : '')
+      },
+      body: JSON.stringify(body)
+    });
+    const data = await res.json();
+    if(!res.ok || data.error) throw new Error(data.error || 'Error al gestionar usuarios.');
+    return data;
+  }
+
+  async function cargarUsuariosAdmin(){
+    const contenedor = document.getElementById('admin-users-list');
+    contenedor.textContent = 'Cargando…';
+    try {
+      const data = await llamarGestionUsuarios({ accion: 'listar' });
+      renderUsuariosAdmin(data.usuarios);
+    } catch (err) {
+      contenedor.textContent = err.message;
+    }
+  }
+
+  function renderUsuariosAdmin(usuarios){
+    const contenedor = document.getElementById('admin-users-list');
+    contenedor.innerHTML = '';
+    usuarios.forEach(u => {
+      const esUnoMismo = u.id === state.userId;
+
+      const row = document.createElement('div');
+      row.className = 'admin-user-row';
+
+      const info = document.createElement('div');
+      const nombre = document.createElement('div');
+      nombre.className = 'admin-user-name';
+      nombre.textContent = (u.nombre || 'Sin nombre') + (esUnoMismo ? ' (tú)' : '');
+      const email = document.createElement('div');
+      email.className = 'admin-user-email';
+      email.textContent = u.email || '';
+      info.appendChild(nombre);
+      info.appendChild(email);
+
+      const actions = document.createElement('div');
+      actions.className = 'admin-user-actions';
+
+      const badge = document.createElement('span');
+      badge.className = 'role-badge' + (u.rol === 'admin' ? ' admin' : '') + (esUnoMismo ? ' self' : '');
+      badge.textContent = u.rol;
+      if(!esUnoMismo){
+        badge.title = u.rol === 'admin' ? 'Clic para quitarle admin' : 'Clic para hacerlo admin';
+        badge.addEventListener('click', () => cambiarRolUsuario(u.id, u.rol === 'admin' ? 'usuario' : 'admin', u.nombre));
+      }
+      actions.appendChild(badge);
+
+      if(!esUnoMismo){
+        const delBtn = document.createElement('button');
+        delBtn.className = 'task-delete';
+        delBtn.setAttribute('aria-label', 'Eliminar usuario');
+        delBtn.innerHTML = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>';
+        delBtn.addEventListener('click', () => eliminarUsuarioAdmin(u.id, u.nombre));
+        actions.appendChild(delBtn);
+      }
+
+      row.appendChild(info);
+      row.appendChild(actions);
+      contenedor.appendChild(row);
+    });
+  }
+
+  async function cambiarRolUsuario(id, nuevoRol, nombre){
+    try {
+      await llamarGestionUsuarios({ accion: 'cambiar_rol', id, rol: nuevoRol });
+      await cargarUsuariosAdmin();
+    } catch (err) {
+      alert(err.message);
+    }
+  }
+
+  async function eliminarUsuarioAdmin(id, nombre){
+    if(!confirm('¿Eliminar a "' + nombre + '"? Esto borra su cuenta y todos sus datos (tareas, mensajes). No se puede deshacer.')) return;
+    try {
+      await llamarGestionUsuarios({ accion: 'eliminar', id });
+      await cargarUsuariosAdmin();
+    } catch (err) {
+      alert(err.message);
     }
   }
 
@@ -945,6 +1051,7 @@
     document.getElementById('view-' + name).classList.add('active');
     document.querySelectorAll('.navbtn').forEach(b => b.classList.toggle('active', b.dataset.view === name));
     if(name === 'tasks' && state.userId) loadTasks();
+    if(name === 'admin' && state.userId) cargarUsuariosAdmin();
   }
 
   // ---------- Orbe ----------
@@ -1112,13 +1219,38 @@
   document.getElementById('home-input').addEventListener('input', () => { homeInputVoice = false; });
   document.getElementById('chat-input').addEventListener('input', () => { chatInputVoice = false; });
 
-  function speakLiaReply(texto){
+  function obtenerVocesListas(){
+    return new Promise((resolve) => {
+      const listaActual = speechSynthesis.getVoices();
+      if(listaActual.length > 0){ resolve(listaActual); return; }
+      const onVoicesChanged = () => {
+        speechSynthesis.removeEventListener('voiceschanged', onVoicesChanged);
+        resolve(speechSynthesis.getVoices());
+      };
+      speechSynthesis.addEventListener('voiceschanged', onVoicesChanged);
+      setTimeout(() => {
+        speechSynthesis.removeEventListener('voiceschanged', onVoicesChanged);
+        resolve(speechSynthesis.getVoices());
+      }, 1000);
+    });
+  }
+
+  function elegirMejorVozEs(voces){
+    const esVoces = voces.filter(v => v.lang && v.lang.toLowerCase().startsWith('es'));
+    if(esVoces.length === 0) return null;
+    // Voces "Online/Natural/Neural" (p.ej. las que expone Edge/Chrome con internet)
+    // suenan muchísimo más humanas que las voces locales clásicas del sistema.
+    const natural = esVoces.find(v => /natural|online|neural/i.test(v.name));
+    return natural || esVoces[0];
+  }
+
+  async function speakLiaReply(texto){
     if(!('speechSynthesis' in window) || !texto) return;
     speechSynthesis.cancel();
+    const voces = await obtenerVocesListas();
     const utter = new SpeechSynthesisUtterance(texto);
     utter.lang = 'es-ES';
-    const voces = speechSynthesis.getVoices();
-    const vozEs = voces.find(v => v.lang && v.lang.toLowerCase().startsWith('es'));
+    const vozEs = elegirMejorVozEs(voces);
     if(vozEs) utter.voice = vozEs;
     if(state.voz === 'clara'){ utter.pitch = 1.15; utter.rate = 1.02; }
     else if(state.voz === 'grave'){ utter.pitch = 0.75; utter.rate = 0.95; }
