@@ -141,6 +141,21 @@
     margin-top:8px;
   }
   .btn-primary:disabled{ opacity:0.5; cursor:default; }
+  .btn-secondary{
+    width:100%;
+    padding:13px;
+    background:transparent;
+    color:var(--text);
+    border:1px solid var(--hairline);
+    font-family:'Manrope', sans-serif;
+    font-weight:600;
+    font-size:14px;
+    letter-spacing:0.2px;
+    cursor:pointer;
+    margin-top:8px;
+  }
+  .btn-secondary:hover{ border-color:var(--orb-3); }
+  .btn-secondary:disabled{ opacity:0.5; cursor:default; }
   .auth-error{
     color:#E28B8B;
     font-size:13px;
@@ -527,9 +542,7 @@
 
     <button class="btn-primary" id="auth-submit-btn" onclick="submitAuth()">Iniciar sesión</button>
 
-    <div class="auth-switch" id="auth-switch">
-      ¿No tienes cuenta? <a onclick="toggleAuthMode()">Regístrate</a>
-    </div>
+    <p class="auth-switch">¿No tienes cuenta? Pídele a un administrador que te la cree.</p>
   </div>
 
   <!-- ONBOARDING -->
@@ -658,7 +671,38 @@
           <span class="v">No conectado</span>
         </div>
       </div>
+      <div class="setting-block" id="admin-panel-link" style="display:none;">
+        <div class="setting-label">Administración</div>
+        <button class="btn-secondary" onclick="showView('admin')">Crear nuevo usuario</button>
+      </div>
+
       <div class="logout-link" onclick="logout()">Cerrar sesión</div>
+    </div>
+  </div>
+
+  <!-- ADMIN -->
+  <div class="view" id="view-admin">
+    <div class="topbar">
+      <button class="icon-btn" onclick="showView('settings')" aria-label="Volver">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+      </button>
+      <h2 class="serif">Crear usuario</h2>
+    </div>
+    <div class="settings-scroll">
+      <div class="field">
+        <label for="admin-new-nombre">Nombre</label>
+        <input type="text" id="admin-new-nombre" placeholder="Nombre del usuario" />
+      </div>
+      <div class="field">
+        <label for="admin-new-email">Correo</label>
+        <input type="text" id="admin-new-email" placeholder="correo@ejemplo.com" autocomplete="off" />
+      </div>
+      <div class="field">
+        <label for="admin-new-password">Contraseña temporal</label>
+        <input type="password" id="admin-new-password" placeholder="••••••••" autocomplete="off" />
+      </div>
+      <div class="auth-error" id="admin-create-error"></div>
+      <button class="btn-primary" id="admin-create-btn" onclick="crearUsuarioAdmin()">Crear usuario</button>
     </div>
   </div>
 
@@ -703,28 +747,11 @@
     userId: null,
     nombre: '',
     voz: 'clara',
+    rol: 'usuario',
     tareas: []
   };
 
   // ---------- Autenticación ----------
-  let authMode = 'login'; // 'login' | 'signup'
-
-  function toggleAuthMode(){
-    authMode = authMode === 'login' ? 'signup' : 'login';
-    document.getElementById('auth-error').textContent = '';
-    if(authMode === 'signup'){
-      document.getElementById('auth-title').textContent = 'Crea tu cuenta';
-      document.getElementById('auth-lead').textContent = 'Regístrate para empezar a usar a Lia.';
-      document.getElementById('auth-submit-btn').textContent = 'Registrarme';
-      document.getElementById('auth-switch').innerHTML = '¿Ya tienes cuenta? <a onclick="toggleAuthMode()">Inicia sesión</a>';
-    } else {
-      document.getElementById('auth-title').textContent = 'Bienvenido a Lia';
-      document.getElementById('auth-lead').textContent = 'Inicia sesión para continuar.';
-      document.getElementById('auth-submit-btn').textContent = 'Iniciar sesión';
-      document.getElementById('auth-switch').innerHTML = '¿No tienes cuenta? <a onclick="toggleAuthMode()">Regístrate</a>';
-    }
-  }
-
   async function submitAuth(){
     const email = document.getElementById('auth-email').value.trim();
     const password = document.getElementById('auth-password').value;
@@ -738,28 +765,17 @@
     }
 
     btn.disabled = true;
-    btn.textContent = authMode === 'login' ? 'Ingresando…' : 'Creando cuenta…';
+    btn.textContent = 'Ingresando…';
 
     try {
-      if(authMode === 'login'){
-        const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-        if(error) throw error;
-        await onAuthenticated(data.user);
-      } else {
-        const { data, error } = await supabase.auth.signUp({ email, password });
-        if(error) throw error;
-        if(!data.session){
-          errorEl.textContent = 'Cuenta creada. Revisa tu correo para confirmar, luego inicia sesión.';
-          toggleAuthMode();
-        } else {
-          await onAuthenticated(data.user);
-        }
-      }
+      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+      if(error) throw error;
+      await onAuthenticated(data.user);
     } catch (err) {
       errorEl.textContent = err.message || 'Ocurrió un error, intenta de nuevo.';
     } finally {
       btn.disabled = false;
-      btn.textContent = authMode === 'login' ? 'Iniciar sesión' : 'Registrarme';
+      btn.textContent = 'Iniciar sesión';
     }
   }
 
@@ -767,7 +783,7 @@
     state.userId = user.id;
     const { data: profile, error } = await supabase
       .from('profiles')
-      .select('nombre, voz, zona_horaria')
+      .select('nombre, voz, zona_horaria, rol')
       .eq('id', user.id)
       .maybeSingle();
 
@@ -779,7 +795,9 @@
     if(profile){
       state.nombre = profile.nombre || 'Usuario';
       state.voz = profile.voz || 'clara';
+      state.rol = profile.rol || 'usuario';
       document.getElementById('settings-voice').value = state.voz;
+      document.getElementById('admin-panel-link').style.display = state.rol === 'admin' ? 'block' : 'none';
       document.getElementById('bottomnav').style.display = 'flex';
       renderGreeting();
       await loadTasks();
@@ -802,15 +820,65 @@
     }
   }
 
+  const ADMIN_CREATE_USER_URL = 'https://coeoasnibxuvpodoixbd.supabase.co/functions/v1/admin-crear-usuario';
+
+  async function crearUsuarioAdmin(){
+    const nombre = document.getElementById('admin-new-nombre').value.trim();
+    const email = document.getElementById('admin-new-email').value.trim();
+    const password = document.getElementById('admin-new-password').value;
+    const errorEl = document.getElementById('admin-create-error');
+    const btn = document.getElementById('admin-create-btn');
+    errorEl.textContent = '';
+
+    if(!nombre || !email || !password){
+      errorEl.textContent = 'Completa nombre, correo y contraseña.';
+      return;
+    }
+    if(password.length < 8){
+      errorEl.textContent = 'La contraseña debe tener al menos 8 caracteres.';
+      return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = 'Creando…';
+
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      const res = await fetch(ADMIN_CREATE_USER_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + (session ? session.access_token : '')
+        },
+        body: JSON.stringify({ nombre, email, password })
+      });
+      const data = await res.json();
+      if(!res.ok || data.error){
+        errorEl.textContent = data.error || 'No se pudo crear el usuario.';
+        return;
+      }
+      document.getElementById('admin-new-nombre').value = '';
+      document.getElementById('admin-new-email').value = '';
+      document.getElementById('admin-new-password').value = '';
+      alert('Usuario creado: ' + email);
+      showView('settings');
+    } catch (err) {
+      errorEl.textContent = 'Error de conexión con el servidor.';
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Crear usuario';
+    }
+  }
+
   async function logout(){
     await supabase.auth.signOut();
     state.userId = null;
     state.nombre = '';
     state.voz = 'clara';
+    state.rol = 'usuario';
     document.getElementById('bottomnav').style.display = 'none';
     document.getElementById('auth-email').value = '';
     document.getElementById('auth-password').value = '';
-    if(authMode !== 'login') toggleAuthMode();
     showView('auth');
   }
 
