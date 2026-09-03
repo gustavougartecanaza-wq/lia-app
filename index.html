@@ -1558,6 +1558,7 @@
       pendingBubble.textContent = 'Error de conexión con el servidor de Lia.';
     } finally {
       setOrbState('idle');
+      pendingBubble.scrollIntoView({ behavior:'smooth', block:'start' });
     }
   }
 
