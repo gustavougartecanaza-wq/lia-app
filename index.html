@@ -234,20 +234,6 @@
     font-size:26px;
     font-weight:500;
   }
-  .home-greeting .sub{
-    color:var(--text-muted);
-    font-size:14px;
-  }
-  .home-progress{
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    gap:10px;
-    margin-top:8px;
-  }
-  .home-progress svg{ flex-shrink:0; }
-  #home-progress-ring{ transition: stroke-dashoffset .5s ease; }
-
   .orb-stage{
     flex:1;
     display:flex;
@@ -560,15 +546,6 @@
   <div class="view" id="view-home">
     <div class="home-greeting">
       <div class="name serif" id="home-greeting-text">Buenas tardes</div>
-      <div class="home-progress" id="home-progress">
-        <svg viewBox="0 0 40 40" width="34" height="34">
-          <circle cx="20" cy="20" r="16" fill="none" stroke="var(--hairline)" stroke-width="3"/>
-          <circle id="home-progress-ring" cx="20" cy="20" r="16" fill="none" stroke="var(--orb-3)"
-            stroke-width="3" stroke-linecap="round" stroke-dasharray="100.53" stroke-dashoffset="100.53"
-            transform="rotate(-90 20 20)"/>
-        </svg>
-        <span class="sub" id="home-greeting-sub">Tienes 2 tareas pendientes hoy.</span>
-      </div>
     </div>
 
     <div class="orb-stage">
@@ -1035,21 +1012,6 @@
     const saludo = hour < 12 ? 'Buenos días' : hour < 19 ? 'Buenas tardes' : 'Buenas noches';
     const titulo = state.nombre ? `, ${state.nombre}` : '';
     document.getElementById('home-greeting-text').textContent = `${saludo}${titulo}`;
-    const pendientes = state.tareas.filter(t => !t.completada).length;
-    document.getElementById('home-greeting-sub').textContent =
-      pendientes === 0 ? 'No tienes tareas pendientes.' : `Tienes ${pendientes} tarea${pendientes === 1 ? '' : 's'} pendiente${pendientes === 1 ? '' : 's'}.`;
-
-    const tareasHoy = state.tareas.filter(t => t.dia === 'Hoy');
-    const ring = document.getElementById('home-progress-ring');
-    const circunferencia = 100.53;
-    if(tareasHoy.length === 0){
-      ring.style.display = 'none';
-    } else {
-      ring.style.display = '';
-      const completadasHoy = tareasHoy.filter(t => t.completada).length;
-      const fraccion = completadasHoy / tareasHoy.length;
-      ring.setAttribute('stroke-dashoffset', String(circunferencia * (1 - fraccion)));
-    }
   }
 
   // ---------- Navegación ----------
