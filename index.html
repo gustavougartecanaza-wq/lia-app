@@ -423,12 +423,30 @@
   }
   .task-row{
     display:flex;
-    align-items:center;
-    gap:12px;
+    flex-direction:column;
+    gap:6px;
     padding: 12px 0;
     border-bottom:1px solid var(--hairline);
   }
   .task-row:last-child{ border-bottom:none; }
+  .task-row-main{
+    display:flex;
+    align-items:center;
+    gap:12px;
+  }
+  .task-row-meta{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    padding-left:51px;
+  }
+  .task-meta-left{
+    display:flex; align-items:center; gap:8px; min-width:0;
+  }
+  .task-meta-actions{
+    display:flex; align-items:center; gap:2px; flex-shrink:0;
+  }
   .checkbox{
     width:19px; height:19px;
     border:1px solid var(--text-muted);
@@ -1365,9 +1383,14 @@
           if(e.key === 'Enter'){ e.preventDefault(); title.blur(); }
         });
 
-        row.appendChild(priorityDot);
-        row.appendChild(checkbox);
-        row.appendChild(title);
+        const rowMain = document.createElement('div');
+        rowMain.className = 'task-row-main';
+        rowMain.appendChild(priorityDot);
+        rowMain.appendChild(checkbox);
+        rowMain.appendChild(title);
+
+        const metaLeft = document.createElement('div');
+        metaLeft.className = 'task-meta-left';
 
         const timeInput = document.createElement('input');
         timeInput.type = 'time';
@@ -1382,7 +1405,7 @@
           horaBadge.textContent = t.hora.slice(0, 5);
           horaBadge.title = 'Recordatorio a las ' + t.hora.slice(0, 5) + ' — clic para cambiar';
           horaBadge.addEventListener('click', abrirSelectorHora);
-          row.appendChild(horaBadge);
+          metaLeft.appendChild(horaBadge);
         }
 
         if(t.recurrencia){
@@ -1390,7 +1413,7 @@
           recIcon.className = 'task-recurrence-icon';
           recIcon.title = 'Se repite: ' + t.recurrencia;
           recIcon.innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 2l4 4-4 4"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><path d="M7 22l-4-4 4-4"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>';
-          row.appendChild(recIcon);
+          metaLeft.appendChild(recIcon);
         }
 
         const dateInput = document.createElement('input');
@@ -1417,11 +1440,21 @@
         del.innerHTML = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>';
         del.addEventListener('click', () => deleteTask(t.id));
 
-        row.appendChild(clockBtn);
-        row.appendChild(timeInput);
-        row.appendChild(calBtn);
-        row.appendChild(dateInput);
-        row.appendChild(del);
+        const metaActions = document.createElement('div');
+        metaActions.className = 'task-meta-actions';
+        metaActions.appendChild(clockBtn);
+        metaActions.appendChild(timeInput);
+        metaActions.appendChild(calBtn);
+        metaActions.appendChild(dateInput);
+        metaActions.appendChild(del);
+
+        const rowMeta = document.createElement('div');
+        rowMeta.className = 'task-row-meta';
+        rowMeta.appendChild(metaLeft);
+        rowMeta.appendChild(metaActions);
+
+        row.appendChild(rowMain);
+        row.appendChild(rowMeta);
         group.appendChild(row);
       });
       container.appendChild(group);
