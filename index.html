@@ -1329,8 +1329,9 @@
       orbEscalaObjetivo = 1.08 + Math.sin(orbTiempo / 12) * 0.07;
     } else if(orbEstadoActual === 'speaking'){
       orbEscalaObjetivo = 1.05 + Math.sin(orbTiempo / 14) * 0.06 + Math.sin(orbTiempo / 7) * 0.03;
+    } else if(orbEstadoActual === 'listening'){
+      orbEscalaObjetivo = 1.04 + Math.sin(orbTiempo / 18) * 0.05;
     }
-    // 'listening': orbEscalaObjetivo la fija iniciarAnalizadorMic() con el volumen real.
 
     orbEscalaActual += (orbEscalaObjetivo - orbEscalaActual) * 0.14;
     if(!orbReduceMotion){
@@ -1466,37 +1467,6 @@
   }
   orbDibujarFrame();
 
-  let orbMicCtx = null, orbMicAnalyser = null, orbMicStream = null, orbMicAnimId = null;
-
-  async function iniciarAnalizadorMic(){
-    try {
-      orbMicStream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      orbMicCtx = new (window.AudioContext || window.webkitAudioContext)();
-      const fuente = orbMicCtx.createMediaStreamSource(orbMicStream);
-      orbMicAnalyser = orbMicCtx.createAnalyser();
-      orbMicAnalyser.fftSize = 256;
-      fuente.connect(orbMicAnalyser);
-      const datos = new Uint8Array(orbMicAnalyser.frequencyBinCount);
-      const loop = () => {
-        orbMicAnalyser.getByteFrequencyData(datos);
-        const promedio = datos.reduce((s, v) => s + v, 0) / datos.length;
-        orbEscalaObjetivo = 1 + (promedio / 255) * 0.5;
-        orbMicAnimId = requestAnimationFrame(loop);
-      };
-      loop();
-    } catch (err) {
-      // Sin acceso al micrófono para análisis: el dictado sigue funcionando, solo sin la reacción real de tamaño.
-    }
-  }
-
-  function detenerAnalizadorMic(){
-    if(orbMicAnimId){ cancelAnimationFrame(orbMicAnimId); orbMicAnimId = null; }
-    if(orbMicStream){ orbMicStream.getTracks().forEach(t => t.stop()); orbMicStream = null; }
-    if(orbMicCtx){ orbMicCtx.close(); orbMicCtx = null; }
-    orbMicAnalyser = null;
-    orbEscalaObjetivo = 1;
-  }
-
   // ---------- Chat ----------
   const CHAT_FUNCTION_URL = 'https://coeoasnibxuvpodoixbd.supabase.co/functions/v1/chat';
   const chatHistory = [];
@@ -1628,9 +1598,9 @@
     const btn = document.getElementById('mic-home-btn');
     const input = document.getElementById('home-input');
     const rec = crearReconocimiento((texto) => { input.value = texto; homeInputVoice = true; });
-    rec.onstart = () => { btn.classList.add('recording'); setOrbState('listening'); iniciarAnalizadorMic(); };
-    rec.onend = () => { homeRecognition = null; btn.classList.remove('recording'); setOrbState('idle'); detenerAnalizadorMic(); };
-    rec.onerror = () => { homeRecognition = null; btn.classList.remove('recording'); setOrbState('idle'); detenerAnalizadorMic(); };
+    rec.onstart = () => { btn.classList.add('recording'); setOrbState('listening'); };
+    rec.onend = () => { homeRecognition = null; btn.classList.remove('recording'); setOrbState('idle'); };
+    rec.onerror = (e) => { homeRecognition = null; btn.classList.remove('recording'); setOrbState('idle'); console.error('Error de dictado:', e.error); };
     homeRecognition = rec;
     rec.start();
   }
