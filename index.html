@@ -242,15 +242,15 @@
     position:relative;
     width:100%;
   }
-  .orb-wrap{ position:relative; width:220px; height:220px; }
+  .orb-wrap{ position:relative; width:260px; height:260px; }
   #orb-canvas{
     position:absolute;
     inset:0;
-    width:220px;
-    height:220px;
+    width:260px;
+    height:260px;
     cursor:pointer;
-    mask-image: radial-gradient(circle, black 58%, transparent 76%);
-    -webkit-mask-image: radial-gradient(circle, black 58%, transparent 76%);
+    mask-image: radial-gradient(circle 128px, black 55%, transparent 100%);
+    -webkit-mask-image: radial-gradient(circle 128px, black 55%, transparent 100%);
   }
 
   .orb-status{
@@ -1049,7 +1049,7 @@
   const ORB_COLOR_A = hexARgb(getComputedStyle(document.documentElement).getPropertyValue('--orb-3') || '#534AB7');
   const ORB_COLOR_B = hexARgb(getComputedStyle(document.documentElement).getPropertyValue('--orb-2') || '#3C3489');
   const ORB_BG = hexARgb(getComputedStyle(document.documentElement).getPropertyValue('--bg') || '#0B0A16');
-  const ORB_SIZE = 220;
+  const ORB_SIZE = 260;
   const ORB_DPR = Math.min(window.devicePixelRatio || 1, 2);
   orbCanvas.width = ORB_SIZE * ORB_DPR;
   orbCanvas.height = ORB_SIZE * ORB_DPR;
@@ -1074,6 +1074,8 @@
     orbPuntos.push({
       x: Math.cos(theta) * radioEnY, y, z: Math.sin(theta) * radioEnY,
       tinte: Math.random(),
+      tamBase: 0.5 + Math.random() * 1.5,
+      opacidadBase: 0.55 + Math.random() * 0.6,
     });
   }
 
@@ -1137,8 +1139,11 @@
     return puntos;
   }
   const orbAnillosExternos = [
-    { puntos: orbCrearAnilloPlano(11, 70), escala: 1.28 },
-    { puntos: orbCrearAnilloPlano(16, 70), escala: 1.46 },
+    { puntos: orbCrearAnilloPlano(6, 70), escala: 1.15 },
+    { puntos: orbCrearAnilloPlano(12, 70), escala: 1.25 },
+    { puntos: orbCrearAnilloPlano(18, 70), escala: 1.35 },
+    { puntos: orbCrearAnilloPlano(24, 70), escala: 1.44 },
+    { puntos: orbCrearAnilloPlano(30, 70), escala: 1.5 },
   ];
 
   let orbRotacion = 0;
@@ -1166,6 +1171,108 @@
       Math.round(g + (255 - g) * calidez),
       Math.round(b + (255 - b) * calidez),
     ];
+  }
+
+  function orbDibujarIris(ctx, cx, cy, radio, parpadeo, tiempo){
+    const radioIris = radio * 0.6;
+    const radioPupila = radio * 0.25;
+
+    // Halo suave detrás, tenue
+    const halo = ctx.createRadialGradient(cx, cy, 0, cx, cy, radio * 0.85);
+    halo.addColorStop(0, `rgba(${ORB_COLOR_A.join(',')},${0.16 * parpadeo})`);
+    halo.addColorStop(1, `rgba(${ORB_COLOR_A.join(',')},0)`);
+    ctx.fillStyle = halo;
+    ctx.beginPath();
+    ctx.arc(cx, cy, radio * 0.85, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Cuerpo del iris, apagado (azul/morado oscuro, no un degradado brillante)
+    const cuerpo = ctx.createRadialGradient(cx, cy, radioPupila * 0.9, cx, cy, radioIris);
+    cuerpo.addColorStop(0, `rgba(${ORB_COLOR_A.join(',')},${0.5 * parpadeo})`);
+    cuerpo.addColorStop(1, `rgba(${ORB_COLOR_B.join(',')},${0.42 * parpadeo})`);
+    ctx.fillStyle = cuerpo;
+    ctx.beginPath();
+    ctx.arc(cx, cy, radioIris, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Fibras radiales — nacen justo fuera del anillo de la pupila, no del centro
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(cx, cy, radioIris, 0, Math.PI * 2);
+    ctx.clip();
+    const numFibras = 64;
+    for(let i = 0; i < numFibras; i++){
+      const a = (i / numFibras) * Math.PI * 2 + tiempo * 0.0012;
+      const largoInterior = radioPupila * 1.15;
+      const largoExterior = radioIris * (0.72 + ((i * 37) % 10) / 10 * 0.28);
+      const x1 = cx + Math.cos(a) * largoInterior, y1 = cy + Math.sin(a) * largoInterior;
+      const x2 = cx + Math.cos(a) * largoExterior, y2 = cy + Math.sin(a) * largoExterior;
+      const clara = i % 4 === 0;
+      ctx.strokeStyle = clara
+        ? `rgba(255,255,255,${0.16 * parpadeo})`
+        : `rgba(${ORB_COLOR_B.join(',')},${0.3 * parpadeo})`;
+      ctx.lineWidth = clara ? 0.5 : 0.9;
+      ctx.beginPath();
+      ctx.moveTo(x1, y1);
+      ctx.lineTo(x2, y2);
+      ctx.stroke();
+    }
+    ctx.restore();
+
+    // Anillo límbico: borde definido del iris
+    ctx.strokeStyle = `rgba(${ORB_COLOR_B.join(',')},${0.45 * parpadeo})`;
+    ctx.lineWidth = radio * 0.035;
+    ctx.beginPath();
+    ctx.arc(cx, cy, radioIris, 0, Math.PI * 2);
+    ctx.stroke();
+
+    // Anillo brillante justo alrededor de la pupila (la "corona" del iris)
+    const corona = ctx.createRadialGradient(cx, cy, radioPupila * 0.85, cx, cy, radioPupila * 1.5);
+    corona.addColorStop(0, `rgba(255,255,255,${0.5 * parpadeo})`);
+    corona.addColorStop(0.5, `rgba(${ORB_COLOR_A.join(',')},${0.38 * parpadeo})`);
+    corona.addColorStop(1, `rgba(${ORB_COLOR_A.join(',')},0)`);
+    ctx.fillStyle = corona;
+    ctx.beginPath();
+    ctx.arc(cx, cy, radioPupila * 1.5, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Pupila oscura al centro, pintada encima para que quede limpia y sólida
+    const pupila = ctx.createRadialGradient(cx, cy, 0, cx, cy, radioPupila);
+    pupila.addColorStop(0, 'rgba(4,3,9,0.97)');
+    pupila.addColorStop(1, 'rgba(4,3,9,0.9)');
+    ctx.fillStyle = pupila;
+    ctx.beginPath();
+    ctx.arc(cx, cy, radioPupila, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Pequeño destello de luz sobre la pupila, le da vida
+    ctx.beginPath();
+    ctx.arc(cx - radioPupila * 0.32, cy - radioPupila * 0.32, radioPupila * 0.28, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(255,255,255,${0.55 * parpadeo})`;
+    ctx.fill();
+  }
+
+  function orbDibujarOndasDeCalor(ctx, cx, cy, radioIris, parpadeo, tiempo){
+    const numOndas = 10;
+    for(let i = 0; i < numOndas; i++){
+      const anguloBase = (i / numOndas) * Math.PI * 2;
+      const largo = radioIris * (0.5 + ((i * 53) % 10) / 10 * 0.65);
+      const segmentos = 12;
+      ctx.beginPath();
+      for(let s = 0; s <= segmentos; s++){
+        const t = s / segmentos;
+        const r = radioIris * 0.58 + largo * t;
+        const ondulacion = Math.sin(t * Math.PI * 3 + tiempo * 0.045 + i * 1.7) * (largo * 0.14) * t;
+        const anguloOndulado = anguloBase + ondulacion / r;
+        const x = cx + Math.cos(anguloOndulado) * r;
+        const y = cy + Math.sin(anguloOndulado) * r;
+        if(s === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+      }
+      const opacidad = (0.1 + ((i * 29) % 10) / 10 * 0.14) * parpadeo;
+      ctx.strokeStyle = `rgba(${ORB_COLOR_A.join(',')},${opacidad})`;
+      ctx.lineWidth = 1;
+      ctx.stroke();
+    }
   }
 
   function orbDibujarDestello(ctx, x, y, tam, color){
@@ -1251,26 +1358,10 @@
       }
     }
 
-    // Núcleo tipo estrella enana: halo amplio + centro compacto casi blanco
+    // Núcleo con forma de iris de ojo: fibras radiales, anillo límbico y pupila
     const parpadeo = 0.92 + Math.sin(orbTiempo / 9) * 0.08;
-
-    const halo = c.createRadialGradient(cx, cy, 0, cx, cy, radio * 0.8);
-    halo.addColorStop(0, `rgba(${ORB_COLOR_A.join(',')},${0.4 * parpadeo})`);
-    halo.addColorStop(1, `rgba(${ORB_COLOR_A.join(',')},0)`);
-    c.fillStyle = halo;
-    c.beginPath();
-    c.arc(cx, cy, radio * 0.8, 0, Math.PI * 2);
-    c.fill();
-
-    const nucleoRadio = radio * 0.22;
-    const nucleo = c.createRadialGradient(cx, cy, 0, cx, cy, nucleoRadio);
-    nucleo.addColorStop(0, `rgba(255,255,255,${0.95 * parpadeo})`);
-    nucleo.addColorStop(0.35, `rgba(${ORB_COLOR_A.join(',')},${0.95 * parpadeo})`);
-    nucleo.addColorStop(1, `rgba(${ORB_COLOR_A.join(',')},0)`);
-    c.fillStyle = nucleo;
-    c.beginPath();
-    c.arc(cx, cy, nucleoRadio, 0, Math.PI * 2);
-    c.fill();
+    orbDibujarIris(c, cx, cy, radio, parpadeo, orbTiempo);
+    orbDibujarOndasDeCalor(c, cx, cy, radio * 0.6, parpadeo, orbTiempo);
 
     // Anillos: caminos que envuelven la esfera, como una red de conexiones
     for(const anillo of orbAnillos){
@@ -1284,26 +1375,26 @@
         c.beginPath();
         c.moveTo(a.sx, a.sy);
         c.lineTo(b.sx, b.sy);
-        c.strokeStyle = `rgba(${r},${g},${bl},${0.05 + profundidad * 0.12})`;
-        c.lineWidth = 2.2;
-        c.stroke();
-        c.strokeStyle = `rgba(${r},${g},${bl},${0.15 + profundidad * 0.55})`;
-        c.lineWidth = 0.7;
+        c.strokeStyle = `rgba(${r},${g},${bl},${0.06 + profundidad * 0.22})`;
+        c.lineWidth = 0.8;
         c.stroke();
       }
     }
 
-    // Nodos/puntos de textura
-    const proyectadosPuntos = orbPuntos.map((p, i) => ({ ...rotarProyectar(p), tinte: p.tinte }));
+    // Nodos/puntos de textura — tamaño y opacidad propios de cada punto,
+    // no solo según profundidad, para que no se vean uniformes/idénticos.
+    const proyectadosPuntos = orbPuntos.map(p => ({
+      ...rotarProyectar(p), tinte: p.tinte, tamBase: p.tamBase, opacidadBase: p.opacidadBase,
+    }));
     proyectadosPuntos.sort((a, b) => a.z - b.z);
     for(const p of proyectadosPuntos){
       const profundidad = (p.z + 1) / 2;
-      const tam = 0.8 + profundidad * 1.8;
-      const opacidad = 0.15 + profundidad * 0.7;
+      const tam = (0.5 + profundidad * 1.5) * p.tamBase;
+      const opacidad = (0.12 + profundidad * 0.65) * p.opacidadBase;
       const color = orbColorPorProfundidad(profundidad, p.tinte);
       c.beginPath();
       c.arc(p.sx, p.sy, tam, 0, Math.PI * 2);
-      c.fillStyle = `rgba(${color[0]},${color[1]},${color[2]},${opacidad})`;
+      c.fillStyle = `rgba(${color[0]},${color[1]},${color[2]},${Math.min(1, opacidad)})`;
       c.fill();
     }
 
