@@ -1148,6 +1148,17 @@
     { puntos: orbCrearAnilloPlano(30, 70), escala: 1.5 },
   ];
 
+  // ---- Pulsos de energía: viajan desde el núcleo hacia la red ----
+  const ORB_NUM_PULSOS = 8;
+  const orbPulsos = [];
+  for(let i = 0; i < ORB_NUM_PULSOS; i++){
+    orbPulsos.push({
+      angulo: (i / ORB_NUM_PULSOS) * Math.PI * 2 + Math.random() * 0.4,
+      fase: Math.random(),
+      velocidad: 0.0035 + Math.random() * 0.002,
+    });
+  }
+
   let orbRotacion = 0;
   let orbRotacionX = 0;
   let orbEscalaObjetivo = 1;
@@ -1247,6 +1258,25 @@
     ctx.arc(cx, cy, radioPupila, 0, Math.PI * 2);
     ctx.fill();
 
+  }
+
+  function orbDibujarPulsosEnergia(ctx, cx, cy, radio, radioIris, tiempo){
+    for(const p of orbPulsos){
+      const progreso = (tiempo * p.velocidad + p.fase) % 1;
+      const r = radioIris * 0.5 + progreso * (radio - radioIris * 0.5);
+      const x = cx + Math.cos(p.angulo) * r;
+      const y = cy + Math.sin(p.angulo) * r;
+      const opacidad = Math.sin(progreso * Math.PI) * 0.85;
+      const tam = 1.2 + (1 - progreso) * 1.1;
+      const grad = ctx.createRadialGradient(x, y, 0, x, y, tam * 2.2);
+      grad.addColorStop(0, `rgba(255,255,255,${opacidad})`);
+      grad.addColorStop(0.5, `rgba(${ORB_COLOR_A.join(',')},${opacidad * 0.6})`);
+      grad.addColorStop(1, `rgba(${ORB_COLOR_A.join(',')},0)`);
+      ctx.fillStyle = grad;
+      ctx.beginPath();
+      ctx.arc(x, y, tam * 2.2, 0, Math.PI * 2);
+      ctx.fill();
+    }
   }
 
   function orbDibujarOndasDeCalor(ctx, cx, cy, radioIris, parpadeo, tiempo){
@@ -1407,6 +1437,9 @@
       const color = orbColorPorProfundidad(profundidad, p.tinte);
       orbDibujarDestello(c, p.sx, p.sy, tam, color);
     }
+
+    // Pulsos de energía saliendo del núcleo hacia la red exterior
+    orbDibujarPulsosEnergia(c, cx, cy, radio, radio * 0.6, orbTiempo);
 
     // ---- Composición sobre el canvas visible: estela + bloom + nítido ----
     // 1) Estela: en vez de borrar, se pinta un velo translúcido del color de
