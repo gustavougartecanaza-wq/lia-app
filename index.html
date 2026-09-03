@@ -277,6 +277,7 @@
       inset 8px 10px 20px rgba(255,255,255,0.10);
     animation: breathe 4.5s ease-in-out infinite;
     overflow:hidden;
+    transition: border-radius .15s ease-out;
   }
   .orb::before{
     content:'';
@@ -1252,6 +1253,70 @@
     return rec;
   }
 
+  // ---------- Deformación orgánica del orbe (reacciona a la voz) ----------
+  function deformarOrbe(amplitud){
+    const orb = document.querySelector('.orb');
+    if(!orb) return;
+    const a = Math.min(1, Math.max(0, amplitud));
+    const v = 6 + a * 14;
+    orb.style.borderRadius =
+      `${50 - v}% ${50 + v}% ${50 + v * 0.7}% ${50 - v * 0.7}% / ` +
+      `${50 + v * 0.6}% ${50 - v * 0.5}% ${50 + v * 0.8}% ${50 - v * 0.6}%`;
+  }
+  function resetearOrbe(){
+    const orb = document.querySelector('.orb');
+    if(orb) orb.style.borderRadius = '';
+  }
+
+  let micAudioCtx = null, micAnalyser = null, micStreamActual = null, micAnimId = null;
+
+  async function iniciarAnalizadorMic(){
+    try {
+      micStreamActual = await navigator.mediaDevices.getUserMedia({ audio: true });
+      micAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      const fuente = micAudioCtx.createMediaStreamSource(micStreamActual);
+      micAnalyser = micAudioCtx.createAnalyser();
+      micAnalyser.fftSize = 256;
+      fuente.connect(micAnalyser);
+      const datos = new Uint8Array(micAnalyser.frequencyBinCount);
+      const loop = () => {
+        micAnalyser.getByteFrequencyData(datos);
+        const promedio = datos.reduce((s, v) => s + v, 0) / datos.length;
+        deformarOrbe(promedio / 255);
+        micAnimId = requestAnimationFrame(loop);
+      };
+      loop();
+    } catch (err) {
+      // Sin acceso al micrófono para análisis: el dictado sigue funcionando, solo sin la deformación reactiva.
+    }
+  }
+
+  function detenerAnalizadorMic(){
+    if(micAnimId){ cancelAnimationFrame(micAnimId); micAnimId = null; }
+    if(micStreamActual){ micStreamActual.getTracks().forEach(t => t.stop()); micStreamActual = null; }
+    if(micAudioCtx){ micAudioCtx.close(); micAudioCtx = null; }
+    micAnalyser = null;
+    resetearOrbe();
+  }
+
+  let hablandoAnimId = null;
+
+  function iniciarWobbleSimulado(){
+    let t = 0;
+    const loop = () => {
+      t += 0.06;
+      const amplitud = 0.35 + Math.sin(t) * 0.25 + Math.sin(t * 2.7) * 0.15;
+      deformarOrbe(amplitud);
+      hablandoAnimId = requestAnimationFrame(loop);
+    };
+    loop();
+  }
+
+  function detenerWobbleSimulado(){
+    if(hablandoAnimId){ cancelAnimationFrame(hablandoAnimId); hablandoAnimId = null; }
+    resetearOrbe();
+  }
+
   let homeRecognition = null;
   function toggleHomeMic(){
     if(homeRecognition){ homeRecognition.stop(); return; }
@@ -1259,9 +1324,9 @@
     const btn = document.getElementById('mic-home-btn');
     const input = document.getElementById('home-input');
     const rec = crearReconocimiento((texto) => { input.value = texto; homeInputVoice = true; });
-    rec.onstart = () => { btn.classList.add('recording'); setOrbState('listening'); };
-    rec.onend = () => { homeRecognition = null; btn.classList.remove('recording'); setOrbState('idle'); };
-    rec.onerror = () => { homeRecognition = null; btn.classList.remove('recording'); setOrbState('idle'); };
+    rec.onstart = () => { btn.classList.add('recording'); setOrbState('listening'); iniciarAnalizadorMic(); };
+    rec.onend = () => { homeRecognition = null; btn.classList.remove('recording'); setOrbState('idle'); detenerAnalizadorMic(); };
+    rec.onerror = () => { homeRecognition = null; btn.classList.remove('recording'); setOrbState('idle'); detenerAnalizadorMic(); };
     homeRecognition = rec;
     rec.start();
   }
@@ -1319,6 +1384,9 @@
     if(state.voz === 'clara'){ utter.pitch = 1.15; utter.rate = 1.02; }
     else if(state.voz === 'grave'){ utter.pitch = 0.75; utter.rate = 0.95; }
     else { utter.pitch = 1.0; utter.rate = 1.0; }
+    utter.onstart = () => iniciarWobbleSimulado();
+    utter.onend = () => detenerWobbleSimulado();
+    utter.onerror = () => detenerWobbleSimulado();
     speechSynthesis.speak(utter);
   }
 
