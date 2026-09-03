@@ -1054,7 +1054,7 @@
   orbCtx.scale(ORB_DPR, ORB_DPR);
 
   // ---- Puntos de textura repartidos en la esfera (Fibonacci sphere) ----
-  const ORB_NUM_PUNTOS = 90;
+  const ORB_NUM_PUNTOS = 170;
   const orbPuntos = [];
   for(let i = 0; i < ORB_NUM_PUNTOS; i++){
     const y = 1 - (i / (ORB_NUM_PUNTOS - 1)) * 2;
@@ -1090,8 +1090,8 @@
     }
     return puntos;
   }
-  const ORB_NUM_ANILLOS = 8;
-  const ORB_PUNTOS_POR_ANILLO = 40;
+  const ORB_NUM_ANILLOS = 11;
+  const ORB_PUNTOS_POR_ANILLO = 44;
   const orbAnillos = [];
   for(let i = 0; i < ORB_NUM_ANILLOS; i++) orbAnillos.push(orbCrearAnillo(ORB_PUNTOS_POR_ANILLO));
 
@@ -1150,13 +1150,25 @@
       return { sx: cx + x * radio, sy: cy + y * radio, z };
     }
 
-    // Núcleo de luz central
-    const nucleo = orbCtx.createRadialGradient(cx, cy, 0, cx, cy, radio * 0.85);
-    nucleo.addColorStop(0, `rgba(${ORB_COLOR_A.join(',')},0.5)`);
+    // Núcleo tipo estrella enana: halo amplio + centro compacto casi blanco
+    const parpadeo = 0.92 + Math.sin(orbTiempo / 9) * 0.08;
+
+    const halo = orbCtx.createRadialGradient(cx, cy, 0, cx, cy, radio * 0.8);
+    halo.addColorStop(0, `rgba(${ORB_COLOR_A.join(',')},${0.4 * parpadeo})`);
+    halo.addColorStop(1, `rgba(${ORB_COLOR_A.join(',')},0)`);
+    orbCtx.fillStyle = halo;
+    orbCtx.beginPath();
+    orbCtx.arc(cx, cy, radio * 0.8, 0, Math.PI * 2);
+    orbCtx.fill();
+
+    const nucleoRadio = radio * 0.22;
+    const nucleo = orbCtx.createRadialGradient(cx, cy, 0, cx, cy, nucleoRadio);
+    nucleo.addColorStop(0, `rgba(255,255,255,${0.95 * parpadeo})`);
+    nucleo.addColorStop(0.35, `rgba(${ORB_COLOR_A.join(',')},${0.95 * parpadeo})`);
     nucleo.addColorStop(1, `rgba(${ORB_COLOR_A.join(',')},0)`);
     orbCtx.fillStyle = nucleo;
     orbCtx.beginPath();
-    orbCtx.arc(cx, cy, radio * 0.85, 0, Math.PI * 2);
+    orbCtx.arc(cx, cy, nucleoRadio, 0, Math.PI * 2);
     orbCtx.fill();
 
     // Anillos: caminos que envuelven la esfera, como una red de conexiones
