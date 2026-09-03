@@ -249,7 +249,8 @@
     width:220px;
     height:220px;
     cursor:pointer;
-    filter: drop-shadow(0 0 24px var(--glow));
+    mask-image: radial-gradient(circle, black 58%, transparent 76%);
+    -webkit-mask-image: radial-gradient(circle, black 58%, transparent 76%);
   }
 
   .orb-status{
@@ -1047,11 +1048,21 @@
   const orbReduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const ORB_COLOR_A = hexARgb(getComputedStyle(document.documentElement).getPropertyValue('--orb-3') || '#534AB7');
   const ORB_COLOR_B = hexARgb(getComputedStyle(document.documentElement).getPropertyValue('--orb-2') || '#3C3489');
+  const ORB_BG = hexARgb(getComputedStyle(document.documentElement).getPropertyValue('--bg') || '#0B0A16');
   const ORB_SIZE = 220;
   const ORB_DPR = Math.min(window.devicePixelRatio || 1, 2);
   orbCanvas.width = ORB_SIZE * ORB_DPR;
   orbCanvas.height = ORB_SIZE * ORB_DPR;
   orbCtx.scale(ORB_DPR, ORB_DPR);
+
+  // Canvas oculto: dibuja el cuadro "nítido" de cada frame, sin rastro,
+  // que luego se compone dos veces sobre el canvas visible (borroso+aditivo
+  // para el bloom, y nítido encima) — así se simula un brillo real sin WebGL.
+  const orbCanvasNitido = document.createElement('canvas');
+  const orbCtxNitido = orbCanvasNitido.getContext('2d');
+  orbCanvasNitido.width = ORB_SIZE * ORB_DPR;
+  orbCanvasNitido.height = ORB_SIZE * ORB_DPR;
+  orbCtxNitido.scale(ORB_DPR, ORB_DPR);
 
   // ---- Puntos de textura repartidos en la esfera (Fibonacci sphere) ----
   const ORB_NUM_PUNTOS = 170;
@@ -1136,8 +1147,9 @@
 
     const cx = ORB_SIZE / 2, cy = ORB_SIZE / 2;
     const radio = 80 * orbEscalaActual;
+    const c = orbCtxNitido;
 
-    orbCtx.clearRect(0, 0, ORB_SIZE, ORB_SIZE);
+    c.clearRect(0, 0, ORB_SIZE, ORB_SIZE);
 
     const cosR = Math.cos(orbRotacion), sinR = Math.sin(orbRotacion);
     const cosX = Math.cos(orbRotacionX), sinX = Math.sin(orbRotacionX);
@@ -1153,23 +1165,23 @@
     // Núcleo tipo estrella enana: halo amplio + centro compacto casi blanco
     const parpadeo = 0.92 + Math.sin(orbTiempo / 9) * 0.08;
 
-    const halo = orbCtx.createRadialGradient(cx, cy, 0, cx, cy, radio * 0.8);
+    const halo = c.createRadialGradient(cx, cy, 0, cx, cy, radio * 0.8);
     halo.addColorStop(0, `rgba(${ORB_COLOR_A.join(',')},${0.4 * parpadeo})`);
     halo.addColorStop(1, `rgba(${ORB_COLOR_A.join(',')},0)`);
-    orbCtx.fillStyle = halo;
-    orbCtx.beginPath();
-    orbCtx.arc(cx, cy, radio * 0.8, 0, Math.PI * 2);
-    orbCtx.fill();
+    c.fillStyle = halo;
+    c.beginPath();
+    c.arc(cx, cy, radio * 0.8, 0, Math.PI * 2);
+    c.fill();
 
     const nucleoRadio = radio * 0.22;
-    const nucleo = orbCtx.createRadialGradient(cx, cy, 0, cx, cy, nucleoRadio);
+    const nucleo = c.createRadialGradient(cx, cy, 0, cx, cy, nucleoRadio);
     nucleo.addColorStop(0, `rgba(255,255,255,${0.95 * parpadeo})`);
     nucleo.addColorStop(0.35, `rgba(${ORB_COLOR_A.join(',')},${0.95 * parpadeo})`);
     nucleo.addColorStop(1, `rgba(${ORB_COLOR_A.join(',')},0)`);
-    orbCtx.fillStyle = nucleo;
-    orbCtx.beginPath();
-    orbCtx.arc(cx, cy, nucleoRadio, 0, Math.PI * 2);
-    orbCtx.fill();
+    c.fillStyle = nucleo;
+    c.beginPath();
+    c.arc(cx, cy, nucleoRadio, 0, Math.PI * 2);
+    c.fill();
 
     // Anillos: caminos que envuelven la esfera, como una red de conexiones
     for(const anillo of orbAnillos){
@@ -1180,15 +1192,15 @@
         const profundidad = ((a.z + b.z) / 2 + 1) / 2;
         if(profundidad < 0.12) continue;
         const [r, g, bl] = orbColorPorProfundidad(profundidad);
-        orbCtx.beginPath();
-        orbCtx.moveTo(a.sx, a.sy);
-        orbCtx.lineTo(b.sx, b.sy);
-        orbCtx.strokeStyle = `rgba(${r},${g},${bl},${0.05 + profundidad * 0.12})`;
-        orbCtx.lineWidth = 2.2;
-        orbCtx.stroke();
-        orbCtx.strokeStyle = `rgba(${r},${g},${bl},${0.15 + profundidad * 0.55})`;
-        orbCtx.lineWidth = 0.7;
-        orbCtx.stroke();
+        c.beginPath();
+        c.moveTo(a.sx, a.sy);
+        c.lineTo(b.sx, b.sy);
+        c.strokeStyle = `rgba(${r},${g},${bl},${0.05 + profundidad * 0.12})`;
+        c.lineWidth = 2.2;
+        c.stroke();
+        c.strokeStyle = `rgba(${r},${g},${bl},${0.15 + profundidad * 0.55})`;
+        c.lineWidth = 0.7;
+        c.stroke();
       }
     }
 
@@ -1200,11 +1212,32 @@
       const tam = 0.8 + profundidad * 1.8;
       const opacidad = 0.15 + profundidad * 0.7;
       const [r, g, b] = orbColorPorProfundidad(profundidad);
-      orbCtx.beginPath();
-      orbCtx.arc(p.sx, p.sy, tam, 0, Math.PI * 2);
-      orbCtx.fillStyle = `rgba(${r},${g},${b},${opacidad})`;
-      orbCtx.fill();
+      c.beginPath();
+      c.arc(p.sx, p.sy, tam, 0, Math.PI * 2);
+      c.fillStyle = `rgba(${r},${g},${b},${opacidad})`;
+      c.fill();
     }
+
+    // ---- Composición sobre el canvas visible: estela + bloom + nítido ----
+    // 1) Estela: en vez de borrar, se pinta un velo translúcido del color de
+    //    fondo, así lo anterior se desvanece poco a poco en vez de desaparecer.
+    orbCtx.globalCompositeOperation = 'source-over';
+    orbCtx.fillStyle = `rgba(${ORB_BG.join(',')},0.30)`;
+    orbCtx.fillRect(0, 0, ORB_SIZE, ORB_SIZE);
+
+    // 2) Bloom: una copia borrosa del cuadro nítido, mezclada de forma aditiva.
+    orbCtx.save();
+    orbCtx.filter = 'blur(6px)';
+    orbCtx.globalCompositeOperation = 'lighter';
+    orbCtx.globalAlpha = 0.65;
+    orbCtx.drawImage(orbCanvasNitido, 0, 0, orbCanvasNitido.width, orbCanvasNitido.height, 0, 0, ORB_SIZE, ORB_SIZE);
+    orbCtx.restore();
+
+    // 3) El cuadro nítido encima, también aditivo para que no se vea apagado.
+    orbCtx.save();
+    orbCtx.globalCompositeOperation = 'lighter';
+    orbCtx.drawImage(orbCanvasNitido, 0, 0, orbCanvasNitido.width, orbCanvasNitido.height, 0, 0, ORB_SIZE, ORB_SIZE);
+    orbCtx.restore();
 
     if(!orbReduceMotion) requestAnimationFrame(orbDibujarFrame);
   }
