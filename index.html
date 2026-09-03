@@ -1112,6 +1112,10 @@
     document.querySelectorAll('.navbtn').forEach(b => b.classList.toggle('active', b.dataset.view === name));
     if(name === 'tasks' && state.userId) loadTasks();
     if(name === 'admin' && state.userId) cargarUsuariosAdmin();
+    if(name === 'chat'){
+      const messages = document.getElementById('chat-messages');
+      messages.scrollTop = messages.scrollHeight;
+    }
   }
 
   // ---------- Orbe ----------
