@@ -1071,7 +1071,25 @@
     const y = 1 - (i / (ORB_NUM_PUNTOS - 1)) * 2;
     const radioEnY = Math.sqrt(Math.max(0, 1 - y * y));
     const theta = Math.PI * (1 + Math.sqrt(5)) * i;
-    orbPuntos.push({ x: Math.cos(theta) * radioEnY, y, z: Math.sin(theta) * radioEnY });
+    orbPuntos.push({
+      x: Math.cos(theta) * radioEnY, y, z: Math.sin(theta) * radioEnY,
+      tinte: Math.random(),
+    });
+  }
+
+  // ---- Estrellas de fondo, fuera de la esfera ----
+  const ORB_NUM_ESTRELLAS = 26;
+  const orbEstrellas = [];
+  for(let i = 0; i < ORB_NUM_ESTRELLAS; i++){
+    const angulo = Math.random() * Math.PI * 2;
+    const dist = 96 + Math.random() * 16;
+    orbEstrellas.push({
+      x: ORB_SIZE / 2 + Math.cos(angulo) * dist,
+      y: ORB_SIZE / 2 + Math.sin(angulo) * dist,
+      tam: 0.5 + Math.random() * 1.1,
+      fase: Math.random() * Math.PI * 2,
+      vel: 0.02 + Math.random() * 0.03,
+    });
   }
 
   // ---- Anillos (grandes círculos) para el efecto de red/caminos ----
@@ -1106,6 +1124,23 @@
   const orbAnillos = [];
   for(let i = 0; i < ORB_NUM_ANILLOS; i++) orbAnillos.push(orbCrearAnillo(ORB_PUNTOS_POR_ANILLO));
 
+  // ---- Anillos externos, planos, tipo Saturno ----
+  function orbCrearAnilloPlano(inclinacionGrados, numPuntos){
+    const inc = inclinacionGrados * Math.PI / 180;
+    const puntos = [];
+    for(let i = 0; i < numPuntos; i++){
+      const a = (i / numPuntos) * Math.PI * 2;
+      const x = Math.cos(a);
+      const base = Math.sin(a);
+      puntos.push({ x, y: base * Math.sin(inc), z: base * Math.cos(inc) });
+    }
+    return puntos;
+  }
+  const orbAnillosExternos = [
+    { puntos: orbCrearAnilloPlano(11, 70), escala: 1.28 },
+    { puntos: orbCrearAnilloPlano(16, 70), escala: 1.46 },
+  ];
+
   let orbRotacion = 0;
   let orbRotacionX = 0;
   let orbEscalaObjetivo = 1;
@@ -1119,11 +1154,36 @@
     return 0.006;
   }
 
-  function orbColorPorProfundidad(profundidad){
+  function orbColorPorProfundidad(profundidad, tinte){
     const r = Math.round(ORB_COLOR_B[0] + (ORB_COLOR_A[0] - ORB_COLOR_B[0]) * profundidad);
     const g = Math.round(ORB_COLOR_B[1] + (ORB_COLOR_A[1] - ORB_COLOR_B[1]) * profundidad);
     const b = Math.round(ORB_COLOR_B[2] + (ORB_COLOR_A[2] - ORB_COLOR_B[2]) * profundidad);
-    return [r, g, b];
+    if(tinte === undefined || tinte < 0.72) return [r, g, b];
+    // Un puñado de nodos "calientes": se aclaran hacia blanco para dar variedad.
+    const calidez = ((tinte - 0.72) / 0.28) * profundidad * 0.55;
+    return [
+      Math.round(r + (255 - r) * calidez),
+      Math.round(g + (255 - g) * calidez),
+      Math.round(b + (255 - b) * calidez),
+    ];
+  }
+
+  function orbDibujarDestello(ctx, x, y, tam, color){
+    const grad = ctx.createRadialGradient(x, y, 0, x, y, tam * 1.6);
+    grad.addColorStop(0, 'rgba(255,255,255,0.95)');
+    grad.addColorStop(0.4, `rgba(${color.join(',')},0.5)`);
+    grad.addColorStop(1, `rgba(${color.join(',')},0)`);
+    ctx.fillStyle = grad;
+    ctx.beginPath();
+    ctx.arc(x, y, tam * 1.6, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.strokeStyle = 'rgba(255,255,255,0.85)';
+    ctx.lineWidth = 0.6;
+    ctx.beginPath();
+    ctx.moveTo(x - tam * 2.4, y); ctx.lineTo(x + tam * 2.4, y);
+    ctx.moveTo(x, y - tam * 2.4); ctx.lineTo(x, y + tam * 2.4);
+    ctx.stroke();
   }
 
   function orbDibujarFrame(){
@@ -1160,6 +1220,35 @@
       const y = p.y * cosX - z1 * sinX;
       const z = p.y * sinX + z1 * cosX;
       return { sx: cx + x * radio, sy: cy + y * radio, z };
+    }
+
+    // Estrellas de fondo (parpadeo suave)
+    for(const e of orbEstrellas){
+      const brillo = 0.15 + (Math.sin(orbTiempo * e.vel + e.fase) * 0.5 + 0.5) * 0.35;
+      c.beginPath();
+      c.arc(e.x, e.y, e.tam, 0, Math.PI * 2);
+      c.fillStyle = `rgba(255,255,255,${brillo})`;
+      c.fill();
+    }
+
+    // Anillos externos, planos, tipo Saturno
+    for(const externo of orbAnillosExternos){
+      const proyectados = externo.puntos.map(p => rotarProyectar({
+        x: p.x * externo.escala, y: p.y * externo.escala, z: p.z * externo.escala,
+      }));
+      for(let i = 0; i < proyectados.length; i++){
+        const a = proyectados[i];
+        const b = proyectados[(i + 1) % proyectados.length];
+        const profundidad = ((a.z + b.z) / 2 + 1) / 2;
+        if(profundidad < 0.15) continue;
+        const [r, g, bl] = orbColorPorProfundidad(profundidad);
+        c.beginPath();
+        c.moveTo(a.sx, a.sy);
+        c.lineTo(b.sx, b.sy);
+        c.strokeStyle = `rgba(${r},${g},${bl},${0.06 + profundidad * 0.22})`;
+        c.lineWidth = 0.8;
+        c.stroke();
+      }
     }
 
     // Núcleo tipo estrella enana: halo amplio + centro compacto casi blanco
@@ -1205,17 +1294,30 @@
     }
 
     // Nodos/puntos de textura
-    const proyectadosPuntos = orbPuntos.map(rotarProyectar);
+    const proyectadosPuntos = orbPuntos.map((p, i) => ({ ...rotarProyectar(p), tinte: p.tinte }));
     proyectadosPuntos.sort((a, b) => a.z - b.z);
     for(const p of proyectadosPuntos){
       const profundidad = (p.z + 1) / 2;
       const tam = 0.8 + profundidad * 1.8;
       const opacidad = 0.15 + profundidad * 0.7;
-      const [r, g, b] = orbColorPorProfundidad(profundidad);
+      const color = orbColorPorProfundidad(profundidad, p.tinte);
       c.beginPath();
       c.arc(p.sx, p.sy, tam, 0, Math.PI * 2);
-      c.fillStyle = `rgba(${r},${g},${b},${opacidad})`;
+      c.fillStyle = `rgba(${color[0]},${color[1]},${color[2]},${opacidad})`;
       c.fill();
+    }
+
+    // Destellos tipo lente en los nodos "calientes" más cercanos
+    const destellos = proyectadosPuntos
+      .filter(p => p.tinte >= 0.72)
+      .sort((a, b) => b.z - a.z)
+      .slice(0, 4);
+    for(const p of destellos){
+      const profundidad = (p.z + 1) / 2;
+      if(profundidad < 0.55) continue;
+      const tam = 1.1 + profundidad * 1.6;
+      const color = orbColorPorProfundidad(profundidad, p.tinte);
+      orbDibujarDestello(c, p.sx, p.sy, tam, color);
     }
 
     // ---- Composición sobre el canvas visible: estela + bloom + nítido ----
