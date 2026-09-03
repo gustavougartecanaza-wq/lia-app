@@ -1641,10 +1641,30 @@
   function elegirMejorVozEs(voces){
     const esVoces = voces.filter(v => v.lang && v.lang.toLowerCase().startsWith('es'));
     if(esVoces.length === 0) return null;
+
+    // No existe una variante de voz específica de Bolivia en ningún motor de
+    // síntesis (navegador o de pago) — es demasiado específico. Lo más cercano
+    // real es el español latinoamericano genérico (es-419) o mexicano, que
+    // suena mucho más parecido que el español de España.
+    function puntuarRegion(lang){
+      const l = (lang || '').toLowerCase();
+      if(l === 'es-bo') return 3;
+      if(l === 'es-419') return 2.5;
+      if(l === 'es-mx' || l === 'es-us') return 2;
+      if(l.startsWith('es-') && l !== 'es-es') return 1;
+      if(l === 'es') return 0.5;
+      return 0; // es-es (España)
+    }
     // Voces "Online/Natural/Neural" (p.ej. las que expone Edge/Chrome con internet)
-    // suenan muchísimo más humanas que las voces locales clásicas del sistema.
-    const natural = esVoces.find(v => /natural|online|neural/i.test(v.name));
-    return natural || esVoces[0];
+    // suenan muchísimo más humanas que las voces locales clásicas del sistema —
+    // esa diferencia de calidad pesa más que el acento a la hora de elegir.
+    function puntuarCalidad(v){
+      return /natural|online|neural/i.test(v.name) ? 10 : 0;
+    }
+
+    return esVoces.slice().sort((a, b) =>
+      (puntuarCalidad(b) + puntuarRegion(b.lang)) - (puntuarCalidad(a) + puntuarRegion(a.lang))
+    )[0];
   }
 
   async function speakLiaReply(texto){
@@ -1652,7 +1672,7 @@
     speechSynthesis.cancel();
     const voces = await obtenerVocesListas();
     const utter = new SpeechSynthesisUtterance(texto);
-    utter.lang = 'es-ES';
+    utter.lang = 'es-419';
     const vozEs = elegirMejorVozEs(voces);
     if(vozEs) utter.voice = vozEs;
     if(state.voz === 'clara'){ utter.pitch = 1.15; utter.rate = 1.02; }
