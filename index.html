@@ -1080,17 +1080,19 @@
   }
 
   // ---- Estrellas de fondo, fuera de la esfera ----
-  const ORB_NUM_ESTRELLAS = 26;
+  const ORB_NUM_ESTRELLAS = 70;
   const orbEstrellas = [];
   for(let i = 0; i < ORB_NUM_ESTRELLAS; i++){
     const angulo = Math.random() * Math.PI * 2;
-    const dist = 96 + Math.random() * 16;
+    const dist = 55 + Math.random() * 80;
+    const profundidadEstrella = Math.random();
     orbEstrellas.push({
       x: ORB_SIZE / 2 + Math.cos(angulo) * dist,
       y: ORB_SIZE / 2 + Math.sin(angulo) * dist,
-      tam: 0.5 + Math.random() * 1.1,
+      tam: 0.3 + profundidadEstrella * 0.9,
+      brilloMax: 0.1 + profundidadEstrella * 0.22,
       fase: Math.random() * Math.PI * 2,
-      vel: 0.02 + Math.random() * 0.03,
+      vel: 0.015 + Math.random() * 0.025,
     });
   }
 
@@ -1324,9 +1326,9 @@
       return { sx: cx + x * radio, sy: cy + y * radio, z };
     }
 
-    // Estrellas de fondo (parpadeo suave)
+    // Estrellas de fondo, sutiles, con sensación de espacio profundo
     for(const e of orbEstrellas){
-      const brillo = 0.15 + (Math.sin(orbTiempo * e.vel + e.fase) * 0.5 + 0.5) * 0.35;
+      const brillo = e.brilloMax * (0.4 + (Math.sin(orbTiempo * e.vel + e.fase) * 0.5 + 0.5) * 0.6);
       c.beginPath();
       c.arc(e.x, e.y, e.tam, 0, Math.PI * 2);
       c.fillStyle = `rgba(255,255,255,${brillo})`;
