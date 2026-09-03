@@ -1245,11 +1245,6 @@
     ctx.arc(cx, cy, radioPupila, 0, Math.PI * 2);
     ctx.fill();
 
-    // Pequeño destello de luz sobre la pupila, le da vida
-    ctx.beginPath();
-    ctx.arc(cx - radioPupila * 0.32, cy - radioPupila * 0.32, radioPupila * 0.28, 0, Math.PI * 2);
-    ctx.fillStyle = `rgba(255,255,255,${0.55 * parpadeo})`;
-    ctx.fill();
   }
 
   function orbDibujarOndasDeCalor(ctx, cx, cy, radioIris, parpadeo, tiempo){
