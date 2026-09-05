@@ -1,6 +1,6 @@
 # Proyecto de Innovación Tecnológica
 
-## Lia — Asistente Personal Inteligente
+## Lia, Asistente Personal Inteligente para la Digitalización de las Funciones del Secretariado Ejecutivo mediante Inteligencia Artificial Conversacional
 
 ---
 
@@ -49,7 +49,7 @@ En los últimos años, la inteligencia artificial ha dejado de ser una tecnolog�
 
 Entre esas funciones se encuentra el trabajo secretarial: la gestión de agendas, la organización de tareas por prioridad, el envío de recordatorios oportunos y la comunicación formal con quienes se atiende, son actividades centrales en la formación de un secretariado ejecutivo. Tradicionalmente, estas labores se apoyan en herramientas informáticas que exigen que la persona interrumpa su actividad, abra la aplicación correspondiente y complete manualmente campos como el título, la fecha, la hora o la prioridad de cada pendiente. Este proceso, aunque sencillo en apariencia, introduce una fricción constante que muchas veces provoca que los pendientes no se registren a tiempo, o se registren de forma incompleta, perdiendo así su utilidad práctica.
 
-Frente a este panorama, surge la oportunidad de fusionar el conocimiento propio del secretariado ejecutivo con las capacidades actuales de la inteligencia artificial, de modo que sea la tecnología la que se adapte al usuario y no al revés. Bajo esta premisa se desarrolla **Lia**, un asistente personal inteligente que reproduce, mediante lenguaje natural y por texto o por voz, funciones propias del trabajo de un secretariado ejecutivo: crear, consultar, modificar y eliminar tareas y recordatorios, priorizarlos, programarlos y comunicar sus resultados con un trato formal, sin necesidad de formularios ni menús de navegación.
+Frente a este panorama, surge la oportunidad de fusionar el conocimiento propio del secretariado ejecutivo con las capacidades actuales de la inteligencia artificial, de modo que sea la tecnología la que se adapte al usuario y no al revés. Bajo esta premisa se desarrolla **Lia, un asistente personal inteligente para la digitalización de las funciones del secretariado ejecutivo mediante inteligencia artificial conversacional**, capaz de crear, consultar, modificar y eliminar tareas y recordatorios, priorizarlos, programarlos y comunicar sus resultados con un trato formal, por texto o por voz, sin necesidad de formularios ni menús de navegación.
 
 Lia se concibe como una aplicación web progresiva —instalable en el celular o la computadora como si fuera una aplicación nativa—, accesible desde cualquier dispositivo con conexión a internet, que combina un modelo de inteligencia artificial capaz de ejecutar acciones reales sobre la información del usuario, un sistema de recordatorios oportunos mediante notificaciones automáticas, y una interfaz de entrada y salida por voz que permite dictar una tarea o escuchar la respuesta del asistente. El acceso a la aplicación se encuentra administrado mediante un sistema de roles, lo que la orienta hacia un uso real y controlado, y no únicamente hacia una demostración técnica.
 
@@ -75,7 +75,7 @@ Finalmente, el proyecto incorpora un modelo de acceso administrado, con roles de
 
 ### 2.1 Objetivo general
 
-Desarrollar Lia, un asistente personal inteligente basado en un modelo de inteligencia artificial conversacional, capaz de digitalizar y automatizar las funciones esenciales del secretariado ejecutivo —gestión de agenda, organización de tareas por prioridad, programación de recordatorios y comunicación formal con el usuario— mediante interacción en lenguaje natural, por texto o por voz.
+Desarrollar Lia, un asistente personal inteligente para la digitalización de las funciones del secretariado ejecutivo mediante inteligencia artificial conversacional, capaz de gestionar una agenda, organizar tareas por prioridad, programar recordatorios y comunicarse con el usuario de manera formal, a través de una interacción en lenguaje natural, por texto o por voz.
 
 ### 2.2 Objetivo específico
 
