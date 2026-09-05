@@ -263,16 +263,67 @@
     position:relative;
     width:100%;
   }
-  .orb-wrap{ position:relative; width:260px; height:260px; }
-  #orb-canvas{
-    position:absolute;
-    inset:0;
-    width:260px;
-    height:260px;
+  .avatar-wrap{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:16px;
     cursor:pointer;
-    mask-image: radial-gradient(circle 128px, black 55%, transparent 100%);
-    -webkit-mask-image: radial-gradient(circle 128px, black 55%, transparent 100%);
   }
+  .avatar-circle{
+    position:relative;
+    width:200px;
+    height:200px;
+    border-radius:50%;
+    flex-shrink:0;
+  }
+  .avatar-circle img{
+    width:100%;
+    height:100%;
+    border-radius:50%;
+    object-fit:cover;
+    display:block;
+    box-shadow: 0 0 0 1px rgba(255,255,255,0.08), 0 0 44px rgba(83,74,183,0.5);
+  }
+  .avatar-circle::after{
+    content:'';
+    position:absolute;
+    inset:-7px;
+    border-radius:50%;
+    border:2px solid var(--orb-3);
+    opacity:0.4;
+    animation: avatar-pulse-ring 2.6s ease-in-out infinite;
+  }
+  @keyframes avatar-pulse-ring{
+    0%, 100%{ transform:scale(1); opacity:0.3; }
+    50%{ transform:scale(1.05); opacity:0.6; }
+  }
+  .avatar-bars{
+    display:flex;
+    align-items:center;
+    gap:4px;
+    height:56px;
+    flex-shrink:0;
+  }
+  .avatar-bars span{
+    display:block;
+    width:4px;
+    border-radius:2px;
+    background: linear-gradient(180deg, var(--orb-3), var(--orb-2));
+    height:12px;
+    animation: avatar-bar-idle 1.8s ease-in-out infinite;
+  }
+  .avatar-bars span:nth-child(2){ animation-delay:0.12s; }
+  .avatar-bars span:nth-child(3){ animation-delay:0.24s; }
+  .avatar-bars span:nth-child(4){ animation-delay:0.36s; }
+  @keyframes avatar-bar-idle{ 0%,100%{ height:8px; } 50%{ height:20px; } }
+  @keyframes avatar-bar-listening{ 0%,100%{ height:12px; } 50%{ height:50px; } }
+  @keyframes avatar-bar-thinking{ 0%,100%{ height:6px; } 50%{ height:56px; } }
+  @keyframes avatar-bar-speaking{ 0%,100%{ height:14px; } 50%{ height:44px; } }
+  .avatar-wrap.state-idle .avatar-bars span{ animation-name: avatar-bar-idle; animation-duration:1.8s; }
+  .avatar-wrap.state-listening .avatar-bars span{ animation-name: avatar-bar-listening; animation-duration:0.7s; }
+  .avatar-wrap.state-thinking .avatar-bars span{ animation-name: avatar-bar-thinking; animation-duration:0.45s; }
+  .avatar-wrap.state-speaking .avatar-bars span{ animation-name: avatar-bar-speaking; animation-duration:0.55s; }
 
   .orb-status{
     text-align:center;
@@ -585,8 +636,12 @@
     </div>
 
     <div class="orb-stage">
-      <div class="orb-wrap" id="orb-wrap">
-        <canvas id="orb-canvas" onclick="toggleHomeMic()"></canvas>
+      <div class="avatar-wrap state-idle" id="orb-wrap" onclick="toggleHomeMic()">
+        <div class="avatar-bars avatar-bars-left"><span></span><span></span><span></span><span></span></div>
+        <div class="avatar-circle">
+          <img src="assets/avatar.jpg" alt="Lia" />
+        </div>
+        <div class="avatar-bars avatar-bars-right"><span></span><span></span><span></span><span></span></div>
       </div>
     </div>
     <div class="orb-status" id="orb-status">En espera</div>
@@ -1388,437 +1443,13 @@
   function setOrbState(s){
     orbEstadoActual = s;
     document.getElementById('orb-status').textContent = orbLabels[s] || orbLabels.idle;
-  }
-
-  function hexARgb(hex){
-    const limpio = (hex || '').replace('#', '').trim();
-    const n = parseInt(limpio, 16);
-    return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
-  }
-
-  const orbCanvas = document.getElementById('orb-canvas');
-  const orbCtx = orbCanvas.getContext('2d');
-  const orbReduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const ORB_COLOR_A = hexARgb(getComputedStyle(document.documentElement).getPropertyValue('--orb-3') || '#534AB7');
-  const ORB_COLOR_B = hexARgb(getComputedStyle(document.documentElement).getPropertyValue('--orb-2') || '#3C3489');
-  const ORB_BG = hexARgb(getComputedStyle(document.documentElement).getPropertyValue('--bg') || '#0B0A16');
-  const ORB_SIZE = 260;
-  const ORB_DPR = Math.min(window.devicePixelRatio || 1, 2);
-  orbCanvas.width = ORB_SIZE * ORB_DPR;
-  orbCanvas.height = ORB_SIZE * ORB_DPR;
-  orbCtx.scale(ORB_DPR, ORB_DPR);
-
-  // Canvas oculto: dibuja el cuadro "nítido" de cada frame, sin rastro,
-  // que luego se compone dos veces sobre el canvas visible (borroso+aditivo
-  // para el bloom, y nítido encima) — así se simula un brillo real sin WebGL.
-  const orbCanvasNitido = document.createElement('canvas');
-  const orbCtxNitido = orbCanvasNitido.getContext('2d');
-  orbCanvasNitido.width = ORB_SIZE * ORB_DPR;
-  orbCanvasNitido.height = ORB_SIZE * ORB_DPR;
-  orbCtxNitido.scale(ORB_DPR, ORB_DPR);
-
-  // ---- Puntos de textura repartidos en la esfera (Fibonacci sphere) ----
-  const ORB_NUM_PUNTOS = 170;
-  const orbPuntos = [];
-  for(let i = 0; i < ORB_NUM_PUNTOS; i++){
-    const y = 1 - (i / (ORB_NUM_PUNTOS - 1)) * 2;
-    const radioEnY = Math.sqrt(Math.max(0, 1 - y * y));
-    const theta = Math.PI * (1 + Math.sqrt(5)) * i;
-    orbPuntos.push({
-      x: Math.cos(theta) * radioEnY, y, z: Math.sin(theta) * radioEnY,
-      tinte: Math.random(),
-      tamBase: 0.5 + Math.random() * 1.5,
-      opacidadBase: 0.55 + Math.random() * 0.6,
-    });
-  }
-
-  // ---- Estrellas de fondo, fuera de la esfera ----
-  const ORB_NUM_ESTRELLAS = 70;
-  const orbEstrellas = [];
-  for(let i = 0; i < ORB_NUM_ESTRELLAS; i++){
-    const angulo = Math.random() * Math.PI * 2;
-    const dist = 55 + Math.random() * 80;
-    const profundidadEstrella = Math.random();
-    orbEstrellas.push({
-      x: ORB_SIZE / 2 + Math.cos(angulo) * dist,
-      y: ORB_SIZE / 2 + Math.sin(angulo) * dist,
-      tam: 0.3 + profundidadEstrella * 0.9,
-      brilloMax: 0.1 + profundidadEstrella * 0.22,
-      fase: Math.random() * Math.PI * 2,
-      vel: 0.015 + Math.random() * 0.025,
-    });
-  }
-
-  // ---- Anillos (grandes círculos) para el efecto de red/caminos ----
-  function orbVectorAleatorioUnitario(){
-    const z = Math.random() * 2 - 1;
-    const t = Math.random() * Math.PI * 2;
-    const r = Math.sqrt(1 - z * z);
-    return [r * Math.cos(t), r * Math.sin(t), z];
-  }
-  function orbNormalizar(v){
-    const l = Math.sqrt(v[0] * v[0] + v[1] * v[1] + v[2] * v[2]) || 1;
-    return [v[0] / l, v[1] / l, v[2] / l];
-  }
-  function orbCruz(a, b){
-    return [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]];
-  }
-  function orbCrearAnillo(numPuntos){
-    const n = orbVectorAleatorioUnitario();
-    const ejeAux = Math.abs(n[0]) < 0.9 ? [1, 0, 0] : [0, 1, 0];
-    const u = orbNormalizar(orbCruz(n, ejeAux));
-    const v = orbNormalizar(orbCruz(n, u));
-    const puntos = [];
-    for(let i = 0; i < numPuntos; i++){
-      const a = (i / numPuntos) * Math.PI * 2;
-      const ca = Math.cos(a), sa = Math.sin(a);
-      puntos.push({ x: u[0] * ca + v[0] * sa, y: u[1] * ca + v[1] * sa, z: u[2] * ca + v[2] * sa });
-    }
-    return puntos;
-  }
-  const ORB_NUM_ANILLOS = 11;
-  const ORB_PUNTOS_POR_ANILLO = 44;
-  const orbAnillos = [];
-  for(let i = 0; i < ORB_NUM_ANILLOS; i++) orbAnillos.push(orbCrearAnillo(ORB_PUNTOS_POR_ANILLO));
-
-  // ---- Anillos externos, planos, tipo Saturno ----
-  function orbCrearAnilloPlano(inclinacionGrados, numPuntos){
-    const inc = inclinacionGrados * Math.PI / 180;
-    const puntos = [];
-    for(let i = 0; i < numPuntos; i++){
-      const a = (i / numPuntos) * Math.PI * 2;
-      const x = Math.cos(a);
-      const base = Math.sin(a);
-      puntos.push({ x, y: base * Math.sin(inc), z: base * Math.cos(inc) });
-    }
-    return puntos;
-  }
-  const orbAnillosExternos = [
-    { puntos: orbCrearAnilloPlano(6, 70), escala: 1.15 },
-    { puntos: orbCrearAnilloPlano(12, 70), escala: 1.25 },
-    { puntos: orbCrearAnilloPlano(18, 70), escala: 1.35 },
-    { puntos: orbCrearAnilloPlano(24, 70), escala: 1.44 },
-    { puntos: orbCrearAnilloPlano(30, 70), escala: 1.5 },
-  ];
-
-  // ---- Pulsos de energía: viajan desde el núcleo hacia la red ----
-  const ORB_NUM_PULSOS = 8;
-  const orbPulsos = [];
-  for(let i = 0; i < ORB_NUM_PULSOS; i++){
-    orbPulsos.push({
-      angulo: (i / ORB_NUM_PULSOS) * Math.PI * 2 + Math.random() * 0.4,
-      fase: Math.random(),
-      velocidad: 0.0035 + Math.random() * 0.002,
-    });
-  }
-
-  let orbRotacion = 0;
-  let orbRotacionX = 0;
-  let orbEscalaObjetivo = 1;
-  let orbEscalaActual = 1;
-  let orbTiempo = 0;
-
-  function orbVelocidadRotacion(){
-    if(orbEstadoActual === 'thinking') return 0.028;
-    if(orbEstadoActual === 'listening') return 0.014;
-    if(orbEstadoActual === 'speaking') return 0.02;
-    return 0.006;
-  }
-
-  function orbColorPorProfundidad(profundidad, tinte){
-    const r = Math.round(ORB_COLOR_B[0] + (ORB_COLOR_A[0] - ORB_COLOR_B[0]) * profundidad);
-    const g = Math.round(ORB_COLOR_B[1] + (ORB_COLOR_A[1] - ORB_COLOR_B[1]) * profundidad);
-    const b = Math.round(ORB_COLOR_B[2] + (ORB_COLOR_A[2] - ORB_COLOR_B[2]) * profundidad);
-    if(tinte === undefined || tinte < 0.72) return [r, g, b];
-    // Un puñado de nodos "calientes": se aclaran hacia blanco para dar variedad.
-    const calidez = ((tinte - 0.72) / 0.28) * profundidad * 0.55;
-    return [
-      Math.round(r + (255 - r) * calidez),
-      Math.round(g + (255 - g) * calidez),
-      Math.round(b + (255 - b) * calidez),
-    ];
-  }
-
-  function orbDibujarIris(ctx, cx, cy, radio, parpadeo, tiempo){
-    const radioIris = radio * 0.6;
-    const radioPupila = radio * 0.25;
-
-    // Halo suave detrás, tenue
-    const halo = ctx.createRadialGradient(cx, cy, 0, cx, cy, radio * 0.85);
-    halo.addColorStop(0, `rgba(${ORB_COLOR_A.join(',')},${0.16 * parpadeo})`);
-    halo.addColorStop(1, `rgba(${ORB_COLOR_A.join(',')},0)`);
-    ctx.fillStyle = halo;
-    ctx.beginPath();
-    ctx.arc(cx, cy, radio * 0.85, 0, Math.PI * 2);
-    ctx.fill();
-
-    // Cuerpo del iris, apagado (azul/morado oscuro, no un degradado brillante)
-    const cuerpo = ctx.createRadialGradient(cx, cy, radioPupila * 0.9, cx, cy, radioIris);
-    cuerpo.addColorStop(0, `rgba(${ORB_COLOR_A.join(',')},${0.5 * parpadeo})`);
-    cuerpo.addColorStop(1, `rgba(${ORB_COLOR_B.join(',')},${0.42 * parpadeo})`);
-    ctx.fillStyle = cuerpo;
-    ctx.beginPath();
-    ctx.arc(cx, cy, radioIris, 0, Math.PI * 2);
-    ctx.fill();
-
-    // Fibras radiales — nacen justo fuera del anillo de la pupila, no del centro
-    ctx.save();
-    ctx.beginPath();
-    ctx.arc(cx, cy, radioIris, 0, Math.PI * 2);
-    ctx.clip();
-    const numFibras = 64;
-    for(let i = 0; i < numFibras; i++){
-      const a = (i / numFibras) * Math.PI * 2 + tiempo * 0.0012;
-      const largoInterior = radioPupila * 1.15;
-      const largoExterior = radioIris * (0.72 + ((i * 37) % 10) / 10 * 0.28);
-      const x1 = cx + Math.cos(a) * largoInterior, y1 = cy + Math.sin(a) * largoInterior;
-      const x2 = cx + Math.cos(a) * largoExterior, y2 = cy + Math.sin(a) * largoExterior;
-      const clara = i % 4 === 0;
-      ctx.strokeStyle = clara
-        ? `rgba(255,255,255,${0.16 * parpadeo})`
-        : `rgba(${ORB_COLOR_B.join(',')},${0.3 * parpadeo})`;
-      ctx.lineWidth = clara ? 0.5 : 0.9;
-      ctx.beginPath();
-      ctx.moveTo(x1, y1);
-      ctx.lineTo(x2, y2);
-      ctx.stroke();
-    }
-    ctx.restore();
-
-    // Anillo límbico: borde definido del iris
-    ctx.strokeStyle = `rgba(${ORB_COLOR_B.join(',')},${0.45 * parpadeo})`;
-    ctx.lineWidth = radio * 0.035;
-    ctx.beginPath();
-    ctx.arc(cx, cy, radioIris, 0, Math.PI * 2);
-    ctx.stroke();
-
-    // Anillo brillante justo alrededor de la pupila (la "corona" del iris)
-    const corona = ctx.createRadialGradient(cx, cy, radioPupila * 0.85, cx, cy, radioPupila * 1.5);
-    corona.addColorStop(0, `rgba(255,255,255,${0.5 * parpadeo})`);
-    corona.addColorStop(0.5, `rgba(${ORB_COLOR_A.join(',')},${0.38 * parpadeo})`);
-    corona.addColorStop(1, `rgba(${ORB_COLOR_A.join(',')},0)`);
-    ctx.fillStyle = corona;
-    ctx.beginPath();
-    ctx.arc(cx, cy, radioPupila * 1.5, 0, Math.PI * 2);
-    ctx.fill();
-
-    // Pupila oscura al centro, pintada encima para que quede limpia y sólida
-    const pupila = ctx.createRadialGradient(cx, cy, 0, cx, cy, radioPupila);
-    pupila.addColorStop(0, 'rgba(4,3,9,0.97)');
-    pupila.addColorStop(1, 'rgba(4,3,9,0.9)');
-    ctx.fillStyle = pupila;
-    ctx.beginPath();
-    ctx.arc(cx, cy, radioPupila, 0, Math.PI * 2);
-    ctx.fill();
-
-  }
-
-  function orbDibujarPulsosEnergia(ctx, cx, cy, radio, radioIris, tiempo){
-    for(const p of orbPulsos){
-      const progreso = (tiempo * p.velocidad + p.fase) % 1;
-      const r = radioIris * 0.5 + progreso * (radio - radioIris * 0.5);
-      const x = cx + Math.cos(p.angulo) * r;
-      const y = cy + Math.sin(p.angulo) * r;
-      const opacidad = Math.sin(progreso * Math.PI) * 0.85;
-      const tam = 1.2 + (1 - progreso) * 1.1;
-      const grad = ctx.createRadialGradient(x, y, 0, x, y, tam * 2.2);
-      grad.addColorStop(0, `rgba(255,255,255,${opacidad})`);
-      grad.addColorStop(0.5, `rgba(${ORB_COLOR_A.join(',')},${opacidad * 0.6})`);
-      grad.addColorStop(1, `rgba(${ORB_COLOR_A.join(',')},0)`);
-      ctx.fillStyle = grad;
-      ctx.beginPath();
-      ctx.arc(x, y, tam * 2.2, 0, Math.PI * 2);
-      ctx.fill();
+    const wrap = document.getElementById('orb-wrap');
+    if(wrap){
+      wrap.classList.remove('state-idle', 'state-listening', 'state-thinking', 'state-speaking');
+      wrap.classList.add('state-' + (orbLabels[s] ? s : 'idle'));
     }
   }
 
-  function orbDibujarOndasDeCalor(ctx, cx, cy, radioIris, parpadeo, tiempo){
-    const numOndas = 10;
-    for(let i = 0; i < numOndas; i++){
-      const anguloBase = (i / numOndas) * Math.PI * 2;
-      const largo = radioIris * (0.5 + ((i * 53) % 10) / 10 * 0.65);
-      const segmentos = 12;
-      ctx.beginPath();
-      for(let s = 0; s <= segmentos; s++){
-        const t = s / segmentos;
-        const r = radioIris * 0.58 + largo * t;
-        const ondulacion = Math.sin(t * Math.PI * 3 + tiempo * 0.045 + i * 1.7) * (largo * 0.14) * t;
-        const anguloOndulado = anguloBase + ondulacion / r;
-        const x = cx + Math.cos(anguloOndulado) * r;
-        const y = cy + Math.sin(anguloOndulado) * r;
-        if(s === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
-      }
-      const opacidad = (0.1 + ((i * 29) % 10) / 10 * 0.14) * parpadeo;
-      ctx.strokeStyle = `rgba(${ORB_COLOR_A.join(',')},${opacidad})`;
-      ctx.lineWidth = 1;
-      ctx.stroke();
-    }
-  }
-
-  function orbDibujarDestello(ctx, x, y, tam, color){
-    const grad = ctx.createRadialGradient(x, y, 0, x, y, tam * 1.6);
-    grad.addColorStop(0, 'rgba(255,255,255,0.95)');
-    grad.addColorStop(0.4, `rgba(${color.join(',')},0.5)`);
-    grad.addColorStop(1, `rgba(${color.join(',')},0)`);
-    ctx.fillStyle = grad;
-    ctx.beginPath();
-    ctx.arc(x, y, tam * 1.6, 0, Math.PI * 2);
-    ctx.fill();
-
-    ctx.strokeStyle = 'rgba(255,255,255,0.85)';
-    ctx.lineWidth = 0.6;
-    ctx.beginPath();
-    ctx.moveTo(x - tam * 2.4, y); ctx.lineTo(x + tam * 2.4, y);
-    ctx.moveTo(x, y - tam * 2.4); ctx.lineTo(x, y + tam * 2.4);
-    ctx.stroke();
-  }
-
-  function orbDibujarFrame(){
-    orbTiempo += 1;
-
-    if(orbEstadoActual === 'idle'){
-      orbEscalaObjetivo = 1 + Math.sin(orbTiempo / 70) * 0.05;
-    } else if(orbEstadoActual === 'thinking'){
-      orbEscalaObjetivo = 1.08 + Math.sin(orbTiempo / 12) * 0.07;
-    } else if(orbEstadoActual === 'speaking'){
-      orbEscalaObjetivo = 1.05 + Math.sin(orbTiempo / 14) * 0.06 + Math.sin(orbTiempo / 7) * 0.03;
-    } else if(orbEstadoActual === 'listening'){
-      orbEscalaObjetivo = 1.04 + Math.sin(orbTiempo / 18) * 0.05;
-    }
-
-    orbEscalaActual += (orbEscalaObjetivo - orbEscalaActual) * 0.14;
-    if(!orbReduceMotion){
-      const vel = orbVelocidadRotacion();
-      orbRotacion += vel;
-      orbRotacionX += vel * 0.37;
-    }
-
-    const cx = ORB_SIZE / 2, cy = ORB_SIZE / 2;
-    const radio = 80 * orbEscalaActual;
-    const c = orbCtxNitido;
-
-    c.clearRect(0, 0, ORB_SIZE, ORB_SIZE);
-
-    const cosR = Math.cos(orbRotacion), sinR = Math.sin(orbRotacion);
-    const cosX = Math.cos(orbRotacionX), sinX = Math.sin(orbRotacionX);
-
-    function rotarProyectar(p){
-      const x = p.x * cosR - p.z * sinR;
-      const z1 = p.x * sinR + p.z * cosR;
-      const y = p.y * cosX - z1 * sinX;
-      const z = p.y * sinX + z1 * cosX;
-      return { sx: cx + x * radio, sy: cy + y * radio, z };
-    }
-
-    // Estrellas de fondo, sutiles, con sensación de espacio profundo
-    for(const e of orbEstrellas){
-      const brillo = e.brilloMax * (0.4 + (Math.sin(orbTiempo * e.vel + e.fase) * 0.5 + 0.5) * 0.6);
-      c.beginPath();
-      c.arc(e.x, e.y, e.tam, 0, Math.PI * 2);
-      c.fillStyle = `rgba(255,255,255,${brillo})`;
-      c.fill();
-    }
-
-    // Anillos externos, planos, tipo Saturno
-    for(const externo of orbAnillosExternos){
-      const proyectados = externo.puntos.map(p => rotarProyectar({
-        x: p.x * externo.escala, y: p.y * externo.escala, z: p.z * externo.escala,
-      }));
-      for(let i = 0; i < proyectados.length; i++){
-        const a = proyectados[i];
-        const b = proyectados[(i + 1) % proyectados.length];
-        const profundidad = ((a.z + b.z) / 2 + 1) / 2;
-        if(profundidad < 0.15) continue;
-        const [r, g, bl] = orbColorPorProfundidad(profundidad);
-        c.beginPath();
-        c.moveTo(a.sx, a.sy);
-        c.lineTo(b.sx, b.sy);
-        c.strokeStyle = `rgba(${r},${g},${bl},${0.06 + profundidad * 0.22})`;
-        c.lineWidth = 0.8;
-        c.stroke();
-      }
-    }
-
-    // Núcleo con forma de iris de ojo: fibras radiales, anillo límbico y pupila
-    const parpadeo = 0.92 + Math.sin(orbTiempo / 9) * 0.08;
-    orbDibujarIris(c, cx, cy, radio, parpadeo, orbTiempo);
-    orbDibujarOndasDeCalor(c, cx, cy, radio * 0.6, parpadeo, orbTiempo);
-
-    // Anillos: caminos que envuelven la esfera, como una red de conexiones
-    for(const anillo of orbAnillos){
-      const proyectados = anillo.map(rotarProyectar);
-      for(let i = 0; i < proyectados.length; i++){
-        const a = proyectados[i];
-        const b = proyectados[(i + 1) % proyectados.length];
-        const profundidad = ((a.z + b.z) / 2 + 1) / 2;
-        if(profundidad < 0.12) continue;
-        const [r, g, bl] = orbColorPorProfundidad(profundidad);
-        c.beginPath();
-        c.moveTo(a.sx, a.sy);
-        c.lineTo(b.sx, b.sy);
-        c.strokeStyle = `rgba(${r},${g},${bl},${0.06 + profundidad * 0.22})`;
-        c.lineWidth = 0.8;
-        c.stroke();
-      }
-    }
-
-    // Nodos/puntos de textura — tamaño y opacidad propios de cada punto,
-    // no solo según profundidad, para que no se vean uniformes/idénticos.
-    const proyectadosPuntos = orbPuntos.map(p => ({
-      ...rotarProyectar(p), tinte: p.tinte, tamBase: p.tamBase, opacidadBase: p.opacidadBase,
-    }));
-    proyectadosPuntos.sort((a, b) => a.z - b.z);
-    for(const p of proyectadosPuntos){
-      const profundidad = (p.z + 1) / 2;
-      const tam = (0.5 + profundidad * 1.5) * p.tamBase;
-      const opacidad = (0.12 + profundidad * 0.65) * p.opacidadBase;
-      const color = orbColorPorProfundidad(profundidad, p.tinte);
-      c.beginPath();
-      c.arc(p.sx, p.sy, tam, 0, Math.PI * 2);
-      c.fillStyle = `rgba(${color[0]},${color[1]},${color[2]},${Math.min(1, opacidad)})`;
-      c.fill();
-    }
-
-    // Destellos tipo lente en los nodos "calientes" más cercanos
-    const destellos = proyectadosPuntos
-      .filter(p => p.tinte >= 0.72)
-      .sort((a, b) => b.z - a.z)
-      .slice(0, 4);
-    for(const p of destellos){
-      const profundidad = (p.z + 1) / 2;
-      if(profundidad < 0.55) continue;
-      const tam = 1.1 + profundidad * 1.6;
-      const color = orbColorPorProfundidad(profundidad, p.tinte);
-      orbDibujarDestello(c, p.sx, p.sy, tam, color);
-    }
-
-    // Pulsos de energía saliendo del núcleo hacia la red exterior
-    orbDibujarPulsosEnergia(c, cx, cy, radio, radio * 0.6, orbTiempo);
-
-    // ---- Composición sobre el canvas visible: estela + bloom + nítido ----
-    // 1) Estela: en vez de borrar, se pinta un velo translúcido del color de
-    //    fondo, así lo anterior se desvanece poco a poco en vez de desaparecer.
-    orbCtx.globalCompositeOperation = 'source-over';
-    orbCtx.fillStyle = `rgba(${ORB_BG.join(',')},0.30)`;
-    orbCtx.fillRect(0, 0, ORB_SIZE, ORB_SIZE);
-
-    // 2) Bloom: una copia borrosa del cuadro nítido, mezclada de forma aditiva.
-    orbCtx.save();
-    orbCtx.filter = 'blur(6px)';
-    orbCtx.globalCompositeOperation = 'lighter';
-    orbCtx.globalAlpha = 0.65;
-    orbCtx.drawImage(orbCanvasNitido, 0, 0, orbCanvasNitido.width, orbCanvasNitido.height, 0, 0, ORB_SIZE, ORB_SIZE);
-    orbCtx.restore();
-
-    // 3) El cuadro nítido encima, también aditivo para que no se vea apagado.
-    orbCtx.save();
-    orbCtx.globalCompositeOperation = 'lighter';
-    orbCtx.drawImage(orbCanvasNitido, 0, 0, orbCanvasNitido.width, orbCanvasNitido.height, 0, 0, ORB_SIZE, ORB_SIZE);
-    orbCtx.restore();
-
-    if(!orbReduceMotion) requestAnimationFrame(orbDibujarFrame);
-  }
-  orbDibujarFrame();
 
   // ---------- Chat ----------
   const CHAT_FUNCTION_URL = 'https://coeoasnibxuvpodoixbd.supabase.co/functions/v1/chat';
