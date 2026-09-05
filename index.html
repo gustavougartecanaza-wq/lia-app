@@ -238,9 +238,26 @@
     justify-content:flex-start;
     padding-top:8px;
   }
-  .home-greeting{
+  .home-brand{
     text-align:center;
     margin-top: 6vh;
+  }
+  .home-brand .brand-title{
+    font-family:'Fraunces', serif;
+    font-size:14px;
+    font-weight:600;
+    letter-spacing:3px;
+    color:var(--text);
+  }
+  .home-brand .brand-subtitle{
+    font-size:11px;
+    color:var(--text-muted);
+    margin-top:4px;
+    letter-spacing:0.3px;
+  }
+  .home-greeting{
+    text-align:center;
+    margin-top: 14px;
   }
   .home-greeting .name{
     font-family:'Fraunces', serif;
@@ -571,6 +588,10 @@
 
   <!-- HOME -->
   <div class="view" id="view-home">
+    <div class="home-brand">
+      <div class="brand-title">LIA</div>
+      <div class="brand-subtitle">Asistente Personal Inteligente</div>
+    </div>
     <div class="home-greeting">
       <div class="name serif" id="home-greeting-text">Buenas tardes</div>
     </div>
