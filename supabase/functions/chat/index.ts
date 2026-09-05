@@ -84,6 +84,165 @@ const tools = [
       required: ["id"],
     },
   },
+  {
+    name: "crear_contacto",
+    description: "Guarda un nuevo contacto del usuario (persona u organización con la que trata habitualmente).",
+    input_schema: {
+      type: "object",
+      properties: {
+        nombre: { type: "string", description: "Nombre del contacto." },
+        cargo: { type: "string", description: "Cargo o puesto del contacto, si se conoce." },
+        empresa: { type: "string", description: "Empresa u organización a la que pertenece, si se conoce." },
+        telefono: { type: "string", description: "Número de teléfono, si se conoce." },
+        correo: { type: "string", description: "Correo electrónico, si se conoce." },
+        notas: { type: "string", description: "Cualquier otra información relevante sobre el contacto." },
+      },
+      required: ["nombre"],
+    },
+  },
+  {
+    name: "listar_contactos",
+    description: "Lista los contactos guardados por el usuario. Úsala para buscar el teléfono o correo de alguien, o antes de modificar o eliminar un contacto para conocer su id exacto.",
+    input_schema: {
+      type: "object",
+      properties: {
+        busqueda: { type: "string", description: "Filtra por coincidencia parcial en el nombre o la empresa (opcional)." },
+      },
+    },
+  },
+  {
+    name: "actualizar_contacto",
+    description: "Modifica un contacto existente, dado su id (obtenido con listar_contactos). Incluye solo los campos que cambian.",
+    input_schema: {
+      type: "object",
+      properties: {
+        id: { type: "string", description: "ID (uuid) del contacto." },
+        nombre: { type: "string" },
+        cargo: { type: "string" },
+        empresa: { type: "string" },
+        telefono: { type: "string" },
+        correo: { type: "string" },
+        notas: { type: "string" },
+      },
+      required: ["id"],
+    },
+  },
+  {
+    name: "eliminar_contacto",
+    description: "Elimina permanentemente un contacto, dado su id (obtenido con listar_contactos).",
+    input_schema: {
+      type: "object",
+      properties: {
+        id: { type: "string", description: "ID (uuid) del contacto." },
+      },
+      required: ["id"],
+    },
+  },
+  {
+    name: "crear_nota",
+    description: "Guarda una nota o acta de reunión del usuario. Úsala cuando pida tomar nota de algo, redactar un acta o dejar constancia de lo tratado en una reunión.",
+    input_schema: {
+      type: "object",
+      properties: {
+        titulo: { type: "string", description: "Título breve de la nota o de la reunión." },
+        contenido: { type: "string", description: "Contenido completo de la nota o acta, redactado en prosa clara." },
+        fecha: { type: "string", description: "Fecha en formato YYYY-MM-DD. Si no se indica, usa la fecha de hoy." },
+        asistentes: { type: "string", description: "Personas que participaron en la reunión, si corresponde." },
+      },
+      required: ["titulo", "contenido"],
+    },
+  },
+  {
+    name: "listar_notas",
+    description: "Lista las notas o actas guardadas por el usuario. Úsala para responder qué se trató en una reunión, y antes de modificar o eliminar una nota para conocer su id exacto.",
+    input_schema: {
+      type: "object",
+      properties: {
+        fecha: { type: "string", description: "Filtra por fecha exacta YYYY-MM-DD (opcional)." },
+      },
+    },
+  },
+  {
+    name: "actualizar_nota",
+    description: "Modifica una nota existente, dado su id (obtenido con listar_notas). Incluye solo los campos que cambian.",
+    input_schema: {
+      type: "object",
+      properties: {
+        id: { type: "string", description: "ID (uuid) de la nota." },
+        titulo: { type: "string" },
+        contenido: { type: "string" },
+        fecha: { type: "string" },
+        asistentes: { type: "string" },
+      },
+      required: ["id"],
+    },
+  },
+  {
+    name: "eliminar_nota",
+    description: "Elimina permanentemente una nota, dado su id (obtenido con listar_notas).",
+    input_schema: {
+      type: "object",
+      properties: {
+        id: { type: "string", description: "ID (uuid) de la nota." },
+      },
+      required: ["id"],
+    },
+  },
+  {
+    name: "registrar_gasto",
+    description: "Registra un gasto menor de caja chica. Úsala cuando el usuario indique que gastó o pagó algo.",
+    input_schema: {
+      type: "object",
+      properties: {
+        concepto: { type: "string", description: "Descripción breve del gasto." },
+        monto: { type: "number", description: "Monto del gasto, en bolivianos." },
+        categoria: {
+          type: "string",
+          enum: ["transporte", "materiales", "alimentacion", "servicios", "otros"],
+          description: "Categoría del gasto. Si no se especifica o no encaja claramente, usa 'otros'.",
+        },
+        fecha: { type: "string", description: "Fecha en formato YYYY-MM-DD. Si no se indica, usa la fecha de hoy." },
+      },
+      required: ["concepto", "monto"],
+    },
+  },
+  {
+    name: "listar_gastos",
+    description: "Lista los gastos de caja chica registrados por el usuario, para responder cuánto se gastó o en qué, y para sumar totales. Antes de modificar o eliminar un gasto, úsala para conocer su id exacto.",
+    input_schema: {
+      type: "object",
+      properties: {
+        fecha_desde: { type: "string", description: "Filtra desde esta fecha YYYY-MM-DD (opcional)." },
+        fecha_hasta: { type: "string", description: "Filtra hasta esta fecha YYYY-MM-DD (opcional)." },
+      },
+    },
+  },
+  {
+    name: "actualizar_gasto",
+    description: "Modifica un gasto existente, dado su id (obtenido con listar_gastos). Incluye solo los campos que cambian.",
+    input_schema: {
+      type: "object",
+      properties: {
+        id: { type: "string", description: "ID (uuid) del gasto." },
+        concepto: { type: "string" },
+        monto: { type: "number" },
+        categoria: { type: "string", enum: ["transporte", "materiales", "alimentacion", "servicios", "otros"] },
+        fecha: { type: "string" },
+      },
+      required: ["id"],
+    },
+  },
+  {
+    name: "eliminar_gasto",
+    description: "Elimina permanentemente un gasto, dado su id (obtenido con listar_gastos).",
+    input_schema: {
+      type: "object",
+      properties: {
+        id: { type: "string", description: "ID (uuid) del gasto." },
+      },
+      required: ["id"],
+    },
+  },
 ];
 
 async function ejecutarHerramienta(
@@ -155,6 +314,184 @@ async function ejecutarHerramienta(
     return { eliminado: true };
   }
 
+  if (name === "crear_contacto") {
+    const { data, error } = await supabase
+      .from("contactos")
+      .insert({
+        usuario_id: userId,
+        nombre: String(input.nombre ?? "").slice(0, 200),
+        cargo: typeof input.cargo === "string" ? input.cargo : null,
+        empresa: typeof input.empresa === "string" ? input.empresa : null,
+        telefono: typeof input.telefono === "string" ? input.telefono : null,
+        correo: typeof input.correo === "string" ? input.correo : null,
+        notas: typeof input.notas === "string" ? input.notas : null,
+      })
+      .select("id, nombre, cargo, empresa, telefono, correo, notas")
+      .single();
+    if (error) return { error: error.message };
+    return { contacto: data };
+  }
+
+  if (name === "listar_contactos") {
+    let query = supabase
+      .from("contactos")
+      .select("id, nombre, cargo, empresa, telefono, correo, notas")
+      .eq("usuario_id", userId)
+      .order("nombre", { ascending: true });
+    if (typeof input.busqueda === "string" && input.busqueda) {
+      query = query.or(`nombre.ilike.%${input.busqueda}%,empresa.ilike.%${input.busqueda}%`);
+    }
+    const { data, error } = await query;
+    if (error) return { error: error.message };
+    return { contactos: data };
+  }
+
+  if (name === "actualizar_contacto") {
+    const cambios: Record<string, unknown> = {};
+    if (typeof input.nombre === "string") cambios.nombre = input.nombre.slice(0, 200);
+    if (typeof input.cargo === "string") cambios.cargo = input.cargo;
+    if (typeof input.empresa === "string") cambios.empresa = input.empresa;
+    if (typeof input.telefono === "string") cambios.telefono = input.telefono;
+    if (typeof input.correo === "string") cambios.correo = input.correo;
+    if (typeof input.notas === "string") cambios.notas = input.notas;
+    if (Object.keys(cambios).length === 0) return { error: "No se especificó ningún cambio." };
+
+    const { data, error } = await supabase
+      .from("contactos")
+      .update(cambios)
+      .eq("id", String(input.id))
+      .eq("usuario_id", userId)
+      .select("id, nombre, cargo, empresa, telefono, correo, notas")
+      .single();
+    if (error) return { error: error.message };
+    return { contacto: data };
+  }
+
+  if (name === "eliminar_contacto") {
+    const { error } = await supabase
+      .from("contactos")
+      .delete()
+      .eq("id", String(input.id))
+      .eq("usuario_id", userId);
+    if (error) return { error: error.message };
+    return { eliminado: true };
+  }
+
+  if (name === "crear_nota") {
+    const { data, error } = await supabase
+      .from("notas")
+      .insert({
+        usuario_id: userId,
+        titulo: String(input.titulo ?? "").slice(0, 300),
+        contenido: String(input.contenido ?? ""),
+        fecha: typeof input.fecha === "string" && input.fecha ? input.fecha : undefined,
+        asistentes: typeof input.asistentes === "string" ? input.asistentes : null,
+      })
+      .select("id, titulo, contenido, fecha, asistentes")
+      .single();
+    if (error) return { error: error.message };
+    return { nota: data };
+  }
+
+  if (name === "listar_notas") {
+    let query = supabase
+      .from("notas")
+      .select("id, titulo, contenido, fecha, asistentes")
+      .eq("usuario_id", userId)
+      .order("fecha", { ascending: false });
+    if (typeof input.fecha === "string") query = query.eq("fecha", input.fecha);
+    const { data, error } = await query;
+    if (error) return { error: error.message };
+    return { notas: data };
+  }
+
+  if (name === "actualizar_nota") {
+    const cambios: Record<string, unknown> = {};
+    if (typeof input.titulo === "string") cambios.titulo = input.titulo.slice(0, 300);
+    if (typeof input.contenido === "string") cambios.contenido = input.contenido;
+    if (typeof input.fecha === "string") cambios.fecha = input.fecha;
+    if (typeof input.asistentes === "string") cambios.asistentes = input.asistentes;
+    if (Object.keys(cambios).length === 0) return { error: "No se especificó ningún cambio." };
+
+    const { data, error } = await supabase
+      .from("notas")
+      .update(cambios)
+      .eq("id", String(input.id))
+      .eq("usuario_id", userId)
+      .select("id, titulo, contenido, fecha, asistentes")
+      .single();
+    if (error) return { error: error.message };
+    return { nota: data };
+  }
+
+  if (name === "eliminar_nota") {
+    const { error } = await supabase
+      .from("notas")
+      .delete()
+      .eq("id", String(input.id))
+      .eq("usuario_id", userId);
+    if (error) return { error: error.message };
+    return { eliminado: true };
+  }
+
+  if (name === "registrar_gasto") {
+    const { data, error } = await supabase
+      .from("gastos")
+      .insert({
+        usuario_id: userId,
+        concepto: String(input.concepto ?? "").slice(0, 300),
+        monto: Number(input.monto ?? 0),
+        categoria: typeof input.categoria === "string" ? input.categoria : "otros",
+        fecha: typeof input.fecha === "string" && input.fecha ? input.fecha : undefined,
+      })
+      .select("id, concepto, monto, categoria, fecha")
+      .single();
+    if (error) return { error: error.message };
+    return { gasto: data };
+  }
+
+  if (name === "listar_gastos") {
+    let query = supabase
+      .from("gastos")
+      .select("id, concepto, monto, categoria, fecha")
+      .eq("usuario_id", userId)
+      .order("fecha", { ascending: false });
+    if (typeof input.fecha_desde === "string") query = query.gte("fecha", input.fecha_desde);
+    if (typeof input.fecha_hasta === "string") query = query.lte("fecha", input.fecha_hasta);
+    const { data, error } = await query;
+    if (error) return { error: error.message };
+    return { gastos: data };
+  }
+
+  if (name === "actualizar_gasto") {
+    const cambios: Record<string, unknown> = {};
+    if (typeof input.concepto === "string") cambios.concepto = input.concepto.slice(0, 300);
+    if (typeof input.monto === "number") cambios.monto = input.monto;
+    if (typeof input.categoria === "string") cambios.categoria = input.categoria;
+    if (typeof input.fecha === "string") cambios.fecha = input.fecha;
+    if (Object.keys(cambios).length === 0) return { error: "No se especificó ningún cambio." };
+
+    const { data, error } = await supabase
+      .from("gastos")
+      .update(cambios)
+      .eq("id", String(input.id))
+      .eq("usuario_id", userId)
+      .select("id, concepto, monto, categoria, fecha")
+      .single();
+    if (error) return { error: error.message };
+    return { gasto: data };
+  }
+
+  if (name === "eliminar_gasto") {
+    const { error } = await supabase
+      .from("gastos")
+      .delete()
+      .eq("id", String(input.id))
+      .eq("usuario_id", userId);
+    if (error) return { error: error.message };
+    return { eliminado: true };
+  }
+
   return { error: "Herramienta desconocida: " + name };
 }
 
@@ -205,12 +542,19 @@ Deno.serve(async (req: Request) => {
       `Tienes herramientas para crear, listar, modificar (incluyendo reprogramar fecha u hora exacta, cambiar ` +
       `prioridad o marcar como recurrente) y eliminar tareas reales del usuario. Si pide que le recuerdes algo a ` +
       `una hora específica, guarda esa hora en el campo 'hora' de la tarea (recibirá una notificación push en ese ` +
-      `momento). Úsalas siempre ` +
-      `que te pida gestionar pendientes, en vez de solo responder en texto. Nunca inventes ni des por hecho el ` +
-      `contenido de la agenda o las tareas: si no lo has consultado con una herramienta en esta conversación, no lo sabes. ` +
+      `momento). ` +
+      `También tienes herramientas para gestionar sus contactos (personas u organizaciones con las que trata), sus ` +
+      `notas y actas de reunión, y sus gastos de caja chica. Úsalas siempre ` +
+      `que te pida gestionar pendientes, contactos, notas o gastos, en vez de solo responder en texto. Nunca inventes ` +
+      `ni des por hecho el contenido de la agenda, los contactos, las notas o los gastos: si no lo has consultado con ` +
+      `una herramienta en esta conversación, no lo sabes. ` +
+      `Además, cuando te pidan redactar una carta, un memorando o un correo formal, escribe el texto completo ` +
+      `directamente en tu respuesta, listo para que el usuario lo copie y lo use; esto no requiere ninguna herramienta, ` +
+      `es simplemente parte de tu respuesta en prosa. ` +
       `Tus respuestas se muestran como texto plano en una burbuja de chat, sin renderizar markdown: nunca uses ` +
       `asteriscos, guiones de lista, numerales de título ni ningún otro símbolo de formato. Escribe en prosa natural, ` +
-      `como en una conversación hablada.`;
+      `como en una conversación hablada (incluidas las cartas o correos que redactes, usando saltos de línea simples ` +
+      `para separar saludo, cuerpo y despedida).`;
 
     const conversationMessages = messages.map((m: { role: string; content: string }) => ({
       role: m.role === "assistant" ? "assistant" : "user",

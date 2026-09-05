@@ -84,6 +84,7 @@ Desarrollar Lia, un asistente personal inteligente para la digitalización de la
 - Incorporar entrada y salida de voz, mediante reconocimiento y síntesis de voz, que permita dictar un pendiente y escuchar la respuesta de Lia, replicando la dinámica de dictado propia de la atención secretarial.
 - Implementar un sistema de notificaciones automáticas oportunas, con resumen diario de pendientes y avisos a la hora exacta solicitada, que asegure un seguimiento proactivo similar al que ofrecería un secretariado ejecutivo.
 - Establecer un modelo de acceso administrado por roles, con un panel de administración de usuarios, que garantice un uso controlado y seguro de la aplicación en condiciones reales.
+- Incorporar la gestión de contactos, la redacción de correspondencia formal, el registro de notas y actas de reunión, y el control de caja chica, ampliando la digitalización a otras funciones propias del secretariado ejecutivo además de la agenda.
 - Validar el funcionamiento de la aplicación mediante su implementación y uso efectivo, como evidencia práctica de la digitalización de funciones secretariales a través de la inteligencia artificial.
 
 ---
@@ -109,23 +110,23 @@ El diseño de Lia se organiza en tres capas que trabajan de forma coordinada: un
 Lia se presenta como una aplicación de una sola pantalla que se organiza en cuatro secciones principales, a las que se accede mediante una barra de navegación inferior:
 
 - **Inicio**, la pantalla principal, con un campo para escribir o dictar una instrucción de manera rápida.
-- **Conversación**, donde se desarrolla el intercambio de mensajes con Lia, por texto o por voz, y donde se muestran sus respuestas.
+- **Conversación**, donde se desarrolla el intercambio de mensajes con Lia, por texto o por voz, y donde se muestran sus respuestas. Cuando Lia redacta una carta, un memorando o un correo formal, el usuario puede copiar el texto directamente desde la burbuja de respuesta.
 - **Tareas**, donde se visualizan los pendientes ya registrados, organizados por fecha, con su prioridad, hora y estado.
-- **Ajustes**, donde el usuario administra su cuenta y, en el caso de un usuario administrador, accede además a un panel para gestionar las cuentas del resto de los usuarios.
+- **Más**, donde el usuario administra su cuenta y accede a las demás funciones secretariales de Lia: Contactos, Notas de reunión y Caja chica, cada una con su propia pantalla de lista y creación manual, además de poder gestionarse por conversación. Un usuario administrador accede además, desde esta misma sección, a un panel para gestionar las cuentas del resto de los usuarios.
 
 ### 4.2 Flujo de interacción
 
 El diseño de Lia sigue siempre el mismo recorrido, sin importar qué se le solicite:
 
-1. El usuario escribe o dicta una instrucción en lenguaje natural, por ejemplo, "recuérdame llamar al proveedor mañana a las nueve".
-2. El motor de inteligencia artificial interpreta la instrucción y determina qué acción corresponde realizar: crear, consultar, modificar o eliminar una tarea.
-3. La acción se ejecuta directamente sobre la información del usuario, y el resultado queda reflejado de inmediato en la sección de Tareas.
-4. Lia devuelve una confirmación en lenguaje natural, con un trato formal, y puede además leerla en voz alta si el usuario así lo solicitó.
+1. El usuario escribe o dicta una instrucción en lenguaje natural, por ejemplo, "recuérdame llamar al proveedor mañana a las nueve" o "guarda el contacto de la señora Rojas, es la contadora, su número es...".
+2. El motor de inteligencia artificial interpreta la instrucción y determina qué acción corresponde realizar: crear, consultar, modificar o eliminar una tarea, un contacto, una nota o un gasto, según lo que se le haya pedido.
+3. La acción se ejecuta directamente sobre la información del usuario, y el resultado queda reflejado de inmediato en la sección correspondiente (Tareas, Contactos, Notas o Caja chica).
+4. Lia devuelve una confirmación en lenguaje natural, con un trato formal, y puede además leerla en voz alta si el usuario así lo solicitó. Si en cambio se le pidió redactar una carta o un correo, escribe el texto completo directamente en su respuesta, sin necesidad de ejecutar ninguna acción sobre la base de datos.
 5. Si la tarea incluye una fecha o una hora específica, el sistema programa de manera automática el envío de una notificación en el momento correspondiente.
 
 ### 4.3 Almacenamiento y notificaciones
 
-Toda la información de tareas, usuarios y conversaciones se conserva en una base de datos en la nube, con acceso restringido a cada usuario sobre sus propios datos. De forma paralela, un servicio independiente revisa periódicamente las tareas pendientes para enviar, según corresponda, un resumen diario de lo que queda por hacer o un aviso puntual a la hora exacta que el usuario indicó.
+Toda la información de tareas, contactos, notas, gastos, usuarios y conversaciones se conserva en una base de datos en la nube, organizada en tablas independientes por tipo de información, con acceso restringido a cada usuario sobre sus propios datos. De forma paralela, un servicio independiente revisa periódicamente las tareas pendientes para enviar, según corresponda, un resumen diario de lo que queda por hacer o un aviso puntual a la hora exacta que el usuario indicó.
 
 Este esquema de diseño permite que la complejidad técnica de la aplicación permanezca completamente oculta para el usuario, quien únicamente percibe una conversación simple y natural, similar a la que sostendría con un secretariado ejecutivo.
 
@@ -226,7 +227,7 @@ A partir de esa página de presentación, se plantean los siguientes canales de 
 
 ### 7.1 Beneficios para el usuario
 
-Quien utiliza Lia deja de depender de formularios y menús para organizarse: basta con decir o escribir lo que necesita, en el momento en que lo necesita, sin interrumpir lo que está haciendo. Esto se traduce en menos pendientes olvidados o registrados fuera de tiempo, y en una agenda que se mantiene actualizada con mucho menos esfuerzo que con una herramienta tradicional. A esto se suma la posibilidad de dictar una tarea o escuchar la respuesta de Lia, lo que resulta especialmente útil cuando el usuario tiene las manos ocupadas o se encuentra en movimiento, y un sistema de notificaciones que le avisa de manera oportuna, sin que deba revisar la aplicación de forma manual.
+Quien utiliza Lia deja de depender de formularios y menús para organizarse: basta con decir o escribir lo que necesita, en el momento en que lo necesita, sin interrumpir lo que está haciendo. Esto se traduce en menos pendientes olvidados o registrados fuera de tiempo, y en una agenda que se mantiene actualizada con mucho menos esfuerzo que con una herramienta tradicional. A esto se suma la posibilidad de dictar una tarea o escuchar la respuesta de Lia, lo que resulta especialmente útil cuando el usuario tiene las manos ocupadas o se encuentra en movimiento, y un sistema de notificaciones que le avisa de manera oportuna, sin que deba revisar la aplicación de forma manual. El mismo principio se extiende a sus contactos, sus notas de reunión y su caja chica, y a la redacción de correspondencia formal, que Lia entrega lista para copiar y usar.
 
 ### 7.2 Beneficios para las organizaciones
 

@@ -110,6 +110,19 @@
     outline:none;
   }
   .field input[type=text]:focus, .field input[type=password]:focus{ border-bottom-color: var(--orb-3); }
+  .field textarea{
+    width:100%;
+    background:transparent;
+    border:none;
+    border-bottom:1px solid var(--hairline);
+    color:var(--text);
+    font-family:'Manrope', sans-serif;
+    font-size:15px;
+    padding:10px 2px;
+    outline:none;
+    resize:vertical;
+  }
+  .field textarea:focus{ border-bottom-color: var(--orb-3); }
 
   .choice-row{
     display:flex;
@@ -301,6 +314,7 @@
     padding:12px 15px;
     font-size:14.5px;
     line-height:1.45;
+    position:relative;
   }
   .bubble.assistant{
     align-self:flex-start;
@@ -313,6 +327,18 @@
     background: linear-gradient(135deg, var(--orb-2), var(--orb-3));
     border-bottom-right-radius:2px;
   }
+  .bubble-text{ white-space:pre-wrap; }
+  .bubble-copy{
+    display:block;
+    margin-top:8px;
+    background:none;
+    border:none;
+    color:var(--text-muted);
+    cursor:pointer;
+    padding:2px;
+  }
+  .bubble-copy:hover{ color:var(--text); }
+  .bubble-copy.copied{ color:var(--orb-3); }
   .chat-inputbar{
     display:flex;
     align-items:center;
@@ -605,7 +631,7 @@
   <!-- SETTINGS -->
   <div class="view" id="view-settings">
     <div class="topbar">
-      <h2 class="serif">Perfil</h2>
+      <h2 class="serif">Más</h2>
     </div>
     <div class="settings-scroll">
       <div class="setting-block">
@@ -640,6 +666,13 @@
           <span class="v">No conectado</span>
         </div>
       </div>
+      <div class="setting-block">
+        <div class="setting-label">Secretariado</div>
+        <button class="btn-secondary" onclick="showView('contactos')">Contactos</button>
+        <button class="btn-secondary" onclick="showView('notas')">Notas de reunión</button>
+        <button class="btn-secondary" onclick="showView('gastos')">Caja chica</button>
+      </div>
+
       <div class="setting-block" id="admin-panel-link" style="display:none;">
         <div class="setting-label">Administración</div>
         <button class="btn-secondary" onclick="showView('admin')">Panel de administración</button>
@@ -683,6 +716,104 @@
     </div>
   </div>
 
+  <!-- CONTACTOS -->
+  <div class="view" id="view-contactos">
+    <div class="topbar">
+      <button class="icon-btn" onclick="showView('settings')" aria-label="Volver">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+      </button>
+      <h2 class="serif">Contactos</h2>
+    </div>
+    <div class="settings-scroll">
+      <div class="setting-block">
+        <div class="setting-label">Nuevo contacto</div>
+        <div class="field">
+          <label for="contacto-new-nombre">Nombre</label>
+          <input type="text" id="contacto-new-nombre" placeholder="Nombre del contacto" />
+        </div>
+        <div class="field">
+          <label for="contacto-new-telefono">Teléfono</label>
+          <input type="text" id="contacto-new-telefono" placeholder="Número de teléfono" />
+        </div>
+        <div class="field">
+          <label for="contacto-new-correo">Correo</label>
+          <input type="text" id="contacto-new-correo" placeholder="correo@ejemplo.com" autocomplete="off" />
+        </div>
+        <button class="btn-primary" onclick="crearContactoManual()">Agregar contacto</button>
+      </div>
+
+      <div class="setting-block">
+        <div class="setting-label">Contactos guardados</div>
+        <div id="contactos-list"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- NOTAS -->
+  <div class="view" id="view-notas">
+    <div class="topbar">
+      <button class="icon-btn" onclick="showView('settings')" aria-label="Volver">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+      </button>
+      <h2 class="serif">Notas de reunión</h2>
+    </div>
+    <div class="settings-scroll">
+      <div class="setting-block">
+        <div class="setting-label">Nueva nota</div>
+        <div class="field">
+          <label for="nota-new-titulo">Título</label>
+          <input type="text" id="nota-new-titulo" placeholder="Título de la nota o reunión" />
+        </div>
+        <div class="field">
+          <label for="nota-new-contenido">Contenido</label>
+          <textarea id="nota-new-contenido" rows="4" placeholder="¿Qué se trató o acordó?"></textarea>
+        </div>
+        <button class="btn-primary" onclick="crearNotaManual()">Guardar nota</button>
+      </div>
+
+      <div class="setting-block">
+        <div class="setting-label">Notas guardadas</div>
+        <div id="notas-list"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- GASTOS -->
+  <div class="view" id="view-gastos">
+    <div class="topbar">
+      <button class="icon-btn" onclick="showView('settings')" aria-label="Volver">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+      </button>
+      <h2 class="serif">Caja chica</h2>
+    </div>
+    <div class="settings-scroll">
+      <div class="setting-block">
+        <div class="setting-label">Nuevo gasto</div>
+        <div class="field">
+          <label for="gasto-new-concepto">Concepto</label>
+          <input type="text" id="gasto-new-concepto" placeholder="¿En qué se gastó?" />
+        </div>
+        <div class="field">
+          <label for="gasto-new-monto">Monto (Bs)</label>
+          <input type="text" id="gasto-new-monto" placeholder="0.00" inputmode="decimal" />
+        </div>
+        <button class="btn-primary" onclick="crearGastoManual()">Registrar gasto</button>
+      </div>
+
+      <div class="setting-block">
+        <div class="setting-value-row">
+          <span class="k">Total registrado</span>
+          <span class="v" id="gastos-total">Bs 0.00</span>
+        </div>
+      </div>
+
+      <div class="setting-block">
+        <div class="setting-label">Gastos registrados</div>
+        <div id="gastos-list"></div>
+      </div>
+    </div>
+  </div>
+
   <!-- BOTTOM NAV -->
   <div class="bottomnav" id="bottomnav" style="display:none;">
     <button class="navbtn active" data-view="home" onclick="showView('home')">
@@ -699,7 +830,7 @@
     </button>
     <button class="navbtn" data-view="settings" onclick="showView('settings')">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-      Perfil
+      Más
     </button>
   </div>
 
@@ -949,6 +1080,214 @@
     }
   }
 
+  function crearFilaSecretariado(tituloTexto, detalleTexto, onEliminar){
+    const row = document.createElement('div');
+    row.className = 'admin-user-row';
+
+    const info = document.createElement('div');
+    const titulo = document.createElement('div');
+    titulo.className = 'admin-user-name';
+    titulo.textContent = tituloTexto;
+    const detalle = document.createElement('div');
+    detalle.className = 'admin-user-email';
+    detalle.textContent = detalleTexto;
+    info.appendChild(titulo);
+    info.appendChild(detalle);
+
+    const actions = document.createElement('div');
+    actions.className = 'admin-user-actions';
+    const delBtn = document.createElement('button');
+    delBtn.className = 'task-delete';
+    delBtn.setAttribute('aria-label', 'Eliminar');
+    delBtn.innerHTML = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>';
+    delBtn.addEventListener('click', onEliminar);
+    actions.appendChild(delBtn);
+
+    row.appendChild(info);
+    row.appendChild(actions);
+    return row;
+  }
+
+  // ---------- Contactos ----------
+  async function cargarContactos(){
+    const contenedor = document.getElementById('contactos-list');
+    contenedor.textContent = 'Cargando…';
+    const { data, error } = await supabase
+      .from('contactos')
+      .select('id, nombre, cargo, empresa, telefono, correo')
+      .eq('usuario_id', state.userId)
+      .order('nombre', { ascending: true });
+    if(error){
+      contenedor.textContent = 'No se pudieron cargar los contactos.';
+      return;
+    }
+    renderContactos(data);
+  }
+
+  function renderContactos(contactos){
+    const contenedor = document.getElementById('contactos-list');
+    contenedor.innerHTML = '';
+    if(contactos.length === 0){
+      contenedor.textContent = 'Aún no tienes contactos guardados.';
+      return;
+    }
+    contactos.forEach(c => {
+      const tituloTexto = c.nombre + (c.empresa ? ' · ' + c.empresa : '') + (c.cargo ? ' (' + c.cargo + ')' : '');
+      const detalleTexto = [c.telefono, c.correo].filter(Boolean).join(' · ') || 'Sin datos de contacto';
+      contenedor.appendChild(crearFilaSecretariado(tituloTexto, detalleTexto, () => eliminarContacto(c.id, c.nombre)));
+    });
+  }
+
+  async function crearContactoManual(){
+    const nombre = document.getElementById('contacto-new-nombre').value.trim();
+    const telefono = document.getElementById('contacto-new-telefono').value.trim();
+    const correo = document.getElementById('contacto-new-correo').value.trim();
+    if(!nombre) return;
+    const { error } = await supabase.from('contactos').insert({
+      usuario_id: state.userId,
+      nombre,
+      telefono: telefono || null,
+      correo: correo || null
+    });
+    if(error){
+      alert('No se pudo guardar el contacto: ' + error.message);
+      return;
+    }
+    document.getElementById('contacto-new-nombre').value = '';
+    document.getElementById('contacto-new-telefono').value = '';
+    document.getElementById('contacto-new-correo').value = '';
+    await cargarContactos();
+  }
+
+  async function eliminarContacto(id, nombre){
+    if(!confirm('¿Eliminar el contacto "' + nombre + '"?')) return;
+    const { error } = await supabase.from('contactos').delete().eq('id', id);
+    if(error){
+      alert('No se pudo eliminar el contacto: ' + error.message);
+      return;
+    }
+    await cargarContactos();
+  }
+
+  // ---------- Notas de reunión ----------
+  async function cargarNotas(){
+    const contenedor = document.getElementById('notas-list');
+    contenedor.textContent = 'Cargando…';
+    const { data, error } = await supabase
+      .from('notas')
+      .select('id, titulo, contenido, fecha, asistentes')
+      .eq('usuario_id', state.userId)
+      .order('fecha', { ascending: false });
+    if(error){
+      contenedor.textContent = 'No se pudieron cargar las notas.';
+      return;
+    }
+    renderNotas(data);
+  }
+
+  function renderNotas(notas){
+    const contenedor = document.getElementById('notas-list');
+    contenedor.innerHTML = '';
+    if(notas.length === 0){
+      contenedor.textContent = 'Aún no tienes notas guardadas.';
+      return;
+    }
+    notas.forEach(n => {
+      const tituloTexto = n.titulo + ' — ' + fechaALabel(n.fecha);
+      contenedor.appendChild(crearFilaSecretariado(tituloTexto, n.contenido, () => eliminarNota(n.id, n.titulo)));
+    });
+  }
+
+  async function crearNotaManual(){
+    const titulo = document.getElementById('nota-new-titulo').value.trim();
+    const contenido = document.getElementById('nota-new-contenido').value.trim();
+    if(!titulo || !contenido) return;
+    const { error } = await supabase.from('notas').insert({
+      usuario_id: state.userId,
+      titulo,
+      contenido
+    });
+    if(error){
+      alert('No se pudo guardar la nota: ' + error.message);
+      return;
+    }
+    document.getElementById('nota-new-titulo').value = '';
+    document.getElementById('nota-new-contenido').value = '';
+    await cargarNotas();
+  }
+
+  async function eliminarNota(id, titulo){
+    if(!confirm('¿Eliminar la nota "' + titulo + '"?')) return;
+    const { error } = await supabase.from('notas').delete().eq('id', id);
+    if(error){
+      alert('No se pudo eliminar la nota: ' + error.message);
+      return;
+    }
+    await cargarNotas();
+  }
+
+  // ---------- Caja chica ----------
+  async function cargarGastos(){
+    const contenedor = document.getElementById('gastos-list');
+    contenedor.textContent = 'Cargando…';
+    const { data, error } = await supabase
+      .from('gastos')
+      .select('id, concepto, monto, categoria, fecha')
+      .eq('usuario_id', state.userId)
+      .order('fecha', { ascending: false });
+    if(error){
+      contenedor.textContent = 'No se pudieron cargar los gastos.';
+      return;
+    }
+    renderGastos(data);
+  }
+
+  function renderGastos(gastos){
+    const contenedor = document.getElementById('gastos-list');
+    contenedor.innerHTML = '';
+    const total = gastos.reduce((suma, g) => suma + Number(g.monto || 0), 0);
+    document.getElementById('gastos-total').textContent = 'Bs ' + total.toFixed(2);
+
+    if(gastos.length === 0){
+      contenedor.textContent = 'Aún no tienes gastos registrados.';
+      return;
+    }
+    gastos.forEach(g => {
+      const tituloTexto = g.concepto + ' — Bs ' + Number(g.monto).toFixed(2);
+      const detalleTexto = fechaALabel(g.fecha) + (g.categoria ? ' · ' + g.categoria : '');
+      contenedor.appendChild(crearFilaSecretariado(tituloTexto, detalleTexto, () => eliminarGasto(g.id, g.concepto)));
+    });
+  }
+
+  async function crearGastoManual(){
+    const concepto = document.getElementById('gasto-new-concepto').value.trim();
+    const montoTexto = document.getElementById('gasto-new-monto').value.trim().replace(',', '.');
+    const monto = parseFloat(montoTexto);
+    if(!concepto || !montoTexto || isNaN(monto)) return;
+    const { error } = await supabase.from('gastos').insert({
+      usuario_id: state.userId,
+      concepto,
+      monto
+    });
+    if(error){
+      alert('No se pudo registrar el gasto: ' + error.message);
+      return;
+    }
+    document.getElementById('gasto-new-concepto').value = '';
+    document.getElementById('gasto-new-monto').value = '';
+    await cargarGastos();
+  }
+
+  async function eliminarGasto(id, concepto){
+    if(!confirm('¿Eliminar el gasto "' + concepto + '"?')) return;
+    const { error } = await supabase.from('gastos').delete().eq('id', id);
+    if(error){
+      alert('No se pudo eliminar el gasto: ' + error.message);
+      return;
+    }
+    await cargarGastos();
+  }
+
   async function logout(){
     await supabase.auth.signOut();
     state.userId = null;
@@ -1022,6 +1361,9 @@
     document.querySelectorAll('.navbtn').forEach(b => b.classList.toggle('active', b.dataset.view === name));
     if(name === 'tasks' && state.userId) loadTasks();
     if(name === 'admin' && state.userId) cargarUsuariosAdmin();
+    if(name === 'contactos' && state.userId) cargarContactos();
+    if(name === 'notas' && state.userId) cargarNotas();
+    if(name === 'gastos' && state.userId) cargarGastos();
     if(name === 'chat'){
       const messages = document.getElementById('chat-messages');
       messages.scrollTop = messages.scrollHeight;
@@ -1476,10 +1818,37 @@
   function appendBubble(text, who){
     const wrap = document.createElement('div');
     wrap.className = 'bubble ' + who;
-    wrap.textContent = text;
+
+    const textoEl = document.createElement('span');
+    textoEl.className = 'bubble-text';
+    textoEl.textContent = text;
+    wrap.appendChild(textoEl);
+
+    if(who === 'assistant'){
+      const copyBtn = document.createElement('button');
+      copyBtn.className = 'bubble-copy';
+      copyBtn.setAttribute('aria-label', 'Copiar texto');
+      copyBtn.innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
+      copyBtn.addEventListener('click', () => {
+        navigator.clipboard.writeText(textoEl.textContent).then(() => {
+          copyBtn.classList.add('copied');
+          setTimeout(() => copyBtn.classList.remove('copied'), 1200);
+        }).catch(() => {
+          alert('No se pudo copiar automáticamente. Selecciona el texto manualmente para copiarlo.');
+        });
+      });
+      wrap.appendChild(copyBtn);
+    }
+
     document.getElementById('chat-messages').appendChild(wrap);
     wrap.scrollIntoView({ behavior:'smooth', block:'end' });
     return wrap;
+  }
+
+  function setBubbleText(wrap, text){
+    const textoEl = wrap.querySelector('.bubble-text');
+    if(textoEl) textoEl.textContent = text;
+    else wrap.textContent = text;
   }
 
   async function guardarMensaje(rol, contenido){
@@ -1547,15 +1916,15 @@
       });
       const data = await res.json();
       if(!res.ok || data.error){
-        pendingBubble.textContent = 'No pude conectarme con Lia en este momento. Detalle: ' + (data.error || res.status);
+        setBubbleText(pendingBubble, 'No pude conectarme con Lia en este momento. Detalle: ' + (data.error || res.status));
       } else {
-        pendingBubble.textContent = data.reply;
+        setBubbleText(pendingBubble, data.reply);
         chatHistory.push({ role: 'assistant', content: data.reply });
         guardarMensaje('asistente', data.reply);
         if(speakReply) speakLiaReply(data.reply);
       }
     } catch (err) {
-      pendingBubble.textContent = 'Error de conexión con el servidor de Lia.';
+      setBubbleText(pendingBubble, 'Error de conexión con el servidor de Lia.');
     } finally {
       setOrbState('idle');
       pendingBubble.scrollIntoView({ behavior:'smooth', block:'start' });
