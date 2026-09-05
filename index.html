@@ -255,15 +255,6 @@
     margin-top:4px;
     letter-spacing:0.3px;
   }
-  .home-greeting{
-    text-align:center;
-    margin-top: 14px;
-  }
-  .home-greeting .name{
-    font-family:'Fraunces', serif;
-    font-size:26px;
-    font-weight:500;
-  }
   .orb-stage{
     flex:1;
     display:flex;
@@ -591,9 +582,6 @@
     <div class="home-brand">
       <div class="brand-title">LIA</div>
       <div class="brand-subtitle">Asistente Personal Inteligente</div>
-    </div>
-    <div class="home-greeting">
-      <div class="name serif" id="home-greeting-text">Buenas tardes</div>
     </div>
 
     <div class="orb-stage">
@@ -1369,10 +1357,12 @@
   }
 
   function renderGreeting(){
+    const el = document.getElementById('home-greeting-text');
+    if(!el) return;
     const hour = new Date().getHours();
     const saludo = hour < 12 ? 'Buenos días' : hour < 19 ? 'Buenas tardes' : 'Buenas noches';
     const titulo = state.nombre ? `, ${state.nombre}` : '';
-    document.getElementById('home-greeting-text').textContent = `${saludo}${titulo}`;
+    el.textContent = `${saludo}${titulo}`;
   }
 
   // ---------- Navegación ----------
