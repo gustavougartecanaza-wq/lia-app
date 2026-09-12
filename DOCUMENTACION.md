@@ -26,6 +26,7 @@
    - 4.3 Almacenamiento y notificaciones
      - 4.3.1 Almacenamiento de datos
      - 4.3.2 Notificaciones
+   - 4.4 Metodología de desarrollo
 5. Costos de diseño
    - 5.1 Costo de mano de obra
    - 5.2 Costo de materiales
@@ -198,6 +199,23 @@ Toda la información que maneja Lia (tareas, contactos, notas, gastos, cuentas d
 De forma paralela al almacenamiento, un servicio independiente revisa periódicamente las tareas pendientes del usuario para determinar si corresponde enviarle un aviso. Este servicio opera bajo dos modalidades complementarias: un resumen diario que agrupa los pendientes del día, enviado una vez por jornada, y un aviso puntual a la hora exacta que el usuario haya indicado para una tarea en particular, verificado cada pocos minutos para que el margen entre la hora solicitada y el aviso real sea mínimo. Ambas modalidades se entregan como notificaciones push del dispositivo, por lo que el usuario las recibe aunque no tenga la aplicación abierta en ese momento, replicando el seguimiento proactivo que se esperaría de un secretariado ejecutivo real.
 
 Este esquema de diseño permite que la complejidad técnica de la aplicación permanezca completamente oculta para el usuario, quien únicamente percibe una conversación simple y natural, similar a la que sostendría con un secretariado ejecutivo.
+
+### 4.4 METODOLOGÍA DE DESARROLLO
+
+Lia se desarrolló mediante un proceso iterativo, apoyado en herramientas de inteligencia artificial para la programación (asistentes de código con inteligencia artificial), que permitieron construir la aplicación a partir de las decisiones tomadas por la autora del proyecto: qué funciones debía tener, cómo debía comportarse Lia frente a cada tipo de pedido, qué información necesita digitalizar un secretariado ejecutivo, y cómo debía sentirse la experiencia de uso final. La autora dirigió todo el proceso de desarrollo, definiendo los requerimientos de cada función, probando personalmente su funcionamiento en el navegador y en el celular, solicitando ajustes y correcciones cuando algo no funcionaba como se esperaba, tomando las decisiones de diseño visual y de redacción, y elaborando la documentación del proyecto, mientras la herramienta de inteligencia artificial se encargó de escribir el código correspondiente siguiendo esas instrucciones.
+
+Este proceso se desarrolló en etapas sucesivas, en lugar de intentar construir la aplicación completa desde el inicio:
+
+1. **Gestión básica de tareas.** Primero se implementó el registro de tareas con fecha, sin ningún otro atributo, para validar la estructura general de la aplicación.
+2. **Conversación con inteligencia artificial.** Se incorporó el modelo de lenguaje con capacidad de ejecutar acciones reales sobre las tareas, reemplazando la idea original de un simple formulario.
+3. **Atributos de la agenda.** Se agregaron prioridad, hora exacta y recurrencia a las tareas, junto con el sistema de notificaciones automáticas.
+4. **Entrada y salida por voz.** Se incorporó el dictado y la lectura en voz alta de las respuestas, probando distintas voces hasta encontrar una cercana al español latinoamericano.
+5. **Acceso administrado.** Se reemplazó el registro público de usuarios por un modelo de roles y un panel de administración, pensado para un uso real y controlado.
+6. **Rediseño visual.** Se ajustó la identidad visual de Lia en varias rondas sucesivas, hasta llegar al avatar y las barras de sonido reactivas descritas en el punto 4.1.1.
+7. **Ampliación a otras funciones secretariales.** Se incorporaron la gestión de contactos, las notas de reunión, la caja chica y la redacción de correspondencia formal, ampliando la digitalización más allá de la agenda.
+8. **Documentación del proyecto.** De forma paralela al desarrollo, se elaboró y ajustó progresivamente el presente documento.
+
+Cada etapa se validó antes de pasar a la siguiente, probando la función correspondiente en condiciones reales de uso y corrigiendo lo necesario, en lugar de dar por finalizado el desarrollo sin comprobar su funcionamiento.
 
 ---
 
