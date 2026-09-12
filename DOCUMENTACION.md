@@ -187,6 +187,12 @@ El diseño de Lia sigue siempre el mismo recorrido, sin importar qué se le soli
 
 Toda la información que maneja Lia (tareas, contactos, notas, gastos, cuentas de usuario y el historial de conversaciones) se conserva en una base de datos en la nube, organizada en tablas independientes por tipo de información, en lugar de mezclar todo en una sola estructura. Cada tabla tiene asociado un control de acceso a nivel de fila, de modo que un usuario únicamente puede ver, crear, modificar o eliminar los registros que le pertenecen a él, sin posibilidad de acceder a la información de otra cuenta, ni siquiera de forma accidental. Esta separación por tipo de dato y por usuario es la que permite que funciones tan distintas como la agenda, los contactos, las notas de reunión y la caja chica convivan en la misma aplicación sin interferir entre sí, y es también la base que hace posible el modelo de acceso administrado descrito para el panel de administración.
 
+**Figura 6**
+
+*Tablas de la base de datos de Lia*
+
+![Tablas de la base de datos de Lia](assets/supabase-tablas.png)
+
 #### 4.3.2 NOTIFICACIONES
 
 De forma paralela al almacenamiento, un servicio independiente revisa periódicamente las tareas pendientes del usuario para determinar si corresponde enviarle un aviso. Este servicio opera bajo dos modalidades complementarias: un resumen diario que agrupa los pendientes del día, enviado una vez por jornada, y un aviso puntual a la hora exacta que el usuario haya indicado para una tarea en particular, verificado cada pocos minutos para que el margen entre la hora solicitada y el aviso real sea mínimo. Ambas modalidades se entregan como notificaciones push del dispositivo, por lo que el usuario las recibe aunque no tenga la aplicación abierta en ese momento, replicando el seguimiento proactivo que se esperaría de un secretariado ejecutivo real.
