@@ -225,7 +225,7 @@ Los costos del proyecto se organizan en tres grupos: el costo de mano de obra, c
 
 ### 5.1 COSTO DE MANO DE OBRA
 
-El desarrollo de Lia representó una inversión de más de 150 horas de trabajo, distribuidas en las distintas etapas del proyecto. Valorizando el tiempo a una tarifa referencial de Bs 80 por hora, se obtiene el siguiente detalle:
+El desarrollo de Lia representó una inversión de más de 150 horas de trabajo, distribuidas en las distintas etapas del proyecto y descritas en la metodología de desarrollo. Esta cifra corresponde al tiempo que la autora dedicó a dirigir el desarrollo: definir requerimientos, probar cada función, solicitar ajustes y validar el resultado, tal como se describió en el punto 4.4, y no a horas de programación manual. Valorizando ese tiempo a una tarifa referencial de Bs 80 por hora, se obtiene el siguiente detalle:
 
 **Tabla 1**
 
@@ -234,8 +234,8 @@ El desarrollo de Lia representó una inversión de más de 150 horas de trabajo,
 | Etapa | Horas | Tarifa por hora | Costo estimado |
 |---|---|---|---|
 | Diseño de la aplicación (interfaz y experiencia de usuario) | 30 | Bs 80 | Bs 2.400 |
-| Programación y desarrollo (funciones, base de datos, notificaciones) | 80 | Bs 80 | Bs 6.400 |
-| Integración de la inteligencia artificial y del reconocimiento y síntesis de voz | 25 | Bs 80 | Bs 2.000 |
+| Dirección del desarrollo (definición de requerimientos, pruebas y ajustes de funciones, base de datos y notificaciones) | 80 | Bs 80 | Bs 6.400 |
+| Dirección de la integración de la inteligencia artificial y del reconocimiento y síntesis de voz | 25 | Bs 80 | Bs 2.000 |
 | Pruebas, ajustes y corrección de errores | 20 | Bs 80 | Bs 1.600 |
 | **Total costo de mano de obra** | **155** | | **Bs 12.400** |
 
