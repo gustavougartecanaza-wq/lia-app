@@ -439,6 +439,12 @@ En conclusión, Lia se presenta como una propuesta de innovación tecnológica c
 
 ## 12. BIBLIOGRAFÍA
 
+Avendaño C., W. R. (2012). Innovación: un proceso necesario para las pequeñas y medianas empresas del municipio de San José de Cúcuta, Norte de Santander (Colombia). *Semestre Económico*, *15*(31), 187-208. https://revistas.udem.edu.co/index.php/economico/article/view/393
+
+Cedeño Alcívar, S., & Mendieta Cedeño Gaibor, C. K. (2019). Competencia profesional: secretaria ejecutiva en el ministerio de trabajo del centro de atención ciudadana de Portoviejo. *Revista Caribeña de Ciencias Sociales*. https://www.eumed.net/rev/caribe/2019/05/secretaria-ministerio-trabajo.html
+
+Marcén, M., & Martínez-Caraballo, N. (2012). Gestión eficiente del tiempo de los universitarios: evidencias para estudiantes de primer curso de la Universidad de Zaragoza. *Innovar*, *22*(43), 117-130. https://www.redalyc.org/articulo.oa?id=81824123011
+
 Anthropic. (2024). *Documentación de Claude*. https://docs.anthropic.com
 
 Supabase Inc. (2024). *Documentación de Supabase*. https://supabase.com/docs
@@ -451,4 +457,4 @@ Mozilla Foundation. (2024). *Push API*. MDN Web Docs. https://developer.mozilla.
 
 Google Developers. (2024). *Aplicaciones web progresivas*. web.dev. https://web.dev/explore/progressive-web-apps
 
-*Nota: esta bibliografía cubre las fuentes técnicas consultadas para el desarrollo de Lia. Se recomienda complementarla con la literatura académica específica sobre competencias del secretariado ejecutivo y gestión administrativa utilizada durante la formación, dado que corresponde a fuentes propias del programa académico que se pueden referenciar con mayor precisión desde la propia formación.*
+*Nota: esta bibliografía incluye tanto la literatura académica sobre competencias del secretariado ejecutivo, gestión del tiempo e innovación tecnológica, como las fuentes técnicas consultadas para el desarrollo de Lia. Se recomienda complementarla con bibliografía adicional propia del programa académico, si se dispone de ella, para reforzar aún más el sustento teórico del proyecto.*
