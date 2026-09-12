@@ -202,7 +202,7 @@ Este esquema de diseño permite que la complejidad técnica de la aplicación pe
 
 ### 4.4 METODOLOGÍA DE DESARROLLO
 
-Lia se desarrolló mediante un proceso iterativo, apoyado en herramientas de inteligencia artificial para la programación (asistentes de código con inteligencia artificial), que permitieron construir la aplicación a partir de las decisiones tomadas por la autora del proyecto: qué funciones debía tener, cómo debía comportarse Lia frente a cada tipo de pedido, qué información necesita digitalizar un secretariado ejecutivo, y cómo debía sentirse la experiencia de uso final. La autora dirigió todo el proceso de desarrollo, definiendo los requerimientos de cada función, probando personalmente su funcionamiento en el navegador y en el celular, solicitando ajustes y correcciones cuando algo no funcionaba como se esperaba, tomando las decisiones de diseño visual y de redacción, y elaborando la documentación del proyecto, mientras la herramienta de inteligencia artificial se encargó de escribir el código correspondiente siguiendo esas instrucciones.
+Lia se desarrolló mediante un proceso iterativo, apoyado en herramientas de inteligencia artificial para la programación (asistentes de código con inteligencia artificial), que permitieron construir la aplicación a partir de decisiones tomadas para el proyecto: qué funciones debía tener, cómo debía comportarse Lia frente a cada tipo de pedido, qué información necesita digitalizar un secretariado ejecutivo, y cómo debía sentirse la experiencia de uso final. Todo el proceso de desarrollo estuvo dirigido desde esas decisiones: definiendo los requerimientos de cada función, probando personalmente su funcionamiento en el navegador y en el celular, solicitando ajustes y correcciones cuando algo no funcionaba como se esperaba, tomando las decisiones de diseño visual y de redacción, y elaborando la documentación del proyecto, mientras la herramienta de inteligencia artificial se encargó de escribir el código correspondiente siguiendo esas instrucciones.
 
 Este proceso se desarrolló en etapas sucesivas, en lugar de intentar construir la aplicación completa desde el inicio:
 
@@ -225,7 +225,7 @@ Los costos del proyecto se organizan en tres grupos: el costo de mano de obra, c
 
 ### 5.1 COSTO DE MANO DE OBRA
 
-El desarrollo de Lia representó una inversión de más de 150 horas de trabajo, distribuidas en las distintas etapas del proyecto y descritas en la metodología de desarrollo. Esta cifra corresponde al tiempo que la autora dedicó a dirigir el desarrollo: definir requerimientos, probar cada función, solicitar ajustes y validar el resultado, tal como se describió en el punto 4.4, y no a horas de programación manual. Valorizando ese tiempo a una tarifa referencial de Bs 80 por hora, se obtiene el siguiente detalle:
+El desarrollo de Lia representó una inversión de más de 150 horas de trabajo, distribuidas en las distintas etapas del proyecto y descritas en la metodología de desarrollo. Esta cifra corresponde al tiempo dedicado a dirigir el desarrollo: definir requerimientos, probar cada función, solicitar ajustes y validar el resultado, tal como se describió en el punto 4.4, y no a horas de programación manual. Valorizando ese tiempo a una tarifa referencial de Bs 80 por hora, se obtiene el siguiente detalle:
 
 **Tabla 1**
 
@@ -451,4 +451,4 @@ Mozilla Foundation. (2024). *Push API*. MDN Web Docs. https://developer.mozilla.
 
 Google Developers. (2024). *Aplicaciones web progresivas*. web.dev. https://web.dev/explore/progressive-web-apps
 
-*Nota: esta bibliografía cubre las fuentes técnicas consultadas para el desarrollo de Lia. Se recomienda complementarla con la literatura académica específica sobre competencias del secretariado ejecutivo y gestión administrativa utilizada durante la formación, dado que corresponde a fuentes propias del programa académico que el autor del proyecto puede referenciar con mayor precisión.*
+*Nota: esta bibliografía cubre las fuentes técnicas consultadas para el desarrollo de Lia. Se recomienda complementarla con la literatura académica específica sobre competencias del secretariado ejecutivo y gestión administrativa utilizada durante la formación, dado que corresponde a fuentes propias del programa académico que se pueden referenciar con mayor precisión desde la propia formación.*
