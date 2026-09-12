@@ -209,6 +209,10 @@ Los costos del proyecto se organizan en tres grupos: el costo de mano de obra, c
 
 El desarrollo de Lia representó una inversión de más de 150 horas de trabajo, distribuidas en las distintas etapas del proyecto. Valorizando el tiempo a una tarifa referencial de Bs 80 por hora, se obtiene el siguiente detalle:
 
+**Tabla 1**
+
+*Costo de mano de obra*
+
 | Etapa | Horas | Tarifa por hora | Costo estimado |
 |---|---|---|---|
 | Diseño de la aplicación (interfaz y experiencia de usuario) | 30 | Bs 80 | Bs 2.400 |
@@ -223,6 +227,10 @@ Esta cifra debe entenderse como una estimación de referencia y no como un gasto
 
 Para el desarrollo, prueba y uso continuo de Lia se requirieron los siguientes recursos:
 
+**Tabla 2**
+
+*Costo de materiales*
+
 | Concepto | Detalle | Costo estimado |
 |---|---|---|
 | Internet | Conexión utilizada durante el desarrollo, las pruebas y el uso diario de la aplicación | Bs 200 por mes |
@@ -235,6 +243,10 @@ El celular y la computadora se presentan como valores referenciales del equipo u
 ### 5.3 COSTO DE FUNCIONAMIENTO
 
 Una vez en operación, Lia se apoya en servicios en la nube contratados bajo planes pagos, lo que garantiza mayor capacidad, estabilidad y respaldo frente a un plan gratuito, condición necesaria para un despliegue real y no solo para una demostración técnica:
+
+**Tabla 3**
+
+*Costo de funcionamiento*
 
 | Concepto | Detalle | Costo estimado |
 |---|---|---|
@@ -249,6 +261,10 @@ Estos montos corresponden a un uso con un número reducido de usuarios. En caso 
 ### 5.4 RESUMEN DE COSTOS TOTALES
 
 Integrando el total de cada uno de los tres cuadros anteriores, se obtiene la suma total de los costos del proyecto:
+
+**Tabla 4**
+
+*Resumen de costos totales*
 
 | Cuadro | Total |
 |---|---|
@@ -268,6 +284,10 @@ El mercado al que se dirige Lia está compuesto principalmente por profesionales
 ### 6.2 MODELO DE COMERCIALIZACIÓN
 
 Se propone un modelo de comercialización por suscripción mensual, con distintos planes según el número de usuarios que utilicen la aplicación dentro de una misma cuenta:
+
+**Tabla 5**
+
+*Planes de comercialización*
 
 | Plan | Dirigido a | Precio mensual | Incluye |
 |---|---|---|---|
@@ -325,6 +345,10 @@ En los últimos años han surgido también herramientas más recientes, como Mot
 ### 8.4 DIFERENCIACIÓN DE LIA
 
 Frente a estas alternativas, Lia se distingue por combinar en un mismo producto lo que, hasta ahora, ninguna de ellas ofrece en conjunto: una interacción completamente conversacional, por texto o por voz, capaz de ejecutar acciones reales sobre las tareas del usuario; un trato formal propio de una atención secretarial, coherente con el perfil profesional del que surge el proyecto; y un modelo de acceso administrado, pensado para pequeñas oficinas y equipos, a un costo notablemente menor que el de contratar personal administrativo adicional.
+
+**Tabla 6**
+
+*Comparación con empresas competidoras*
 
 | Producto | Tipo | Limitación frente a Lia |
 |---|---|---|
