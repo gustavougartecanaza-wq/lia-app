@@ -24,6 +24,8 @@
      - 4.1.4 Más
    - 4.2 Flujo de interacción
    - 4.3 Almacenamiento y notificaciones
+     - 4.3.1 Almacenamiento de datos
+     - 4.3.2 Notificaciones
 5. Costos de diseño
    - 5.1 Costo de mano de obra
    - 5.2 Costo de materiales
@@ -181,7 +183,13 @@ El diseño de Lia sigue siempre el mismo recorrido, sin importar qué se le soli
 
 ### 4.3 ALMACENAMIENTO Y NOTIFICACIONES
 
-Toda la información de tareas, contactos, notas, gastos, usuarios y conversaciones se conserva en una base de datos en la nube, organizada en tablas independientes por tipo de información, con acceso restringido a cada usuario sobre sus propios datos. De forma paralela, un servicio independiente revisa periódicamente las tareas pendientes para enviar, según corresponda, un resumen diario de lo que queda por hacer o un aviso puntual a la hora exacta que el usuario indicó.
+#### 4.3.1 ALMACENAMIENTO DE DATOS
+
+Toda la información que maneja Lia (tareas, contactos, notas, gastos, cuentas de usuario y el historial de conversaciones) se conserva en una base de datos en la nube, organizada en tablas independientes por tipo de información, en lugar de mezclar todo en una sola estructura. Cada tabla tiene asociado un control de acceso a nivel de fila, de modo que un usuario únicamente puede ver, crear, modificar o eliminar los registros que le pertenecen a él, sin posibilidad de acceder a la información de otra cuenta, ni siquiera de forma accidental. Esta separación por tipo de dato y por usuario es la que permite que funciones tan distintas como la agenda, los contactos, las notas de reunión y la caja chica convivan en la misma aplicación sin interferir entre sí, y es también la base que hace posible el modelo de acceso administrado descrito para el panel de administración.
+
+#### 4.3.2 NOTIFICACIONES
+
+De forma paralela al almacenamiento, un servicio independiente revisa periódicamente las tareas pendientes del usuario para determinar si corresponde enviarle un aviso. Este servicio opera bajo dos modalidades complementarias: un resumen diario que agrupa los pendientes del día, enviado una vez por jornada, y un aviso puntual a la hora exacta que el usuario haya indicado para una tarea en particular, verificado cada pocos minutos para que el margen entre la hora solicitada y el aviso real sea mínimo. Ambas modalidades se entregan como notificaciones push del dispositivo, por lo que el usuario las recibe aunque no tenga la aplicación abierta en ese momento, replicando el seguimiento proactivo que se esperaría de un secretariado ejecutivo real.
 
 Este esquema de diseño permite que la complejidad técnica de la aplicación permanezca completamente oculta para el usuario, quien únicamente percibe una conversación simple y natural, similar a la que sostendría con un secretariado ejecutivo.
 
