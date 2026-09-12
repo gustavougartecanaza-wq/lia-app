@@ -127,25 +127,25 @@ Lia se presenta como una aplicación de una sola pantalla que se organiza en cua
 
 - **Inicio**, la pantalla principal, con un campo para escribir o dictar una instrucción de manera rápida.
 
-  ![Figura 1. Pantalla de Inicio](assets/pantalla-inicio.png)
+  <img src="assets/pantalla-inicio.png" alt="Figura 1. Pantalla de Inicio" width="220">
 
   *Figura 1. Pantalla de Inicio.*
 
 - **Conversación**, donde se desarrolla el intercambio de mensajes con Lia, por texto o por voz, y donde se muestran sus respuestas. Cuando Lia redacta una carta, un memorando o un correo formal, el usuario puede copiar el texto directamente desde la burbuja de respuesta.
 
-  ![Figura 2. Pantalla de Conversación](assets/pantalla-chat.png)
+  <img src="assets/pantalla-chat.png" alt="Figura 2. Pantalla de Conversación" width="220">
 
   *Figura 2. Pantalla de Conversación.*
 
 - **Tareas**, donde se visualizan los pendientes ya registrados, organizados por fecha, con su prioridad, hora y estado.
 
-  ![Figura 3. Pantalla de Tareas](assets/pantalla-tareas.png)
+  <img src="assets/pantalla-tareas.png" alt="Figura 3. Pantalla de Tareas" width="220">
 
   *Figura 3. Pantalla de Tareas.*
 
 - **Más**, donde el usuario administra su cuenta y accede a las demás funciones secretariales de Lia: Contactos, Notas de reunión y Caja chica, cada una con su propia pantalla de lista y creación manual, además de poder gestionarse por conversación. Un usuario administrador accede además, desde esta misma sección, a un panel para gestionar las cuentas del resto de los usuarios.
 
-  ![Figura 4. Pantalla de Más](assets/pantalla-mas.png)
+  <img src="assets/pantalla-mas.png" alt="Figura 4. Pantalla de Más" width="220">
 
   *Figura 4. Pantalla de Más.*
 
