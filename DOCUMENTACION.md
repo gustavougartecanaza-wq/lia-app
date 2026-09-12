@@ -126,17 +126,36 @@ El diseño de Lia se organiza en tres capas que trabajan de forma coordinada: un
 Lia se presenta como una aplicación de una sola pantalla que se organiza en cuatro secciones principales, a las que se accede mediante una barra de navegación inferior:
 
 - **Inicio**, la pantalla principal, con un campo para escribir o dictar una instrucción de manera rápida.
+
+  ![Figura 1. Pantalla de Inicio](assets/pantalla-inicio.png)
+
+  *Figura 1. Pantalla de Inicio.*
+
 - **Conversación**, donde se desarrolla el intercambio de mensajes con Lia, por texto o por voz, y donde se muestran sus respuestas. Cuando Lia redacta una carta, un memorando o un correo formal, el usuario puede copiar el texto directamente desde la burbuja de respuesta.
+
+  ![Figura 2. Pantalla de Conversación](assets/pantalla-chat.png)
+
+  *Figura 2. Pantalla de Conversación.*
+
 - **Tareas**, donde se visualizan los pendientes ya registrados, organizados por fecha, con su prioridad, hora y estado.
+
+  ![Figura 3. Pantalla de Tareas](assets/pantalla-tareas.png)
+
+  *Figura 3. Pantalla de Tareas.*
+
 - **Más**, donde el usuario administra su cuenta y accede a las demás funciones secretariales de Lia: Contactos, Notas de reunión y Caja chica, cada una con su propia pantalla de lista y creación manual, además de poder gestionarse por conversación. Un usuario administrador accede además, desde esta misma sección, a un panel para gestionar las cuentas del resto de los usuarios.
+
+  ![Figura 4. Pantalla de Más](assets/pantalla-mas.png)
+
+  *Figura 4. Pantalla de Más.*
 
 ### 4.2 FLUJO DE INTERACCIÓN
 
-El diseño de Lia sigue siempre el mismo recorrido, sin importar qué se le solicite, tal como se resume en la Figura 1: el usuario da una instrucción en lenguaje natural, la inteligencia artificial la interpreta y decide qué acción corresponde, esa acción se ejecuta sobre la información del usuario (una tarea, un contacto, una nota o un gasto), Lia confirma el resultado en lenguaje natural y con trato formal, y, si corresponde una fecha u hora específica, se programa de manera automática una notificación.
+El diseño de Lia sigue siempre el mismo recorrido, sin importar qué se le solicite, tal como se resume en la Figura 5: el usuario da una instrucción en lenguaje natural, la inteligencia artificial la interpreta y decide qué acción corresponde, esa acción se ejecuta sobre la información del usuario (una tarea, un contacto, una nota o un gasto), Lia confirma el resultado en lenguaje natural y con trato formal, y, si corresponde una fecha u hora específica, se programa de manera automática una notificación.
 
-![Figura 1. Flujo de interacción con Lia](assets/flujo-interaccion.png)
+![Figura 5. Flujo de interacción con Lia](assets/flujo-interaccion.png)
 
-*Figura 1. Flujo de interacción con Lia.*
+*Figura 5. Flujo de interacción con Lia.*
 
 ### 4.3 ALMACENAMIENTO Y NOTIFICACIONES
 
