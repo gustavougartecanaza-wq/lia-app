@@ -1,10 +1,10 @@
-# Proyecto de Innovación Tecnológica
+# PROYECTO DE INNOVACIÓN TECNOLÓGICA
 
-## Lia, Asistente Personal Inteligente para la Digitalización de las Funciones del Secretariado Ejecutivo mediante Inteligencia Artificial Conversacional
+## LIA, ASISTENTE PERSONAL INTELIGENTE PARA LA DIGITALIZACIÓN DE LAS FUNCIONES DEL SECRETARIADO EJECUTIVO MEDIANTE INTELIGENCIA ARTIFICIAL CONVERSACIONAL
 
 ---
 
-## Índice
+## ÍNDICE
 
 - Introducción
 1. Justificación de la innovación
@@ -12,6 +12,10 @@
    - 2.1 Objetivo general
    - 2.2 Objetivo específico
 3. Población beneficiaria
+   - 3.1 Beneficiarios directos
+   - 3.2 Beneficiarios indirectos
+   - 3.3 Población beneficiaria académica
+   - 3.4 Proyección de crecimiento
 4. Esquema de diseño
    - 4.1 Interfaz del usuario
    - 4.2 Flujo de interacción
@@ -37,31 +41,35 @@
 9. Estrategias de mejora y proyecciones
    - 9.1 Estrategias de mejora
    - 9.2 Proyecciones
+     - 9.2.1 Escalamiento de infraestructura
+     - 9.2.2 Expansión de mercado
+     - 9.2.3 Crecimiento del plan institucional
+     - 9.2.4 Reinversión en el producto
 10. Conclusiones
 11. Recomendaciones
 12. Bibliografía
 
 ---
 
-## Introducción
+## INTRODUCCIÓN
 
 En los últimos años, la inteligencia artificial ha dejado de ser una tecnología experimental para convertirse en una herramienta capaz de transformar la manera en que las personas organizan su vida cotidiana y su trabajo. La incorporación de modelos de lenguaje en aplicaciones de uso diario ha modificado la forma en que los usuarios se relacionan con la tecnología, desplazando progresivamente las interfaces basadas en menús, formularios y botones hacia interacciones más naturales, cercanas a una conversación humana. Este cambio de paradigma abre la posibilidad de repensar funciones que, hasta ahora, se habían desempeñado casi exclusivamente de forma manual o mediante herramientas informáticas tradicionales.
 
-Entre esas funciones se encuentra el trabajo secretarial: la gestión de agendas, la organización de tareas por prioridad, el envío de recordatorios oportunos y la comunicación formal con quienes se atiende, son actividades centrales en la formación de un secretariado ejecutivo. Tradicionalmente, estas labores se apoyan en herramientas informáticas que exigen que la persona interrumpa su actividad, abra la aplicación correspondiente y complete manualmente campos como el título, la fecha, la hora o la prioridad de cada pendiente. Este proceso, aunque sencillo en apariencia, introduce una fricción constante que muchas veces provoca que los pendientes no se registren a tiempo, o se registren de forma incompleta, perdiendo así su utilidad práctica.
+Dentro de esas funciones destaca el trabajo secretarial, que incluye la gestión de agendas, la organización de tareas por prioridad, el envío de recordatorios oportunos y la comunicación formal con quienes se atiende, actividades centrales en la formación de un secretariado ejecutivo. Tradicionalmente, estas labores se apoyan en herramientas informáticas que exigen que la persona interrumpa su actividad, abra la aplicación correspondiente y complete manualmente campos como el título, la fecha, la hora o la prioridad de cada pendiente. Este proceso, aunque sencillo en apariencia, introduce una dificultad constante que muchas veces provoca que los pendientes no se registren a tiempo, o se registren de forma incompleta, perdiendo así su utilidad práctica.
 
 Frente a este panorama, surge la oportunidad de fusionar el conocimiento propio del secretariado ejecutivo con las capacidades actuales de la inteligencia artificial, de modo que sea la tecnología la que se adapte al usuario y no al revés. Bajo esta premisa se desarrolla **Lia, un asistente personal inteligente para la digitalización de las funciones del secretariado ejecutivo mediante inteligencia artificial conversacional**, capaz de crear, consultar, modificar y eliminar tareas y recordatorios, priorizarlos, programarlos y comunicar sus resultados con un trato formal, por texto o por voz, sin necesidad de formularios ni menús de navegación.
 
-Lia se concibe como una aplicación web progresiva —instalable en el celular o la computadora como si fuera una aplicación nativa—, accesible desde cualquier dispositivo con conexión a internet, que combina un modelo de inteligencia artificial capaz de ejecutar acciones reales sobre la información del usuario, un sistema de recordatorios oportunos mediante notificaciones automáticas, y una interfaz de entrada y salida por voz que permite dictar una tarea o escuchar la respuesta del asistente. El acceso a la aplicación se encuentra administrado mediante un sistema de roles, lo que la orienta hacia un uso real y controlado, y no únicamente hacia una demostración técnica.
+Lia se concibe como una aplicación web progresiva, instalable en el celular o la computadora como si fuera una aplicación nativa, accesible desde cualquier dispositivo con conexión a internet, que combina un modelo de inteligencia artificial capaz de ejecutar acciones reales sobre la información del usuario, un sistema de recordatorios oportunos mediante notificaciones automáticas, y una interfaz de entrada y salida por voz que permite dictar una tarea o escuchar la respuesta del asistente. El acceso a la aplicación se encuentra administrado mediante un sistema de roles, lo que la orienta hacia un uso real y controlado, y no únicamente hacia una demostración técnica.
 
-El presente documento tiene como propósito exponer, de manera ordenada, los distintos aspectos que sustentan el desarrollo de Lia como un proyecto de innovación tecnológica surgido desde el propio campo del secretariado ejecutivo. Para ello, se aborda en primer lugar la justificación del proyecto, seguida de sus objetivos general y específicos, la población a la que está dirigido, el esquema de diseño adoptado, los costos asociados a su desarrollo, su proyección dentro del mercado de comercialización, los beneficios que ofrece, un panorama de las empresas competidoras existentes, y las estrategias de mejora y proyecciones futuras contempladas para el proyecto. El documento cierra con las conclusiones, recomendaciones y la bibliografía consultada durante su elaboración.
+El presente proyecto tiene como propósito exponer, de manera ordenada, los distintos aspectos que sustentan el desarrollo de Lia como una innovación tecnológica surgida desde el propio campo del secretariado ejecutivo.
 
 ---
 
-## 1. Justificación de la innovación
+## 1. JUSTIFICACIÓN DE LA INNOVACIÓN
 
-El trabajo de un secretariado ejecutivo se sostiene, en gran medida, en tareas de organización: administrar una agenda, priorizar pendientes, programar recordatorios y comunicar todo ello con un trato formal y oportuno. La forma tradicional de apoyar estas labores —agendas físicas, notas o aplicaciones de tareas convencionales— exige que la persona interrumpa su actividad, abra la aplicación correspondiente, navegue hasta la pantalla adecuada y complete manualmente campos como título, fecha, hora o prioridad. Esta fricción provoca que numerosos pendientes no se registren, o se registren tarde, perdiendo así su utilidad. A esto se suma que la mayoría de estas herramientas son pasivas: almacenan lo que se escribe, pero no interpretan la intención de quien las usa, no distinguen una tarea urgente de una que puede esperar, ni son capaces de sostener una conversación de seguimiento, como consultar qué queda pendiente para el día o modificar una tarea ya existente sin volver a completar un formulario desde cero.
+El trabajo de un secretariado ejecutivo se sostiene, en gran medida, en tareas de organización: administrar una agenda, priorizar pendientes, programar recordatorios y comunicar todo ello con un trato formal y oportuno. La forma tradicional de apoyar estas labores, mediante agendas físicas, notas o aplicaciones de tareas convencionales, exige que la persona interrumpa su actividad, abra la aplicación correspondiente, navegue hasta la pantalla adecuada y complete manualmente campos como título, fecha, hora o prioridad. Esta dificultad provoca que numerosos pendientes no se registren, o se registren tarde, perdiendo así su utilidad. A esto se suma que la mayoría de estas herramientas son pasivas: almacenan lo que se escribe, pero no interpretan la intención de quien las usa, no distinguen una tarea urgente de una que puede esperar, ni son capaces de sostener una conversación de seguimiento, como consultar qué queda pendiente para el día o modificar una tarea ya existente sin volver a completar un formulario desde cero.
 
-Lia responde a esta limitación fusionando el conocimiento propio del secretariado ejecutivo con un modelo de inteligencia artificial (Claude, de Anthropic) con capacidad de ejecutar acciones concretas y no solo de generar texto. Esta capacidad es la que marca la diferencia frente a un asistente conversacional convencional: el modelo no se limita a responder preguntas o a redactar texto, sino que interpreta la intención de quien le habla y la traduce en acciones reales sobre su base de datos de tareas —crearlas, listarlas, modificarlas o eliminarlas—, devolviendo además una confirmación en lenguaje natural y con el trato formal propio de una atención secretarial. De este modo, la inteligencia artificial deja de ser un simple canal de conversación y pasa a operar como la capa de control de la aplicación, ejecutando exactamente las funciones que un secretariado ejecutivo desempeñaría manualmente.
+Lia responde a esta limitación fusionando el conocimiento propio del secretariado ejecutivo con un modelo de inteligencia artificial (Claude, de Anthropic) con capacidad de ejecutar acciones concretas y no solo de generar texto. Esta capacidad es la que marca la diferencia frente a un asistente conversacional convencional: el modelo no se limita a responder preguntas o a redactar texto, sino que interpreta la intención de quien le habla y la traduce en acciones reales sobre su base de datos de tareas, como crearlas, listarlas, modificarlas o eliminarlas, devolviendo además una confirmación en lenguaje natural y con el trato formal propio de una atención secretarial. De este modo, la inteligencia artificial deja de ser un simple canal de conversación y pasa a operar como la capa de control de la aplicación, ejecutando exactamente las funciones que un secretariado ejecutivo desempeñaría manualmente.
 
 El carácter innovador del proyecto no reside en una sola funcionalidad aislada, sino en la articulación de varias tecnologías al servicio de una función profesional concreta, algo que no es habitual en un desarrollo de este alcance. Por un lado, el uso de un modelo de lenguaje capaz de ejecutar acciones concretas como interfaz principal de la aplicación, en lugar de tratarse como un complemento añadido a una interfaz tradicional ya existente. Por otro, la incorporación de entrada y salida por voz mediante las capacidades propias del navegador, lo que permite dictar una tarea o escuchar la respuesta de Lia sin necesidad de escribir ni leer, tal como ocurriría al dictarle un pendiente a un secretariado en persona. A ello se suma un sistema de recordatorios oportunos mediante notificaciones automáticas, capaz de avisar en el momento exacto solicitado, sin que la aplicación deba permanecer abierta ni la persona deba revisarla manualmente, reproduciendo así el seguimiento proactivo que se espera de una gestión secretarial eficiente.
 
@@ -71,13 +79,13 @@ Finalmente, el proyecto incorpora un modelo de acceso administrado, con roles de
 
 ---
 
-## 2. Objetivos
+## 2. OBJETIVOS
 
-### 2.1 Objetivo general
+### 2.1 OBJETIVO GENERAL
 
 Desarrollar Lia, un asistente personal inteligente para la digitalización de las funciones del secretariado ejecutivo mediante inteligencia artificial conversacional, capaz de gestionar una agenda, organizar tareas por prioridad, programar recordatorios y comunicarse con el usuario de manera formal, a través de una interacción en lenguaje natural, por texto o por voz.
 
-### 2.2 Objetivo específico
+### 2.2 OBJETIVO ESPECÍFICO
 
 - Diseñar un sistema de gestión de tareas con título, fecha, hora exacta, prioridad y recurrencia, que reproduzca digitalmente la organización de una agenda secretarial.
 - Integrar un modelo de inteligencia artificial capaz de interpretar las instrucciones del usuario en lenguaje natural y ejecutarlas como acciones reales sobre sus tareas: crearlas, listarlas, modificarlas o eliminarlas.
@@ -89,23 +97,31 @@ Desarrollar Lia, un asistente personal inteligente para la digitalización de la
 
 ---
 
-## 3. Población beneficiaria
+## 3. POBLACIÓN BENEFICIARIA
+
+### 3.1 BENEFICIARIOS DIRECTOS
 
 La población beneficiaria directa de Lia está conformada por personas que, en su vida profesional o personal, necesitan organizar una agenda propia o ajena: ejecutivos, profesionales independientes, pequeños empresarios, docentes y, de manera particular, secretarias y secretarios ejecutivos que desempeñan funciones de organización, seguimiento de pendientes y comunicación formal como parte central de su labor diaria. Para este último grupo, Lia no es solamente una herramienta de apoyo, sino la representación digital de las mismas competencias que su formación profesional les exige desarrollar: administrar el tiempo, priorizar tareas y mantener informado de manera oportuna a quien se atiende.
 
+### 3.2 BENEFICIARIOS INDIRECTOS
+
 Se benefician también, de forma indirecta, las personas y organizaciones que dependen del trabajo de quien utiliza Lia. Un ejecutivo cuya agenda es gestionada con apoyo de la aplicación recibe recordatorios más puntuales y una organización más consistente de sus actividades; una pequeña oficina o emprendimiento que no cuenta con personal administrativo dedicado encuentra en Lia una forma accesible de suplir esa función sin incurrir en el costo de contratar un puesto adicional. En ambos casos, el beneficio se traduce en menos pendientes olvidados, menos tiempo dedicado a tareas de organización manual y una comunicación más ordenada.
 
+### 3.3 POBLACIÓN BENEFICIARIA ACADÉMICA
+
 Dentro del ámbito académico, la población beneficiaria incluye también a estudiantes y egresados de la carrera de secretariado ejecutivo, para quienes Lia constituye un ejemplo aplicado de cómo su formación profesional puede complementarse con herramientas tecnológicas, ampliando su perfil hacia la gestión de este tipo de soluciones dentro de una organización.
+
+### 3.4 PROYECCIÓN DE CRECIMIENTO
 
 Finalmente, por tratarse de una aplicación de uso personal con control de acceso administrado, Lia está pensada para crecer de manera gradual: desde un primer grupo reducido de usuarios hasta, eventualmente, equipos de trabajo u oficinas completas que requieran una gestión de tareas y recordatorios compartida, sin que ello implique un cambio en su forma de uso, ya que la interacción seguirá dándose siempre mediante una conversación simple, por texto o por voz.
 
 ---
 
-## 4. Esquema de diseño
+## 4. ESQUEMA DE DISEÑO
 
 El diseño de Lia se organiza en tres capas que trabajan de forma coordinada: una interfaz visible para el usuario, un motor de inteligencia artificial que interpreta y ejecuta sus instrucciones, y un sistema de almacenamiento y notificaciones que conserva la información y avisa al usuario en el momento oportuno. Esta separación permite que cada parte cumpla una función clara dentro del funcionamiento general de la aplicación.
 
-### 4.1 Interfaz del usuario
+### 4.1 INTERFAZ DEL USUARIO
 
 Lia se presenta como una aplicación de una sola pantalla que se organiza en cuatro secciones principales, a las que se accede mediante una barra de navegación inferior:
 
@@ -114,17 +130,15 @@ Lia se presenta como una aplicación de una sola pantalla que se organiza en cua
 - **Tareas**, donde se visualizan los pendientes ya registrados, organizados por fecha, con su prioridad, hora y estado.
 - **Más**, donde el usuario administra su cuenta y accede a las demás funciones secretariales de Lia: Contactos, Notas de reunión y Caja chica, cada una con su propia pantalla de lista y creación manual, además de poder gestionarse por conversación. Un usuario administrador accede además, desde esta misma sección, a un panel para gestionar las cuentas del resto de los usuarios.
 
-### 4.2 Flujo de interacción
+### 4.2 FLUJO DE INTERACCIÓN
 
-El diseño de Lia sigue siempre el mismo recorrido, sin importar qué se le solicite:
+El diseño de Lia sigue siempre el mismo recorrido, sin importar qué se le solicite, tal como se resume en la Figura 1: el usuario da una instrucción en lenguaje natural, la inteligencia artificial la interpreta y decide qué acción corresponde, esa acción se ejecuta sobre la información del usuario (una tarea, un contacto, una nota o un gasto), Lia confirma el resultado en lenguaje natural y con trato formal, y, si corresponde una fecha u hora específica, se programa de manera automática una notificación.
 
-1. El usuario escribe o dicta una instrucción en lenguaje natural, por ejemplo, "recuérdame llamar al proveedor mañana a las nueve" o "guarda el contacto de la señora Rojas, es la contadora, su número es...".
-2. El motor de inteligencia artificial interpreta la instrucción y determina qué acción corresponde realizar: crear, consultar, modificar o eliminar una tarea, un contacto, una nota o un gasto, según lo que se le haya pedido.
-3. La acción se ejecuta directamente sobre la información del usuario, y el resultado queda reflejado de inmediato en la sección correspondiente (Tareas, Contactos, Notas o Caja chica).
-4. Lia devuelve una confirmación en lenguaje natural, con un trato formal, y puede además leerla en voz alta si el usuario así lo solicitó. Si en cambio se le pidió redactar una carta o un correo, escribe el texto completo directamente en su respuesta, sin necesidad de ejecutar ninguna acción sobre la base de datos.
-5. Si la tarea incluye una fecha o una hora específica, el sistema programa de manera automática el envío de una notificación en el momento correspondiente.
+![Figura 1. Flujo de interacción con Lia](assets/flujo-interaccion.png)
 
-### 4.3 Almacenamiento y notificaciones
+*Figura 1. Flujo de interacción con Lia.*
+
+### 4.3 ALMACENAMIENTO Y NOTIFICACIONES
 
 Toda la información de tareas, contactos, notas, gastos, usuarios y conversaciones se conserva en una base de datos en la nube, organizada en tablas independientes por tipo de información, con acceso restringido a cada usuario sobre sus propios datos. De forma paralela, un servicio independiente revisa periódicamente las tareas pendientes para enviar, según corresponda, un resumen diario de lo que queda por hacer o un aviso puntual a la hora exacta que el usuario indicó.
 
@@ -132,11 +146,11 @@ Este esquema de diseño permite que la complejidad técnica de la aplicación pe
 
 ---
 
-## 5. Costos de diseño
+## 5. COSTOS DE DISEÑO
 
 Los costos del proyecto se organizan en tres grupos: el costo de mano de obra, correspondiente al tiempo de trabajo invertido en el desarrollo de la aplicación; el costo de materiales, correspondiente a los recursos utilizados para desarrollarla y probarla; y el costo de funcionamiento, correspondiente a los servicios en la nube necesarios para que Lia opere de manera continua.
 
-### 5.1 Costo de mano de obra
+### 5.1 COSTO DE MANO DE OBRA
 
 El desarrollo de Lia representó una inversión de más de 150 horas de trabajo, distribuidas en las distintas etapas del proyecto. Valorizando el tiempo a una tarifa referencial de Bs 80 por hora, se obtiene el siguiente detalle:
 
@@ -150,7 +164,7 @@ El desarrollo de Lia representó una inversión de más de 150 horas de trabajo,
 
 Esta cifra debe entenderse como una estimación de referencia y no como un gasto monetario efectivamente desembolsado, ya que corresponde al trabajo propio invertido en el proyecto.
 
-### 5.2 Costo de materiales
+### 5.2 COSTO DE MATERIALES
 
 Para el desarrollo, prueba y uso continuo de Lia se requirieron los siguientes recursos:
 
@@ -163,7 +177,7 @@ Para el desarrollo, prueba y uso continuo de Lia se requirieron los siguientes r
 
 El celular y la computadora se presentan como valores referenciales del equipo utilizado y no como gastos recurrentes, dado que se trata de bienes que se emplean de forma continua y no de compras realizadas específicamente para este proyecto.
 
-### 5.3 Costo de funcionamiento
+### 5.3 COSTO DE FUNCIONAMIENTO
 
 Una vez en operación, Lia se apoya en servicios en la nube contratados bajo planes pagos, lo que garantiza mayor capacidad, estabilidad y respaldo frente a un plan gratuito, condición necesaria para un despliegue real y no solo para una demostración técnica:
 
@@ -177,7 +191,7 @@ Una vez en operación, Lia se apoya en servicios en la nube contratados bajo pla
 
 Estos montos corresponden a un uso con un número reducido de usuarios. En caso de que Lia se adopte por un mayor número de personas, tanto el alojamiento como la base de datos podrían requerir un nivel de suscripción superior, al igual que el uso del modelo de inteligencia artificial aumentaría en proporción al número de mensajes procesados. Este escenario de crecimiento se desarrolla con mayor detalle más adelante, en las estrategias de mejora y proyecciones del proyecto.
 
-### 5.4 Resumen de costos totales
+### 5.4 RESUMEN DE COSTOS TOTALES
 
 Integrando el total de cada uno de los tres cuadros anteriores, se obtiene la suma total de los costos del proyecto:
 
@@ -190,13 +204,13 @@ Integrando el total de cada uno de los tres cuadros anteriores, se obtiene la su
 
 ---
 
-## 6. Mercado de comercialización
+## 6. MERCADO DE COMERCIALIZACIÓN
 
-### 6.1 Segmento de mercado
+### 6.1 SEGMENTO DE MERCADO
 
 El mercado al que se dirige Lia está compuesto principalmente por profesionales independientes, ejecutivos, secretarias y secretarios ejecutivos, y pequeñas y medianas oficinas o emprendimientos que necesitan gestionar una agenda de forma constante, pero no siempre cuentan con personal administrativo dedicado o con el tiempo suficiente para hacerlo mediante herramientas tradicionales. Este segmento resulta especialmente relevante en un contexto en el que cada vez más profesionales trabajan de forma independiente o remota, y en el que la organización personal se ha vuelto una necesidad constante, sin que ello implique necesariamente contratar personal adicional.
 
-### 6.2 Modelo de comercialización
+### 6.2 MODELO DE COMERCIALIZACIÓN
 
 Se propone un modelo de comercialización por suscripción mensual, con distintos planes según el número de usuarios que utilicen la aplicación dentro de una misma cuenta:
 
@@ -208,7 +222,7 @@ Se propone un modelo de comercialización por suscripción mensual, con distinto
 
 Estos precios de referencia permiten cubrir el costo mensual de funcionamiento de la aplicación con un número reducido de suscriptores, y generar un margen adicional a medida que la cantidad de usuarios crece, dado que el costo de los servicios en la nube aumenta de forma proporcionalmente menor al número de personas que los utilizan.
 
-### 6.3 Canales de comercialización
+### 6.3 CANALES DE COMERCIALIZACIÓN
 
 La comercialización de Lia se plantea a través de una página de presentación (landing page): un sitio público, independiente de la aplicación, donde cualquier persona interesada puede conocer qué es Lia, para qué sirve y qué planes ofrece, antes de registrarse. Esta página funciona como punto de entrada común para el resto de los canales, ya que toda campaña de difusión necesita un lugar al que dirigir a las personas interesadas antes de pedirles que inicien sesión en la aplicación.
 
@@ -223,37 +237,37 @@ A partir de esa página de presentación, se plantean los siguientes canales de 
 
 ---
 
-## 7. Beneficios
+## 7. BENEFICIOS
 
-### 7.1 Beneficios para el usuario
+### 7.1 BENEFICIOS PARA EL USUARIO
 
 Quien utiliza Lia deja de depender de formularios y menús para organizarse: basta con decir o escribir lo que necesita, en el momento en que lo necesita, sin interrumpir lo que está haciendo. Esto se traduce en menos pendientes olvidados o registrados fuera de tiempo, y en una agenda que se mantiene actualizada con mucho menos esfuerzo que con una herramienta tradicional. A esto se suma la posibilidad de dictar una tarea o escuchar la respuesta de Lia, lo que resulta especialmente útil cuando el usuario tiene las manos ocupadas o se encuentra en movimiento, y un sistema de notificaciones que le avisa de manera oportuna, sin que deba revisar la aplicación de forma manual. El mismo principio se extiende a sus contactos, sus notas de reunión y su caja chica, y a la redacción de correspondencia formal, que Lia entrega lista para copiar y usar.
 
-### 7.2 Beneficios para las organizaciones
+### 7.2 BENEFICIOS PARA LAS ORGANIZACIONES
 
 Una oficina, consultorio o emprendimiento que no cuenta con personal administrativo dedicado encuentra en Lia una forma accesible de contar con una función de organización y seguimiento de pendientes, sin necesidad de incorporar un puesto adicional. El sistema de acceso administrado permite, además, que un mismo responsable gestione a varios usuarios dentro de una misma cuenta, lo que facilita su adopción por equipos pequeños y no únicamente por una persona de forma individual.
 
-### 7.3 Beneficios económicos
+### 7.3 BENEFICIOS ECONÓMICOS
 
 Desde el punto de vista económico, el beneficio principal de Lia está en la diferencia entre su costo de suscripción y el costo de incorporar personal administrativo adicional, considerablemente más alto en el mercado boliviano que cualquiera de los planes de suscripción propuestos para Lia. A ese ahorro directo se suma un beneficio menos visible, pero igualmente relevante: el costo de los pendientes que se pierden u olvidan por una mala organización, como una cita reprogramada tarde o un pago no realizado a tiempo, que Lia ayuda a reducir mediante sus recordatorios oportunos.
 
 ---
 
-## 8. Empresas competidoras
+## 8. EMPRESAS COMPETIDORAS
 
-### 8.1 Aplicaciones de gestión de tareas tradicionales
+### 8.1 APLICACIONES DE GESTIÓN DE TAREAS TRADICIONALES
 
 El mercado cuenta con aplicaciones de tareas ampliamente utilizadas, como Google Tasks, Microsoft To Do y Todoist. Se trata de herramientas sólidas y gratuitas o de bajo costo, pero que mantienen el esquema tradicional de formularios y menús: el usuario debe abrirlas, ubicar la sección correspondiente y completar manualmente cada pendiente. Ninguna de ellas está diseñada para sostener una conversación de seguimiento ni para interpretar instrucciones complejas expresadas en lenguaje natural.
 
-### 8.2 Asistentes de voz genéricos
+### 8.2 ASISTENTES DE VOZ GENÉRICOS
 
 Asistentes como Siri, Google Assistant o Alexa permiten crear recordatorios simples mediante comandos de voz. Sin embargo, son asistentes de propósito general, no orientados específicamente a la gestión de una agenda: no manejan prioridad ni recurrencia de forma detallada, no ofrecen un panel de administración de usuarios, y su interacción se limita a comandos puntuales antes que a una conversación sostenida con el trato formal propio de una atención secretarial.
 
-### 8.3 Herramientas de agenda con inteligencia artificial
+### 8.3 HERRAMIENTAS DE AGENDA CON INTELIGENCIA ARTIFICIAL
 
 En los últimos años han surgido también herramientas más recientes, como Motion o Reclaim.ai, orientadas a organizar automáticamente el calendario de un usuario mediante inteligencia artificial. Estas herramientas están dirigidas principalmente a un público internacional de habla inglesa, con planes de precio más elevados, y se enfocan en la programación automática del calendario más que en la conversación en lenguaje natural como forma principal de interacción.
 
-### 8.4 Diferenciación de Lia
+### 8.4 DIFERENCIACIÓN DE LIA
 
 Frente a estas alternativas, Lia se distingue por combinar en un mismo producto lo que, hasta ahora, ninguna de ellas ofrece en conjunto: una interacción completamente conversacional, por texto o por voz, capaz de ejecutar acciones reales sobre las tareas del usuario; un trato formal propio de una atención secretarial, coherente con el perfil profesional del que surge el proyecto; y un modelo de acceso administrado, pensado para pequeñas oficinas y equipos, a un costo notablemente menor que el de contratar personal administrativo adicional.
 
@@ -266,9 +280,9 @@ Frente a estas alternativas, Lia se distingue por combinar en un mismo producto 
 
 ---
 
-## 9. Estrategias de mejora y proyecciones
+## 9. ESTRATEGIAS DE MEJORA Y PROYECCIONES
 
-### 9.1 Estrategias de mejora
+### 9.1 ESTRATEGIAS DE MEJORA
 
 A partir de la versión actual de Lia, se plantean las siguientes mejoras a corto y mediano plazo:
 
@@ -278,22 +292,33 @@ A partir de la versión actual de Lia, se plantean las siguientes mejoras a cort
 - Publicar Lia en una tienda de aplicaciones, de forma complementaria a su acceso web, para ampliar su alcance y facilitar su instalación.
 - Continuar perfeccionando la voz del asistente, incorporando nuevas opciones a medida que existan voces en español con mayor cercanía al acento regional del usuario.
 
-### 9.2 Proyecciones
+### 9.2 PROYECCIONES
 
 En cuanto a su proyección como producto, se contemplan los siguientes escenarios de crecimiento:
 
-- **Escalamiento de infraestructura.** Conforme aumente el número de usuarios, los servicios en la nube que sostienen a Lia requerirán niveles de suscripción superiores a los actuales, un incremento de costo que resulta proporcionalmente menor al ingreso adicional generado por los nuevos suscriptores.
-- **Expansión de mercado.** Al tratarse de una aplicación en español, con una arquitectura que no depende de infraestructura local, Lia tiene la posibilidad de expandirse más allá de Bolivia hacia otros países de habla hispana con necesidades similares de organización personal y profesional.
-- **Crecimiento del plan institucional.** A medida que se sumen oficinas y organizaciones de mayor tamaño, el plan institucional se convierte en la principal fuente de crecimiento sostenido de ingresos, por encima de las suscripciones individuales.
-- **Reinversión en el producto.** Los ingresos generados por la comercialización de Lia se plantean como fuente de reinversión para continuar mejorando el modelo de inteligencia artificial que la sostiene y para incorporar las mejoras planteadas anteriormente.
+#### 9.2.1 ESCALAMIENTO DE INFRAESTRUCTURA
+
+Conforme aumente el número de usuarios, los servicios en la nube que sostienen a Lia requerirán niveles de suscripción superiores a los actuales, un incremento de costo que resulta proporcionalmente menor al ingreso adicional generado por los nuevos suscriptores.
+
+#### 9.2.2 EXPANSIÓN DE MERCADO
+
+Al tratarse de una aplicación en español, con una arquitectura que no depende de infraestructura local, Lia tiene la posibilidad de expandirse más allá de Bolivia hacia otros países de habla hispana con necesidades similares de organización personal y profesional.
+
+#### 9.2.3 CRECIMIENTO DEL PLAN INSTITUCIONAL
+
+A medida que se sumen oficinas y organizaciones de mayor tamaño, el plan institucional se convierte en la principal fuente de crecimiento sostenido de ingresos, por encima de las suscripciones individuales.
+
+#### 9.2.4 REINVERSIÓN EN EL PRODUCTO
+
+Los ingresos generados por la comercialización de Lia se plantean como fuente de reinversión para continuar mejorando el modelo de inteligencia artificial que la sostiene y para incorporar las mejoras planteadas anteriormente.
 
 ---
 
-## 10. Conclusiones
+## 10. CONCLUSIONES
 
 El desarrollo de Lia demuestra que es posible fusionar el conocimiento propio del secretariado ejecutivo con las capacidades actuales de la inteligencia artificial, dando lugar a un asistente que no reemplaza el criterio profesional, sino que digitaliza y automatiza las funciones de organización, seguimiento y comunicación que forman parte central de esa profesión. Esta fusión constituye el eje que sostiene al proyecto como una innovación tecnológica aplicada, y no como el simple uso de una tecnología de moda desconectada de un problema real.
 
-A lo largo del documento se evidenció que el proyecto responde a una necesidad concreta: la fricción que introducen las herramientas tradicionales de organización personal, basadas en formularios y menús, frente a la naturalidad de una conversación por texto o por voz. El esquema de diseño construido permite que esa conversación se traduzca en acciones reales sobre las tareas del usuario, con recordatorios oportunos y un trato formal, replicando de manera efectiva la atención que ofrecería un secretariado ejecutivo.
+A lo largo del documento se evidenció que el proyecto responde a una necesidad concreta: la dificultad que introducen las herramientas tradicionales de organización personal, basadas en formularios y menús, frente a la naturalidad de una conversación por texto o por voz. El esquema de diseño construido permite que esa conversación se traduzca en acciones reales sobre las tareas del usuario, con recordatorios oportunos y un trato formal, replicando de manera efectiva la atención que ofrecería un secretariado ejecutivo.
 
 En términos de viabilidad, se estableció que los costos de desarrollo y funcionamiento del proyecto son razonables y quedan cubiertos por un modelo de comercialización por suscripción, cuyo precio resulta considerablemente menor al costo de incorporar personal administrativo adicional. Frente a las alternativas existentes en el mercado, ya sean aplicaciones de tareas tradicionales o asistentes de voz genéricos, Lia se diferencia por combinar en un mismo producto la interacción conversacional, el trato formal y el modelo de acceso administrado, ninguno de los cuales se ofrece hoy en conjunto.
 
@@ -301,7 +326,7 @@ En conclusión, Lia se presenta como una propuesta de innovación tecnológica c
 
 ---
 
-## 11. Recomendaciones
+## 11. RECOMENDACIONES
 
 - **Realizar una prueba piloto con usuarios reales.** Antes de un lanzamiento comercial más amplio, se recomienda validar Lia con un grupo reducido de usuarios reales, idealmente compañeros y colegas del área de secretariado ejecutivo, para recoger su experiencia de uso y ajustar la aplicación con base en observaciones concretas y no solo en supuestos.
 
@@ -315,7 +340,7 @@ En conclusión, Lia se presenta como una propuesta de innovación tecnológica c
 
 ---
 
-## 12. Bibliografía
+## 12. BIBLIOGRAFÍA
 
 Anthropic. (2024). *Documentación de Claude*. https://docs.anthropic.com
 
