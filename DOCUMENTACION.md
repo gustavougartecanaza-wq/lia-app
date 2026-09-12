@@ -18,6 +18,10 @@
    - 3.4 Proyección de crecimiento
 4. Esquema de diseño
    - 4.1 Interfaz del usuario
+     - 4.1.1 Inicio
+     - 4.1.2 Conversación
+     - 4.1.3 Tareas
+     - 4.1.4 Más
    - 4.2 Flujo de interacción
    - 4.3 Almacenamiento y notificaciones
 5. Costos de diseño
@@ -123,39 +127,57 @@ El diseño de Lia se organiza en tres capas que trabajan de forma coordinada: un
 
 ### 4.1 INTERFAZ DEL USUARIO
 
-Lia se presenta como una aplicación de una sola pantalla que se organiza en cuatro secciones principales, a las que se accede mediante una barra de navegación inferior:
+Lia se presenta como una aplicación de una sola pantalla que se organiza en cuatro secciones principales, a las que se accede mediante una barra de navegación inferior.
 
-- **Inicio**, la pantalla principal, con un campo para escribir o dictar una instrucción de manera rápida.
+#### 4.1.1 INICIO
 
-  <img src="assets/pantalla-inicio.png" alt="Figura 1. Pantalla de Inicio" width="220">
+Es la pantalla principal y el primer contacto del usuario con Lia al abrir la aplicación. Muestra el nombre del asistente y su avatar dentro de un círculo animado, acompañado de barras de sonido a cada lado que reaccionan visualmente según el estado de Lia (en espera, escuchando, pensando o hablando), dando una referencia clara de qué está haciendo el asistente en cada momento. Debajo se encuentra un campo de texto único, con un botón de micrófono para dictar y otro para enviar, pensado para registrar una instrucción con la menor cantidad de pasos posible, ya sea escrita o hablada, sin necesidad de pasar primero por la pantalla de conversación.
 
-  *Figura 1. Pantalla de Inicio.*
+**Figura 1**
 
-- **Conversación**, donde se desarrolla el intercambio de mensajes con Lia, por texto o por voz, y donde se muestran sus respuestas. Cuando Lia redacta una carta, un memorando o un correo formal, el usuario puede copiar el texto directamente desde la burbuja de respuesta.
+*Pantalla de Inicio*
 
-  <img src="assets/pantalla-chat.png" alt="Figura 2. Pantalla de Conversación" width="220">
+![Pantalla de Inicio](assets/pantalla-inicio.png)
 
-  *Figura 2. Pantalla de Conversación.*
+#### 4.1.2 CONVERSACIÓN
 
-- **Tareas**, donde se visualizan los pendientes ya registrados, organizados por fecha, con su prioridad, hora y estado.
+Es la pantalla donde se desarrolla el intercambio completo de mensajes con Lia, por texto o por voz, y donde se muestran sus respuestas con el trato formal propio de una atención secretarial. Cada mensaje del usuario y cada respuesta de Lia se presentan como burbujas diferenciadas por color, con el historial ordenado cronológicamente. Cuando Lia redacta una carta, un memorando o un correo formal, el usuario puede copiar el texto completo directamente desde la burbuja de respuesta mediante un botón dedicado, sin necesidad de seleccionarlo manualmente. Es también el canal a través del cual se ejecutan todas las acciones que Lia realiza sobre tareas, contactos, notas y gastos, ya que cualquier instrucción dada aquí puede traducirse en una acción real sobre esa información.
 
-  <img src="assets/pantalla-tareas.png" alt="Figura 3. Pantalla de Tareas" width="220">
+**Figura 2**
 
-  *Figura 3. Pantalla de Tareas.*
+*Pantalla de Conversación*
 
-- **Más**, donde el usuario administra su cuenta y accede a las demás funciones secretariales de Lia: Contactos, Notas de reunión y Caja chica, cada una con su propia pantalla de lista y creación manual, además de poder gestionarse por conversación. Un usuario administrador accede además, desde esta misma sección, a un panel para gestionar las cuentas del resto de los usuarios.
+![Pantalla de Conversación](assets/pantalla-chat.png)
 
-  <img src="assets/pantalla-mas.png" alt="Figura 4. Pantalla de Más" width="220">
+#### 4.1.3 TAREAS
 
-  *Figura 4. Pantalla de Más.*
+Es la pantalla donde se visualizan los pendientes ya registrados, agrupados por día y ordenados cronológicamente. Cada tarea se muestra en una tarjeta con un indicador de color según su prioridad (alta, media o baja), una casilla para marcarla como completada, y su título editable directamente sobre la pantalla, sin necesidad de abrir un formulario aparte. Cuando corresponde, se muestra además la hora del recordatorio y un ícono que señala si la tarea es recurrente. Al final de la lista hay una barra para añadir una tarea nueva de forma manual, como alternativa directa a pedírsela a Lia por conversación.
+
+**Figura 3**
+
+*Pantalla de Tareas*
+
+![Pantalla de Tareas](assets/pantalla-tareas.png)
+
+#### 4.1.4 MÁS
+
+Es la pantalla donde el usuario administra su cuenta y accede a las demás funciones secretariales de Lia. Incluye las preferencias del asistente (como la voz utilizada para leer las respuestas), el estado de las notificaciones y los datos generales de la cuenta. Desde aquí se accede también a Contactos, Notas de reunión y Caja chica, cada una con su propia pantalla de lista y creación manual, además de poder gestionarse por conversación con Lia. Un usuario administrador ve además, desde esta misma sección, un acceso adicional a un panel para gestionar las cuentas del resto de los usuarios.
+
+**Figura 4**
+
+*Pantalla de Más*
+
+![Pantalla de Más](assets/pantalla-mas.png)
 
 ### 4.2 FLUJO DE INTERACCIÓN
 
 El diseño de Lia sigue siempre el mismo recorrido, sin importar qué se le solicite, tal como se resume en la Figura 5: el usuario da una instrucción en lenguaje natural, la inteligencia artificial la interpreta y decide qué acción corresponde, esa acción se ejecuta sobre la información del usuario (una tarea, un contacto, una nota o un gasto), Lia confirma el resultado en lenguaje natural y con trato formal, y, si corresponde una fecha u hora específica, se programa de manera automática una notificación.
 
-![Figura 5. Flujo de interacción con Lia](assets/flujo-interaccion.png)
+**Figura 5**
 
-*Figura 5. Flujo de interacción con Lia.*
+*Flujo de interacción con Lia*
+
+![Flujo de interacción con Lia](assets/flujo-interaccion.png)
 
 ### 4.3 ALMACENAMIENTO Y NOTIFICACIONES
 
