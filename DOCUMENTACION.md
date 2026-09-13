@@ -139,7 +139,7 @@ El diseño de Lia se organiza en tres capas que trabajan de forma coordinada: un
 
 ### 4.1 INTERFAZ DEL USUARIO
 
-Lia se presenta como una aplicación de una sola pantalla que se organiza en cuatro secciones principales, a las que se accede mediante una barra de navegación inferior.
+Lia se presenta como una aplicación de una sola pantalla que se organiza en cuatro secciones principales, a las que se accede mediante una barra de navegación inferior. El Anexo A (Manual de usuario) presenta una guía práctica y paso a paso de cómo utilizar cada una de estas secciones.
 
 #### 4.1.1 INICIO
 
