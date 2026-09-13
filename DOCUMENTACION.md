@@ -26,7 +26,8 @@
    - 4.3 Almacenamiento y notificaciones
      - 4.3.1 Almacenamiento de datos
      - 4.3.2 Notificaciones
-   - 4.4 Metodología de desarrollo
+   - 4.4 Tecnologías utilizadas
+   - 4.5 Metodología de desarrollo
 5. Costos de diseño
    - 5.1 Costo de mano de obra
    - 5.2 Costo de materiales
@@ -210,7 +211,28 @@ De forma paralela al almacenamiento, un servicio independiente revisa periódica
 
 Este esquema de diseño permite que la complejidad técnica de la aplicación permanezca completamente oculta para el usuario, quien únicamente percibe una conversación simple y natural, similar a la que sostendría con un secretariado ejecutivo.
 
-### 4.4 METODOLOGÍA DE DESARROLLO
+### 4.4 TECNOLOGÍAS UTILIZADAS
+
+Lia se construyó combinando tecnologías web estándar con servicios en la nube especializados, en lugar de desarrollar cada componente desde cero. Cada una cumple una función concreta dentro de la aplicación:
+
+**Tabla 1**
+
+*Tecnologías utilizadas en el desarrollo de Lia*
+
+| Categoría | Tecnología | Función dentro de Lia |
+|---|---|---|
+| Interfaz de usuario | HTML, CSS y JavaScript | Construyen la interfaz de una sola página, sin frameworks adicionales |
+| Alojamiento y despliegue | Vercel | Publica la aplicación y la actualiza automáticamente con cada cambio |
+| Base de datos y autenticación | Supabase (PostgreSQL) | Almacena tareas, contactos, notas, gastos y cuentas de usuario, con acceso restringido por fila |
+| Lógica de servidor | Supabase Edge Functions (Deno) | Ejecuta la comunicación con el modelo de inteligencia artificial y el envío de recordatorios |
+| Inteligencia artificial | API de Claude (Anthropic) | Interpreta las instrucciones en lenguaje natural y ejecuta acciones reales sobre la información del usuario |
+| Voz | Web Speech API | Permite dictar instrucciones y escuchar las respuestas de Lia |
+| Notificaciones | Push API y Service Worker | Entregan avisos al dispositivo aunque la aplicación esté cerrada |
+| Tareas programadas | pg_cron y pg_net (Supabase) | Revisan periódicamente los pendientes para enviar los recordatorios correspondientes |
+| Control de versiones | Git y GitHub | Registran el historial de cambios del código a lo largo del desarrollo |
+| Desarrollo | Asistente de código con inteligencia artificial | Escribe el código siguiendo las instrucciones dirigidas para el proyecto, según se describe en el punto 4.5 |
+
+### 4.5 METODOLOGÍA DE DESARROLLO
 
 Lia se desarrolló mediante un proceso iterativo, apoyado en herramientas de inteligencia artificial para la programación (asistentes de código con inteligencia artificial), que permitieron construir la aplicación a partir de decisiones tomadas para el proyecto: qué funciones debía tener, cómo debía comportarse Lia frente a cada tipo de pedido, qué información necesita digitalizar un secretariado ejecutivo, y cómo debía sentirse la experiencia de uso final. Todo el proceso de desarrollo estuvo dirigido desde esas decisiones: definiendo los requerimientos de cada función, probando personalmente su funcionamiento en el navegador y en el celular, solicitando ajustes y correcciones cuando algo no funcionaba como se esperaba, tomando las decisiones de diseño visual y de redacción, y elaborando la documentación del proyecto, mientras la herramienta de inteligencia artificial se encargó de escribir el código correspondiente siguiendo esas instrucciones.
 
@@ -237,7 +259,7 @@ Los costos del proyecto se organizan en tres grupos: el costo de mano de obra, c
 
 El desarrollo de Lia representó una inversión de más de 150 horas de trabajo, distribuidas en las distintas etapas del proyecto y descritas en la metodología de desarrollo. Esta cifra corresponde al tiempo dedicado a dirigir el desarrollo: definir requerimientos, probar cada función, solicitar ajustes y validar el resultado, tal como se describió en el punto 4.4, y no a horas de programación manual. Valorizando ese tiempo a una tarifa referencial de Bs 80 por hora, se obtiene el siguiente detalle:
 
-**Tabla 1**
+**Tabla 2**
 
 *Costo de mano de obra*
 
@@ -255,7 +277,7 @@ Esta cifra debe entenderse como una estimación de referencia y no como un gasto
 
 Para el desarrollo, prueba y uso continuo de Lia se requirieron los siguientes recursos:
 
-**Tabla 2**
+**Tabla 3**
 
 *Costo de materiales*
 
@@ -272,7 +294,7 @@ El celular y la computadora se presentan como valores referenciales del equipo u
 
 Una vez en operación, Lia se apoya en servicios en la nube contratados bajo planes pagos, lo que garantiza mayor capacidad, estabilidad y respaldo frente a un plan gratuito, condición necesaria para un despliegue real y no solo para una demostración técnica:
 
-**Tabla 3**
+**Tabla 4**
 
 *Costo de funcionamiento*
 
@@ -290,7 +312,7 @@ Estos montos corresponden a un uso con un número reducido de usuarios. En caso 
 
 Integrando el total de cada uno de los tres cuadros anteriores, se obtiene la suma total de los costos del proyecto:
 
-**Tabla 4**
+**Tabla 5**
 
 *Resumen de costos totales*
 
@@ -313,7 +335,7 @@ El mercado al que se dirige Lia está compuesto principalmente por profesionales
 
 Se propone un modelo de comercialización por suscripción mensual, con distintos planes según el número de usuarios que utilicen la aplicación dentro de una misma cuenta:
 
-**Tabla 5**
+**Tabla 6**
 
 *Planes de comercialización*
 
@@ -374,7 +396,7 @@ En los últimos años han surgido también herramientas más recientes, como Mot
 
 Frente a estas alternativas, Lia se distingue por combinar en un mismo producto lo que, hasta ahora, ninguna de ellas ofrece en conjunto: una interacción completamente conversacional, por texto o por voz, capaz de ejecutar acciones reales sobre las tareas del usuario; un trato formal propio de una atención secretarial, coherente con el perfil profesional del que surge el proyecto; y un modelo de acceso administrado, pensado para pequeñas oficinas y equipos, a un costo notablemente menor que el de contratar personal administrativo adicional.
 
-**Tabla 6**
+**Tabla 7**
 
 *Comparación con empresas competidoras*
 
