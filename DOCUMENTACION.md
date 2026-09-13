@@ -64,6 +64,7 @@
      - A.5 Gestión manual (sin usar el chat)
      - A.6 Panel de administración
      - A.7 Preguntas frecuentes
+   - Anexo B. Evidencia fotográfica de uso
 
 ---
 
@@ -542,3 +543,7 @@ Un usuario con rol de administrador ve, dentro de Más, un acceso adicional al p
 **Lia no entendió mi pedido.** Reformular la instrucción de forma más simple y directa, indicando con claridad la fecha, hora o dato exacto, tal como se haría al pedírselo a un secretariado en persona.
 
 **Olvidé mi contraseña.** Al no existir recuperación automática de contraseña, corresponde solicitar a un administrador que restablezca el acceso de la cuenta.
+
+### ANEXO B. EVIDENCIA FOTOGRÁFICA DE USO
+
+*(pendiente: fotografías de uso real de la aplicación)*
