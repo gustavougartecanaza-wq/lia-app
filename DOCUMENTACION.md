@@ -55,6 +55,8 @@
 10. Conclusiones
 11. Recomendaciones
 12. Bibliografía
+13. Anexos
+   - 13.1 Guía rápida de uso
 
 ---
 
@@ -458,3 +460,28 @@ Mozilla Foundation. (2024). *Push API*. MDN Web Docs. https://developer.mozilla.
 Google Developers. (2024). *Aplicaciones web progresivas*. web.dev. https://web.dev/explore/progressive-web-apps
 
 *Nota: esta bibliografía incluye tanto la literatura académica sobre competencias del secretariado ejecutivo, gestión del tiempo e innovación tecnológica, como las fuentes técnicas consultadas para el desarrollo de Lia. Se recomienda complementarla con bibliografía adicional propia del programa académico, si se dispone de ella, para reforzar aún más el sustento teórico del proyecto.*
+
+---
+
+## 13. ANEXOS
+
+### 13.1 GUÍA RÁPIDA DE USO
+
+**Cómo empezar.** Lia es de acceso administrado: no existe registro público, por lo que el usuario recibe su correo y una contraseña temporal de parte de un administrador. Con esos datos inicia sesión desde la pantalla de bienvenida y, la primera vez, indica su nombre para que Lia lo salude correctamente.
+
+**Cómo pedirle algo a Lia.** No hace falta memorizar comandos ni frases exactas: basta con escribir o dictar el pedido en lenguaje natural, desde el campo de Inicio o desde la pantalla de Conversación. Algunos ejemplos:
+
+- *"Recuérdame llamar al proveedor mañana a las nueve."*
+- *"¿Qué tengo pendiente para hoy?"*
+- *"Cambia la reunión del viernes para el lunes a las tres."*
+- *"Marca como hecho el informe de ventas."*
+- *"Guárdame el contacto de la señora Rojas, es la contadora, su número es 700-11122."*
+- *"Toma nota de la reunión con el proveedor: se acordó revisar precios la próxima semana."*
+- *"Anota un gasto de 50 bolivianos en transporte."*
+- *"Redáctame un correo formal para reprogramar una reunión."*
+
+**Cómo dictar y escuchar respuestas.** El botón del micrófono, tanto en Inicio como en Conversación, permite dictar el pedido en lugar de escribirlo. Para escuchar la respuesta de Lia en voz alta, se activa esa opción antes de dictar; la voz utilizada puede ajustarse desde Más → Preferencias de Lia.
+
+**Cómo activar las notificaciones.** Desde Más → Notificaciones → Activar notificaciones, aceptando el permiso que solicita el navegador. Sin este paso, Lia registra los recordatorios correctamente, pero no tiene forma de avisar al dispositivo cuando corresponde.
+
+**Dónde encontrar cada cosa.** Tareas muestra los pendientes con fecha; Más reúne Contactos, Notas de reunión, Caja chica y, para administradores, el panel de usuarios; la corrección de un dato ya guardado puede hacerse tanto desde su pantalla correspondiente como pidiéndoselo a Lia por conversación.
