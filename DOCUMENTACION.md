@@ -56,7 +56,14 @@
 11. Recomendaciones
 12. Bibliografía
 13. Anexos
-   - 13.1 Guía rápida de uso
+   - Anexo A. Manual de usuario
+     - A.1 Requisitos y acceso
+     - A.2 Navegación general
+     - A.3 Cómo pedirle algo a Lia
+     - A.4 Voz y notificaciones
+     - A.5 Gestión manual (sin usar el chat)
+     - A.6 Panel de administración
+     - A.7 Preguntas frecuentes
 
 ---
 
@@ -465,23 +472,73 @@ Google Developers. (2024). *Aplicaciones web progresivas*. web.dev. https://web.
 
 ## 13. ANEXOS
 
-### 13.1 GUÍA RÁPIDA DE USO
+### ANEXO A. MANUAL DE USUARIO
 
-**Cómo empezar.** Lia es de acceso administrado: no existe registro público, por lo que el usuario recibe su correo y una contraseña temporal de parte de un administrador. Con esos datos inicia sesión desde la pantalla de bienvenida y, la primera vez, indica su nombre para que Lia lo salude correctamente.
+#### A.1 REQUISITOS Y ACCESO
 
-**Cómo pedirle algo a Lia.** No hace falta memorizar comandos ni frases exactas: basta con escribir o dictar el pedido en lenguaje natural, desde el campo de Inicio o desde la pantalla de Conversación. Algunos ejemplos:
+Lia funciona desde cualquier navegador con conexión a internet, en celular o computadora, sin necesidad de instalar nada desde una tienda de aplicaciones. Al tratarse de una aplicación de acceso administrado, no existe registro público: el usuario recibe su correo y una contraseña temporal de parte de un administrador, e inicia sesión con esos datos desde la pantalla de bienvenida. La primera vez que ingresa, Lia le pide su nombre para poder saludarlo correctamente en adelante.
 
+Para instalarla como si fuera una aplicación nativa (con su propio ícono en la pantalla de inicio del celular), basta con abrir el enlace de Lia desde el navegador y usar la opción "Agregar a pantalla de inicio" o "Instalar aplicación" que el propio navegador ofrece.
+
+#### A.2 NAVEGACIÓN GENERAL
+
+La aplicación se organiza en cuatro pantallas principales, accesibles desde la barra inferior:
+
+- **Inicio**: muestra el avatar de Lia y un campo para escribir o dictar una instrucción rápida.
+- **Tareas**: lista los pendientes registrados, agrupados por fecha.
+- **Chat**: muestra la conversación completa con Lia y su historial.
+- **Más**: reúne la configuración de la cuenta, Contactos, Notas de reunión, Caja chica y, si corresponde, el panel de administración.
+
+#### A.3 CÓMO PEDIRLE ALGO A LIA
+
+No hace falta memorizar comandos ni frases exactas: basta con escribir o dictar el pedido en lenguaje natural, desde el campo de Inicio o desde la pantalla de Chat. Algunos ejemplos, organizados por función:
+
+**Agenda y tareas**
 - *"Recuérdame llamar al proveedor mañana a las nueve."*
 - *"¿Qué tengo pendiente para hoy?"*
 - *"Cambia la reunión del viernes para el lunes a las tres."*
 - *"Marca como hecho el informe de ventas."*
+- *"Elimina la tarea de comprar una lavadora."*
+
+**Contactos**
 - *"Guárdame el contacto de la señora Rojas, es la contadora, su número es 700-11122."*
+- *"¿Cuál es el teléfono de la señora Rojas?"*
+
+**Notas de reunión**
 - *"Toma nota de la reunión con el proveedor: se acordó revisar precios la próxima semana."*
+- *"¿Qué se acordó en la última reunión con el proveedor?"*
+
+**Caja chica**
 - *"Anota un gasto de 50 bolivianos en transporte."*
+- *"¿Cuánto llevo gastado este mes?"*
+
+**Correspondencia**
 - *"Redáctame un correo formal para reprogramar una reunión."*
+- *"Escríbeme un memorando breve avisando que la oficina cierra temprano el viernes."*
 
-**Cómo dictar y escuchar respuestas.** El botón del micrófono, tanto en Inicio como en Conversación, permite dictar el pedido en lugar de escribirlo. Para escuchar la respuesta de Lia en voz alta, se activa esa opción antes de dictar; la voz utilizada puede ajustarse desde Más → Preferencias de Lia.
+En cualquiera de estos casos, Lia responde confirmando lo realizado, y el resultado queda reflejado de inmediato en la pantalla correspondiente (Tareas, Contactos, Notas o Caja chica), sin necesidad de que el usuario lo registre por separado.
 
-**Cómo activar las notificaciones.** Desde Más → Notificaciones → Activar notificaciones, aceptando el permiso que solicita el navegador. Sin este paso, Lia registra los recordatorios correctamente, pero no tiene forma de avisar al dispositivo cuando corresponde.
+#### A.4 VOZ Y NOTIFICACIONES
 
-**Dónde encontrar cada cosa.** Tareas muestra los pendientes con fecha; Más reúne Contactos, Notas de reunión, Caja chica y, para administradores, el panel de usuarios; la corrección de un dato ya guardado puede hacerse tanto desde su pantalla correspondiente como pidiéndoselo a Lia por conversación.
+**Dictar y escuchar respuestas.** El botón del micrófono, tanto en Inicio como en Chat, permite dictar el pedido en lugar de escribirlo. Para que Lia lea su respuesta en voz alta, se activa esa opción antes de dictar; la voz utilizada puede ajustarse desde Más → Preferencias de Lia → Voz.
+
+**Activar las notificaciones.** Desde Más → Notificaciones → Activar notificaciones, aceptando el permiso que solicita el navegador. Sin este paso, Lia registra los recordatorios correctamente, pero no tiene forma de avisar al dispositivo cuando corresponde; conviene activarlas apenas se empieza a usar la aplicación.
+
+#### A.5 GESTIÓN MANUAL (SIN USAR EL CHAT)
+
+Además de pedírselo a Lia por conversación, cada función puede gestionarse directamente desde su propia pantalla:
+
+- En **Tareas**, se puede tocar el título de una tarea para editarlo, tocar el círculo de color para cambiar su prioridad, marcar la casilla para completarla, o usar los íconos de calendario y reloj para cambiar su fecha u hora. Al final de la lista hay una barra para añadir una tarea nueva.
+- En **Contactos**, **Notas de reunión** y **Caja chica** (dentro de Más), cada pantalla tiene su propio formulario simple para agregar un registro nuevo, y un botón para eliminar los existentes.
+
+#### A.6 PANEL DE ADMINISTRACIÓN
+
+Un usuario con rol de administrador ve, dentro de Más, un acceso adicional al panel de administración, desde donde puede crear nuevas cuentas de usuario (nombre, correo y una contraseña temporal), y desde la lista de usuarios existentes, cambiar el rol de una cuenta o eliminarla junto con toda su información.
+
+#### A.7 PREGUNTAS FRECUENTES
+
+**No me llegan las notificaciones.** Verificar que estén activadas en Más → Notificaciones, y que el navegador tenga el permiso de notificaciones concedido para el sitio de Lia.
+
+**Lia no entendió mi pedido.** Reformular la instrucción de forma más simple y directa, indicando con claridad la fecha, hora o dato exacto, tal como se haría al pedírselo a un secretariado en persona.
+
+**Olvidé mi contraseña.** Al no existir recuperación automática de contraseña, corresponde solicitar a un administrador que restablezca el acceso de la cuenta.
